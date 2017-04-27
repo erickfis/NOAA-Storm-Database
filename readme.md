@@ -6,8 +6,8 @@ NOAA Storm Database Study: the worst events
 [HTML
 version](https://github.com/erickfis/NOAA-Storm-Database/blob/master/NOAA-stormDB.html)
 
-In this study we will analise the NOAA Storm Database in order to
-determine what are the worst natural catastrofic events, both in terms
+In this study we have analysed the NOAA Storm Database in order to
+determine what are the worst natural catastrophic events, both in terms
 of public health and in economic impact.
 
 The U.S. National Oceanic and Atmospheric Administration's (NOAA) storm
@@ -210,7 +210,7 @@ Human health: the most harmfull events
 --------------------------------------
 
 There are occurrences that caused zero fatalities but a lot of injuries,
-so we did a separate analisys to fatal and non-fatal events.
+so we did a separate analysis to fatal and non-fatal events.
 
 ### Fatal Occurrences
 
@@ -1256,11 +1256,11 @@ injuring events:
 Economy: the the most harmfull events
 -------------------------------------
 
-Here we determine what are events did more harm to economy, both int
+Here we determine what are events did more harm to economy, both in
 terms of property and crops damage.
 
 There are events that causes zero property damage but a lot of crop
-damage. The inverse is also true, so we did a separate analisys to
+damage. The inverse is also true, so we did a separate analysis to
 property VS crop damaging events.
 
 ### Property losses
