@@ -3,9 +3,6 @@ NOAA Storm Database: the worst events
 
 NOAA Storm Database Study: the worst events
 
-[HTML
-version](https://github.com/erickfis/NOAA-Storm-Database/blob/master/NOAA-stormDB.html)
-
 In this study we have analysed the NOAA Storm Database in order to
 determine what are the worst natural catastrophic events, both in terms
 of public health and in economic impact.
@@ -22,12 +19,10 @@ The database can be found on:
 
 <https://www.ncdc.noaa.gov/stormevents/ftp.jsp>
 
-Data Processing
----------------
+Objective
+---------
 
-Data Processing
-
-Here we load and process the data in order the answer the questions:
+The goal of this study is to answer the questions:
 
 1.  Across the United States, which types of events were the most
     harmful with respect to population health ever recorded in a single
@@ -42,16 +37,16 @@ Here we load and process the data in order the answer the questions:
 4.  Which types of events had the greatest economic consequences along
     all those years?
 
-5.  Which are the places that were subject to the greatest losses, both
+5.  Which were the places that were subject to the greatest losses, both
     in population health and economic consequences?
 
-First, lets load the original data and them choose which variables are
-useful to answer our questions:
+Data Processing
+---------------
 
-    # linhas <- nrow(dados)
-    # linhas <- sample(linhas,50000)
-    # dataS <- dados[linhas,]
-    # write.csv(dataS, "StormData")
+Data Processing
+
+This code loads the original data and them choose which variables are
+useful to answer our questions:
 
     library(scales)
     library(data.table)
@@ -71,11 +66,10 @@ useful to answer our questions:
     #Full data
     #dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"), na.strings = "")
     dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"))
-
     dados <-tbl_df(dados)
 
+    # treating var names
     names(dados) <- gsub("_", ".", tolower(names(dados)))
-
     names(dados)   
 
     ##  [1] "stormdata0000664000175000017500016166024313076412760013112 0ustar  erickfiserickfis\"\""
@@ -195,22 +189,23 @@ occurred (state and county name).
 
     # lets group the events whose count is < 5 and call it "other"
     contagem <- sort(table(eventos))
-
     outros <- names(contagem[contagem<5])
-
     eventos[eventos %in% outros] <- "other"
     # sort(table(eventos))
 
     # returning treated events
     harm.df$event <- toupper(eventos)
 
-    rm(dados)
+    rm(dados) # house cleanning
 
 Human health: the most harmfull events
 --------------------------------------
 
-There are occurrences that caused zero fatalities but a lot of injuries,
-so we did a separate analysis to fatal and non-fatal events.
+We have determined what events did more harm to human health.
+
+There were occurrences that caused zero fatalities but a lot of
+injuries. The inverse is also true, so we did a separate analysis to
+fatal and non-fatal events.
 
 ### Fatal Occurrences
 
@@ -1259,10 +1254,10 @@ injuring events:
 Economy: the the most harmfull events
 -------------------------------------
 
-Here we determine what are events did more harm to economy, both in
-terms of property and crops damage.
+We have determined what events did more harm to economy, both in terms
+of property and crops damage.
 
-There are events that causes zero property damage but a lot of crop
+There were events that causes zero property damage but a lot of crop
 damage. The inverse is also true, so we did a separate analysis to
 property VS crop damaging events.
 
@@ -2479,6 +2474,16 @@ events:
 </tr>
 </tbody>
 </table>
+
+Most aflicted locations - under construction
+--------------------------------------------
+
+Most afflicted locations
+
+We have determined what locations had the worst impact from those
+events, both in terms of human health and economic losses.
+
+under construction
 
 Results
 -------

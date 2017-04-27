@@ -1,22 +1,9 @@
 Data Processing 
 
-Here we load and process the data in order the answer the questions:
-
-1. Across the United States, which types of events were the most harmful with respect to population health ever recorded in a single occurrence?
-
-1. Which types of events caused most harm to population health along all those years?
-
-1. Which types of events had the greatest economic consequences in a single occurrence?
-
-1. Which types of events had the greatest economic consequences along all those years?
-
-1. Which are the places that were subject to the greatest losses, both in population health and economic consequences?
+This code loads the original data and them choose which variables are useful to answer our questions:
 
 
-First, lets load the original data and them choose which variables are useful to answer our questions:
-
-
-```{r sample}
+```{r sample, echo=FALSE}
 # linhas <- nrow(dados)
 # linhas <- sample(linhas,50000)
 # dataS <- dados[linhas,]
@@ -48,11 +35,10 @@ library(grid)
 #Full data
 #dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"), na.strings = "")
 dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"))
-
 dados <-tbl_df(dados)
 
+# treating var names
 names(dados) <- gsub("_", ".", tolower(names(dados)))
-
 names(dados)   
 ```
 
@@ -132,14 +118,12 @@ for (i in 1:length(lista)) {
 
 # lets group the events whose count is < 5 and call it "other"
 contagem <- sort(table(eventos))
-
 outros <- names(contagem[contagem<5])
-
 eventos[eventos %in% outros] <- "other"
 # sort(table(eventos))
 
 # returning treated events
 harm.df$event <- toupper(eventos)
 
-rm(dados)
+rm(dados) # house cleanning
 ```
