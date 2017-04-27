@@ -1109,7 +1109,7 @@ which are above the mean.
 
     # prepare text for inline R
     worst.injuring.all.ev <- injuring.all.df$event[1]
-    worst.injuring.all.inj <- injuring.all.df$injuries[1]
+    worst.injuring.all.inj <- injuring.all.df$total[1]
 
     # a table
     kable(injuring.all.df[,c(5,1:4)])
@@ -1157,7 +1157,7 @@ which are above the mean.
 </table>
 
 The most injuring event along the time is the **TORNADO. It has injuried
-people until now.**
+4146 people until now.**
 
     # the plot
     plt.inj.all <- ggplot(data=injuring.all.df, aes(event, total, fill=event))
@@ -2495,7 +2495,7 @@ The single most injuring event was a **TORNADO, that occurred in IL,
 WILL, on 1990-08-28, injuring 350 people.**
 
 The most injuring event along the time is the **TORNADO. It has injuried
-people until now.**
+4146 people until now.**
 
 ### Economic Damages
 

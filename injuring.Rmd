@@ -157,7 +157,7 @@ getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
 
 # prepare text for inline R
 worst.injuring.all.ev <- injuring.all.df$event[1]
-worst.injuring.all.inj <- injuring.all.df$injuries[1]
+worst.injuring.all.inj <- injuring.all.df$total[1]
 
 # a table
 kable(injuring.all.df[,c(5,1:4)])
