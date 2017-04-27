@@ -1,0 +1,813 @@
+---
+title: "Week 4 Project"
+author: "erickfis"
+date: "19 de abril de 2017"
+output: html_document
+---
+
+```{r knit-rules, echo=FALSE}
+library(knitr)
+
+opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
+               warning = FALSE, autodep = TRUE, options(scipen=999))
+
+```
+
+```{r libraries}
+
+library(scales)
+library(data.table)
+library(chron)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(rmarkdown)
+library(RColorBrewer)
+library(cowplot)
+# https://cran.r-project.org/web/packages/cowplot/vignettes/plot_grid.html
+
+```
+
+# NOAA Storm Database Study: the worst events
+
+NOAA Storm Database Study: the worst events
+
+In this study we will analise the NOAA Storm Database in order to determine what are the worst natural catastrofic events, both in terms of public health and in economic impact.
+
+The U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage.
+
+The database currently contains data from January 1950 to January 2017, as entered by NOAA's National Weather Service (NWS).
+
+The database can be found on:
+
+https://www.ncdc.noaa.gov/stormevents/ftp.jsp
+
+
+## Data Processing 
+
+Data Processing 
+
+Here we load and process the data in order the answer the questions:
+
+1. Across the United States, which types of events were the most harmful with respect to population health ever recorded in a single occurrence?
+
+1. Which types of events caused most harm to population health allong all those years?
+
+1. Which types of events had the greatest economic consequences in a single occurrence?
+
+1. Which types of events had the greatest economic consequences allong all those years?
+
+1. Which are the places that were subject to the greatest losses, both in population health and economic consequences?
+
+
+First, lets load the original data and them choose which variables are usefull to answer our questions:
+
+
+```{r sample}
+# linhas <- nrow(dados)
+# linhas <- sample(linhas,50000)
+# dataS <- dados[linhas,]
+# write.csv(dataS, "StormData")
+```
+
+
+```{r load-e-tratamento, cache=TRUE, echo=TRUE}
+#fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+
+#download.file(fileUrl, "StormData.bz2", method = "curl")
+
+#Full data
+#dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"), na.strings = "")
+dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"))
+
+dados <-tbl_df(dados)
+
+names(dados) <- gsub("_", ".", tolower(names(dados)))
+
+names(dados)   
+```
+
+```{r}
+dados <- select(dados, -1)
+```
+This database has `r nrow(dados)` observations. Each obervation corresponds to an event occurence.
+
+To determine the most harmfull events to human health, we will check the variables related to human health, which are "fatalities" and "injuries".
+
+To determine the most harmfull events to economy, we will check the variables related to economic measures, from "propdmg" through "cropdmgexp". 
+
+Also, in order to analise various occurrences of the same event, we will measure the duration of the event, its magnitude and where the event occurred (state and county name).
+
+
+
+```{r select-duration, cache=TRUE, echo=TRUE}
+
+harm.df <- dados %>% select(evtype, mag, state, countyname, bgn.date, end.date, 23:28)
+
+harm.df <- harm.df %>% 
+        mutate(bgn.date = mdy_hms(bgn.date), end.date = mdy_hms(end.date),  
+               day = as.Date(bgn.date, "%m/%d/%Y"), 
+               duration = -as.period(interval(end.date, bgn.date)),
+               countyname =strtrim(countyname,9)) %>%
+        select(1:2, day, duration, 3:4, 7:12)
+
+# fixing exp for economic data
+harm.df$propdmgexp[which(harm.df$propdmgexp=="K")] <- as.character(3)
+harm.df$propdmgexp[which(harm.df$propdmgexp=="m")] <- as.character(3)
+harm.df$propdmgexp[which(harm.df$propdmgexp=="M")] <- as.character(6)
+harm.df$propdmgexp[which(harm.df$propdmgexp=="B")] <- as.character(9)
+harm.df$propdmgexp <- as.numeric(harm.df$propdmgexp)
+
+harm.df$cropdmgexp[which(harm.df$cropdmgexp=="K")] <- as.character(3)
+harm.df$cropdmgexp[which(harm.df$cropdmgexp=="m")] <- as.character(3)
+harm.df$cropdmgexp[which(harm.df$cropdmgexp=="M")] <- as.character(6)
+harm.df$cropdmgexp[which(harm.df$cropdmgexp=="B")] <- as.character(9)
+harm.df$cropdmgexp <- as.numeric(harm.df$cropdmgexp)
+
+
+
+harm.df <- mutate(harm.df, prop.ev = propdmg*10^propdmgexp,
+                property.dmg = dollar(prop.ev),
+                crop.ev = cropdmg*10^cropdmgexp,
+                crop.dmg = dollar(crop.ev))
+
+
+```
+
+## Human health: the most harmfull events
+
+There are occurrences that caused zero fatalities but a lot of injuries, so we will do a separate analisys to fatal and non-fatal events.
+
+
+### Most fatal event in a single occurrence
+Most fatal in a single occurrence
+
+
+In order to determine what were the most fatal events in a single occurrence, we need to see how fatalities are distributed allong the occurences.
+
+
+
+
+
+```{r fatal-distr, cache=TRUE}
+
+fatal.df <- harm.df %>% 
+                filter(!is.na(fatalities)) %>%
+                arrange(desc(fatalities)) %>%
+                select(1:2,7,3:6)         
+
+qt <- quantile(fatal.df$fatalities, probs=seq(.95,1,0.001))
+
+qt[(length(qt)-(length(qt[qt>=1])+1)): length(qt)]
+```
+
+Looking at this distribution, we can infer that the vast majority of those occurrences weere not fatal at all: **`r names(qt[qt==0])[length(qt[qt==0])]` occurrences didn't caused any fatalities.**
+
+On ther other hand, fatal occurrences had to have at least 1 fattality.
+
+Now, among the fatal occurrences, lets see its distribution:
+
+
+
+```{r fatal-distr2, cache=TRUE}
+
+
+fatal.df <- filter(fatal.df, fatalities > 0) %>%
+                arrange(desc(fatalities)) %>%
+                mutate(media = mean(fatalities), 
+                mediana = median(fatalities),
+                rank = seq_len(length(evtype)))
+
+
+qt <- quantile(fatal.df$fatalities, probs=seq(.95,1,0.005))
+qt
+```
+
+Looking at this distribution, we can infer that **95% of the fatal occurrences caused up to `r qt[1]` fattalities**.
+
+We looked on the occurrrences that fall out of this confidence interval, ie, those which are the 5% deadliest occurences. Notice that they are very unlikely to happen.
+
+
+
+```{r fatal, cache=TRUE}
+
+fatal95.df <- fatal.df %>% filter(fatalities>qt[1])
+                
+
+colourCount = length(unique(fatal95.df$evtype))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+
+kable(fatal95.df[, c(10,1,3:9)])
+
+worst.fatal.single.ev <- fatal95.df$evtype[1]
+worst.fatal.single.st <- fatal95.df$state[1]
+worst.fatal.single.ct <- fatal95.df$countyname[1]
+worst.fatal.single.dt <- fatal95.df$day[1]
+worst.fatal.single.kill <- fatal95.df$fatalities[1]
+
+
+```
+
+
+
+```{r fatal-plot-single, cache=TRUE}
+
+plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=evtype))
+
+(plt.fatal.single <- plt.fatal.single + geom_point() +
+        geom_text(aes(label=ifelse(rank <= 10, 
+                as.character(day),""),
+                hjust=-.03,vjust=0.5)) +                
+        geom_hline(aes(yintercept = media), linetype=2) +
+        geom_hline(aes(yintercept = mediana), linetype=3) +
+        labs(title="Most Fatal Events in a Single Occurrence",
+                    y="Fatalities", x="Ocurrence Date") +
+    
+        expand_limits(x=as.Date('2017-01-01'))+ #ok
+        scale_colour_manual(values = getPalette(colourCount))+                
+        theme(legend.title=element_blank()) +
+        theme(legend.position="bottom") +
+        guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+        theme(plot.title = element_text(hjust = 0.5))                 
+)  
+
+
+```
+
+
+The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in `r worst.fatal.single.st`, `r worst.fatal.single.ct`, on `r worst.fatal.single.dt`, killing `r worst.fatal.single.kill` people. **
+
+
+However, if we compare this single awfull event to the mean of fatalities caused, we see that this is very unlikelly to happen.
+
+### Most fatal in all time
+Most fatal in all time
+
+Notice that are several occurrences of the same type of event allong the time. 
+
+Therefore, in onder to know which is the worst type of event allong all the years, we summed up the fatalities caused by each one of occurrences of this events. 
+
+Notice that we are interested only in the worst of them, ie, the ones which are above the mean.
+
+
+
+
+```{r fatal2, cache=TRUE}
+
+fatal.all.df <- fatal.df %>% group_by(evtype) %>%
+        summarise(total = sum(fatalities)) %>% arrange(desc(total)) %>% 
+        mutate(media = mean(total), mediana = median(total),
+               rank = seq_len(length(evtype))) %>%
+        filter(total > mean(total))
+
+colourCount = length(unique(fatal.all.df$evtype))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+
+worst.fatal.all.ev <- fatal.all.df$evtype[1]
+worst.fatal.all.kill <- fatal.all.df$total[1]
+
+kable(fatal.all.df[,c(5,1:4)])
+
+
+```
+
+
+
+
+```{r fatal-plot-alltime, cache=TRUE}
+
+plt.fatal.all <- ggplot(data=fatal.all.df, aes(evtype, total, fill=evtype))
+
+(plt.fatal.all <- plt.fatal.all + geom_bar(stat="identity") +
+     
+        geom_text(aes(label=ifelse(total==max(total),
+                paste(evtype, max(total), sep=": "),'')),
+                hjust=0,vjust=2) +
+        geom_hline(aes(yintercept = media), linetype=1) +
+        geom_hline(aes(yintercept = mediana), linetype=2) +
+        labs(title="Most Fatal events - all time", y="Fatalities",
+             x="") + 
+                
+        theme(legend.position="none") +        
+        scale_colour_manual(values = getPalette(colourCount))+                
+        theme(legend.title=element_blank()) +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+        theme(plot.title = element_text(hjust = 0.5))                 
+                
+                
+)  
+
+```
+
+
+The most fatal event allong the time is the **`r worst.fatal.all.ev`. It has killed `r worst.fatal.all.kill` people until now. **
+
+Just for curiosity, lets show now what are the less fatal among the fatal events:
+
+```{r fatal3, cache=TRUE}
+
+fatal.all.df <- fatal.df %>% group_by(evtype) %>%
+        summarise(total = sum(fatalities)) %>% arrange(total) %>% 
+        mutate(media = mean(total), mediana = median(total),
+               rank = seq(length(evtype),1, by=-1))
+
+kable(fatal.all.df[1:20,c(5,1:2)])
+
+
+```
+
+
+
+
+
+
+### Most injuring in a single occurrence
+Most injuring in a single occurrence
+
+
+In order to know which were the most injuring events in a single occurrence, we looked into the occurences that caused injuries beyond the expected value, the ones beyond the confidence interval.
+
+This are the 5% most injuring occurrences:
+
+
+```{r injuring-distr-1, cache=TRUE}
+rm(fatal.df,fatal.all.df, fatal95.df) # cleannig house
+
+
+injuring.df <- harm.df %>% filter(!is.na(injuries)) %>%
+                        select(1:2,8,3:6)
+
+qt <- quantile(injuring.df$injuries, probs=seq(.95,1,0.002))
+
+
+ qt[(length(qt)-(length(qt[qt>=1])+1)): length(qt)]
+
+```
+
+Looking at this distribution, we can infer that the vast majority of those occurrences weere not injuring at all: **`r names(qt[qt==0])[length(qt[qt==0])]` occurrences didn't caused any injuries**
+
+On ther other hand, injuring occurrences had to have at least 1 injury.
+
+Now, among the injuring occurrences, lets see its distribution:
+
+```{r injuring-distr-2, cache=TRUE}
+
+
+injuring.df <- injuring.df %>% filter(injuries > 0) %>%
+                arrange(desc(injuries)) %>%
+                mutate(media = mean(injuries), 
+                mediana = median(injuries),
+                rank = seq_len(length(evtype)))
+
+
+
+qt <- quantile(injuring.df$injuries, probs=seq(.95,1,0.005))
+qt
+```
+
+Looking at this distribution, we can infer that **95% of the injuring occurrences caused up to `r qt[1]` injuries**.
+
+We looked on the occurrrences that fall out of this confidence interval, ie, those which are the 5% worst occurences. Notice that they are very unlikely to happen.
+
+
+
+
+```{r injuring-single-95, cache=TRUE}
+
+injuring95.df <- filter(injuring.df, injuries>qt[1]) %>%
+        mutate
+        
+
+colourCount = length(unique(injuring95.df$evtype))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+kable(injuring95.df[,c(10,1:9)])
+
+worst.injuring.single.ev <- injuring95.df$evtype[1]
+worst.injuring.single.st <- injuring95.df$state[1]
+worst.injuring.single.ct <- injuring95.df$countyname[1]
+worst.injuring.single.dt <- injuring95.df$day[1]
+worst.injuring.single.inj <- injuring95.df$injuries[1]
+```
+
+
+```{r injuring-single-plot, cache=TRUE}
+
+plt.inj.single <- ggplot(injuring95.df, aes(day, injuries, colour=evtype))
+
+(plt.inj.single <- plt.inj.single + geom_point() +
+        geom_text(aes(label=ifelse(rank <= 10,
+                as.character(day),""),
+                hjust=-.03,vjust=0.5)) +
+        geom_hline(aes(yintercept = media), linetype=2) +
+        geom_hline(aes(yintercept = mediana), linetype=3) +
+        labs(title="Most Injuring Events in a Single Occurrence",
+                    y="Injuries", x="Ocurrence Date") +
+                
+        expand_limits(x=as.Date('2017-01-01'))+ #ok
+        scale_colour_manual(values = getPalette(colourCount))+                
+        theme(legend.title=element_blank()) +
+        theme(legend.position="bottom") +
+        guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+        theme(plot.title = element_text(hjust = 0.5)) 
+
+)  
+
+```
+
+
+
+The single most injuring event was a **`r worst.injuring.single.ev`, that occurred in `r worst.injuring.single.st`, `r worst.injuring.single.ct`, on `r worst.injuring.single.dt`, injuring `r worst.injuring.single.inj` people. **
+
+However, if we compare this single awfull event to the mean of injuries caused, we see that this is very unlikelly to happen.
+
+### Most injuring in all time
+Most injuring in all time
+
+Notice that are several occurrences of the same type of event allong the time. 
+
+Therefore, in onder to know which is the worst type of event allong all the years, we summed up the injuries caused by each one of occurrences of this events. 
+
+Notice that we are interested only in the worst of them, ie, the ones which are above the mean.
+
+
+
+```{r injuring-all, cache=TRUE}
+
+
+injuring.all.df <- injuring.df %>% group_by(evtype) %>% 
+        summarise(total = sum(injuries)) %>%
+        arrange(desc(total)) %>% 
+        mutate(media = mean(total), mediana = median(total),
+               rank = seq_len(length(evtype)))  %>%
+        filter(total >= mean(total))
+
+colourCount = length(unique(injuring.all.df$evtype))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+
+worst.injuring.all.ev <- injuring.all.df$evtype[1]
+worst.injuring.all.inj <- injuring.all.df$injuries[1]
+
+
+kable(injuring.all.df[,c(5,1:4)])
+
+
+```
+
+The most injuring event allong the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now. **
+
+
+```{r injuring-all-plot, cache=TRUE}
+
+plt.inj.all <- ggplot(data=injuring.all.df, aes(evtype, total, fill=evtype))
+
+(plt.inj.all <- plt.inj.all + geom_bar(stat="identity") +
+     
+        geom_text(aes(label=ifelse(total==max(total),
+                paste(evtype, max(total), sep=": "),'')),
+                hjust=0,vjust=2) +
+        geom_hline(aes(yintercept = media), linetype=1) +
+        geom_hline(aes(yintercept = mediana), linetype=2) +
+        labs(title="Most Injuring events - all time", 
+             y="Injuries", x="") + 
+                
+        theme(legend.position="none") +        
+        scale_colour_manual(values = getPalette(colourCount))+                
+        theme(legend.title=element_blank()) +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+        theme(plot.title = element_text(hjust = 0.5))                 
+                
+)
+
+```
+
+Just for curiosity, lets show now what are the less injuring among the injuring events:
+
+```{r injuring-less, cache=TRUE}
+
+injuring.all.df <- injuring.df %>% group_by(evtype) %>%
+        summarise(total = sum(injuries)) %>% arrange(total) %>% 
+        mutate(media = mean(total), mediana = median(total),
+               rank = seq(length(evtype),1, by=-1))
+
+kable(injuring.all.df[1:20,c(5,1:2)])
+
+
+
+```
+
+
+
+
+
+## Economy: the the most harmfull events
+
+The first thing we will do here to compare harmfull events is to rule out events that causes zero harm, or else they will shift the analisys.
+
+Furthermore, there are events that causes zero property damage but tons of crop damage, so we will
+do a separate analisys to property damage VS crop damage events
+
+
+### Most Property Damaging event in a single occurrence
+Most Property Damaging event in a single occurrence
+
+In order to know what are the most Property Damaging events in a single occurrence, eed to see how damages are distributed allong the occurences.
+
+
+
+```{r prop-distr, cache=TRUE}
+# property damages
+rm(injuring.df, injuring.all.df, injuring95.df) # cleannig house
+
+prop.df <- harm.df %>% select(1:6,13:14) %>%
+                filter(!is.na(prop.ev)) %>%
+                arrange(desc(prop.ev))
+        
+qt <- quantile(prop.df$prop.ev, probs=seq(.99,1,0.001))
+
+qt
+        
+```
+
+
+
+```{r prop95, cache=TRUE}
+
+prop95.df <- prop.df %>% filter(prop.ev>qt[1]) %>%
+                mutate(media = mean(prop.ev), 
+                mediana = median(prop.ev),
+                rank = seq_len(length(evtype)))
+
+colourCount = length(unique(prop95.df$evtype))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+
+
+kable(prop95.df[1:10,c(1:6,8)])
+
+worst.prop.single.ev <- prop95.df$evtype[1]
+worst.prop.single.st <- prop95.df$state[1]
+worst.prop.single.ct <- prop95.df$countyname[1]
+worst.prop.single.dt <- prop95.df$day[1]
+worst.prop.single.value <- prop95.df$property.dmg[1]
+
+
+```
+
+
+
+```{r prop-single-plot, cache=TRUE}
+
+plt.prop.single <- ggplot(prop95.df[1:10,], aes(day, prop.ev, colour=evtype))
+
+(plt.prop.single <- plt.prop.single + geom_point() +
+        geom_text(aes(label=ifelse(rank <= 10,
+                as.character(day),""),
+                hjust=-.03,vjust=0.5)) +
+        geom_hline(aes(yintercept = media), linetype=2) +
+        geom_hline(aes(yintercept = mediana), linetype=3) +
+        labs(title="Most Property Dammaging Events in a Single Occurrence",
+                    y="Damages", x="") + 
+                
+        expand_limits(x=as.Date('2017-01-01'))+ #ok
+        scale_colour_manual(values = getPalette(colourCount))+
+        scale_y_continuous(labels = dollar)+        
+        theme(legend.title=element_blank()) +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+        theme(plot.title = element_text(hjust = 0.5)) 
+)  
+
+  
+```
+
+
+
+The single most economic damaging  event to properties was a **`r worst.prop.single.ev`, that occurred in `r worst.prop.single.st`, `r worst.prop.single.ct`, on `r worst.prop.single.dt`, costing U$ `r worst.prop.single.value` **.
+
+
+### Most Property Damaging event in all time
+Most Property Damaging event in all time
+
+
+Notice that are several occurrences of the same type of event. So in onder to know which one is the worst allong all the years, we will sum up the damages caused to properties by each one of the events so we have the following table containing the ten worst kind of events:
+
+
+
+```{r prop2, cache=TRUE}
+
+prop.all.df <- prop.df %>% group_by(evtype) %>%
+                summarise(total.raw = sum(prop.ev)) %>%
+                mutate(media.raw = mean(total.raw), 
+                       mediana.raw = median(total.raw),
+                       total = dollar(total.raw),
+                       mean = dollar(media.raw),
+                       median = dollar(mediana.raw)) %>%
+                arrange(desc(total.raw))
+
+worst.prop.all.ev <- prop.all.df$evtype[1]
+worst.prop.total <- prop.all.df$total[1]
+
+
+kable(prop.all.df[1:10, c(1,5:7)])
+
+
+```
+
+
+
+```{r prop-all-plot, cache=TRUE}
+
+plt.prop.all <- ggplot(data=prop.all.df[1:10,], aes(evtype, total.raw))
+
+(plt.prop.all <- plt.prop.all + geom_bar(stat="identity") +
+                scale_y_continuous(labels = dollar)+
+                theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+                geom_text(aes(label=ifelse(total.raw==max(total.raw),
+                        paste(evtype, max(total.raw), sep=": "),'')),
+                        hjust=0,vjust=2) +
+                geom_hline(aes(yintercept = media.raw), linetype=1) +
+                geom_hline(aes(yintercept = mediana.raw), linetype=2) +
+             
+                labs(title="Most property damaging event", y="Damages $", x="") + 
+                theme(plot.title = element_text(hjust = 0.5)) 
+)  
+
+```
+
+
+
+The most property damaging event allong the time is the **`r worst.prop.all.ev`. It has caused `r worst.prop.total` in losses. **
+
+
+Just for curiosity, lets show now what are the less dammaging among the  events:
+
+```{r prop3, cache=TRUE}
+
+prop.all.df <- arrange(prop.all.df, total.raw)
+
+kable(prop.all.df[1:10, c(1,5:7)])
+
+
+```
+
+
+#######
+
+### Most Crop Damaging event in a single occurrence
+Most Crop Damaging event in a single occurrence
+
+In order to know what are the most crop Damaging events in a single occurrence, all we need to do is to filter and sort data, so we have the following table containing the ten worst occurrences:
+
+```{r crop1, cache=TRUE}
+# crop damages
+rm(prop.df, prop.all.df) # cleannig house
+
+crop.df <- harm.df %>% select(1:6,15:16) %>% filter(crop.ev > 0) %>%
+                arrange(desc(crop.ev)) %>% 
+                mutate(media=mean(crop.ev), mediana=median(crop.ev)) %>%
+                group_by(evtype)
+
+
+
+kable(crop.df[1:10,c(1:6,8)])
+
+worst.crop.single.ev <- crop.df$evtype[1]
+worst.crop.single.st <- crop.df$state[1]
+worst.crop.single.ct <- crop.df$countyname[1]
+worst.crop.single.dt <- crop.df$bgn.date[1]
+worst.crop.single.value <- crop.df$crop.dmg[1]
+
+
+```
+
+
+
+```{r crop-single-plot, cache=TRUE}
+
+plt.crop.single <- ggplot(crop.df[1:10,], aes(evtype, crop.ev))
+
+(plt.crop.single <- plt.crop.single + geom_bar(stat="identity") +
+                scale_y_continuous(labels = dollar)+
+                theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+                geom_text(aes(label=ifelse(crop.ev==max(crop.ev),
+                        paste(evtype, max(crop.ev), sep=": "),'')),
+                        hjust=0,vjust=2) +
+                geom_hline(aes(yintercept = media), linetype=1) +
+                geom_hline(aes(yintercept = mediana), linetype=2) +                           labs(title="Most Crop Dammaging Events in a Single Occurrence",
+                    y="Dammage $", x="") + 
+                theme(plot.title = element_text(hjust = 0.5)) 
+)  
+```
+
+
+
+The single most economic damaging  event to crops was a **`r worst.crop.single.ev`, that occurred in `r worst.crop.single.st`, `r worst.crop.single.ct`, on `r worst.crop.single.dt`, costing U$ `r worst.crop.single.value` **.
+
+
+########
+### Most Crop Damaging event in all time
+Most Crop Damaging event in all time
+
+
+Notice that are several occurrences of the same type of event. So in onder to know which one is the worst allong all the years, we will sum up the damages caused to crops by each one of the events so we have the following table containing the ten worst kind of events:
+
+
+
+```{r crop2, cache=TRUE}
+
+crop.all.df <- crop.df %>% summarise(total.raw = sum(crop.ev)) %>%
+                mutate(media.raw = mean(total.raw), 
+                       mediana.raw = median(total.raw),
+                       total = dollar(total.raw),
+                       mean = dollar(media.raw),
+                       median = dollar(mediana.raw)) %>%
+                arrange(desc(total.raw))
+
+worst.crop.all.ev <- crop.all.df$evtype[1]
+worst.crop.total <- crop.all.df$total[1]
+
+
+kable(crop.all.df[1:10, c(1,5:7)])
+
+
+```
+
+
+
+```{r crop-all-plot, cache=TRUE}
+
+plt.crop.all <- ggplot(data=crop.all.df[1:10,], aes(evtype, total.raw))
+
+(plt.crop.all <- plt.crop.all + geom_bar(stat="identity") +
+                scale_y_continuous(labels = dollar)+
+                theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+                geom_text(aes(label=ifelse(total.raw==max(total.raw),
+                        paste(evtype, max(total.raw), sep=": "),'')),
+                        hjust=0,vjust=2) +
+                geom_hline(aes(yintercept = media.raw), linetype=1) +
+                geom_hline(aes(yintercept = mediana.raw), linetype=2) +
+             
+                labs(title="Most Crop Damaging Event", y="Damages $", x="") + 
+                theme(plot.title = element_text(hjust = 0.5)) 
+)  
+
+```
+
+
+
+The most crop damaging event allong the time is the **`r worst.crop.all.ev`. It has caused `r worst.crop.total` in losses. **
+
+
+Just for curiosity, lets show now what are the less dammaging among the  events:
+
+```{r crop3, cache=TRUE}
+
+crop.all.df <- arrange(crop.all.df, total.raw)
+
+kable(crop.all.df[1:10, c(1,5:7)])
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Results
+
+### Impact on Human Health
+The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in `r worst.fatal.single.st`, `r worst.fatal.single.ct`, on `r worst.fatal.single.dt`, killing `r worst.fatal.single.kill` people. **
+
+
+The most fatal event allong the time is the **`r worst.fatal.all.ev`. It has killed `r worst.fatal.all.kill` people until now. **
+
+
+The single most injuring event was a **`r worst.injuring.single.ev`, that occurred in `r worst.injuring.single.st`, `r worst.injuring.single.ct`, on `r worst.injuring.single.dt`, injuring `r worst.injuring.single.inj` people. **
+
+
+The most injuring event allong the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now. **
+
+### Economic impact
+
+The single most economic damaging  event was a **`r worst.prop.single.ev`, that occurred in `r worst.prop.single.st`, `r worst.prop.single.ct`, on `r worst.prop.single.dt`, costing U$ `r worst.prop.single.value` **.
