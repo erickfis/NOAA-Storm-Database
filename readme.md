@@ -3,9 +3,8 @@ NOAA Storm Database: the worst events
 
 NOAA Storm Database Study: the worst events
 
-HTML version:
-
-NOAA-stormDB.html
+[HTML
+version](https://github.com/erickfis/NOAA-Storm-Database/blob/master/NOAA-stormDB.html)
 
 In this study we will analise the NOAA Storm Database in order to
 determine what are the worst natural catastrofic events, both in terms
