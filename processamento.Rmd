@@ -71,13 +71,13 @@ harm.df <- harm.df %>%
 
 # fixing exp for economic data
 harm.df$propdmgexp[which(harm.df$propdmgexp=="K")] <- as.character(3)
-harm.df$propdmgexp[which(harm.df$propdmgexp=="m")] <- as.character(3)
+harm.df$propdmgexp[which(harm.df$propdmgexp=="m")] <- as.character(6)
 harm.df$propdmgexp[which(harm.df$propdmgexp=="M")] <- as.character(6)
 harm.df$propdmgexp[which(harm.df$propdmgexp=="B")] <- as.character(9)
 harm.df$propdmgexp <- as.numeric(harm.df$propdmgexp)
 
 harm.df$cropdmgexp[which(harm.df$cropdmgexp=="K")] <- as.character(3)
-harm.df$cropdmgexp[which(harm.df$cropdmgexp=="m")] <- as.character(3)
+harm.df$cropdmgexp[which(harm.df$cropdmgexp=="m")] <- as.character(6)
 harm.df$cropdmgexp[which(harm.df$cropdmgexp=="M")] <- as.character(6)
 harm.df$cropdmgexp[which(harm.df$cropdmgexp=="B")] <- as.character(9)
 harm.df$cropdmgexp <- as.numeric(harm.df$cropdmgexp)

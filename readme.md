@@ -142,13 +142,13 @@ occurred (state and county name).
 
     # fixing exp for economic data
     harm.df$propdmgexp[which(harm.df$propdmgexp=="K")] <- as.character(3)
-    harm.df$propdmgexp[which(harm.df$propdmgexp=="m")] <- as.character(3)
+    harm.df$propdmgexp[which(harm.df$propdmgexp=="m")] <- as.character(6)
     harm.df$propdmgexp[which(harm.df$propdmgexp=="M")] <- as.character(6)
     harm.df$propdmgexp[which(harm.df$propdmgexp=="B")] <- as.character(9)
     harm.df$propdmgexp <- as.numeric(harm.df$propdmgexp)
 
     harm.df$cropdmgexp[which(harm.df$cropdmgexp=="K")] <- as.character(3)
-    harm.df$cropdmgexp[which(harm.df$cropdmgexp=="m")] <- as.character(3)
+    harm.df$cropdmgexp[which(harm.df$cropdmgexp=="m")] <- as.character(6)
     harm.df$cropdmgexp[which(harm.df$cropdmgexp=="M")] <- as.character(6)
     harm.df$cropdmgexp[which(harm.df$cropdmgexp=="B")] <- as.character(9)
     harm.df$cropdmgexp <- as.numeric(harm.df$cropdmgexp)
@@ -1293,7 +1293,7 @@ occurrences.
     qt
 
     ##    97.5%    97.7%    97.9%    98.1%    98.3%    98.5%    98.7%    98.9% 
-    ##   800000  1000000  1100000  1600000  2000000  2500000  2500000  2500000 
+    ##   800000  1000000  1197300  1643760  2012100  2500000  2500000  2500000 
     ##    99.1%    99.3%    99.5%    99.7%    99.9% 
     ##  3500000  5000000 10000000 25000000 75000000
 
@@ -1379,7 +1379,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ001&gt;00</td>
 <td align="left">$4,000,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="even">
@@ -1391,7 +1391,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">TN</td>
 <td align="left">DAVIDSON</td>
 <td align="left">$1,500,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="odd">
@@ -1403,7 +1403,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ052 -</td>
 <td align="left">$929,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="even">
@@ -1415,7 +1415,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">CA</td>
 <td align="left">CAZ011 -</td>
 <td align="left">$331,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="odd">
@@ -1427,7 +1427,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">TX</td>
 <td align="left">TXZ163&gt;16</td>
 <td align="left">$287,180,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="even">
@@ -1439,7 +1439,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">IL</td>
 <td align="left">COOK</td>
 <td align="left">$253,380,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="odd">
@@ -1451,7 +1451,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">GA</td>
 <td align="left">OCONEE</td>
 <td align="left">$250,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="even">
@@ -1463,7 +1463,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">PA</td>
 <td align="left">ALLEGHENY</td>
 <td align="left">$250,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="odd">
@@ -1475,7 +1475,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">IL</td>
 <td align="left">WILL</td>
 <td align="left">$250,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="even">
@@ -1487,7 +1487,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">TX</td>
 <td align="left">BELL</td>
 <td align="left">$200,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="odd">
@@ -1499,7 +1499,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">NY</td>
 <td align="left">BROOME</td>
 <td align="left">$170,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="even">
@@ -1511,7 +1511,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">NJ</td>
 <td align="left">SUSSEX</td>
 <td align="left">$166,500,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="odd">
@@ -1523,7 +1523,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">VOLUSIA</td>
 <td align="left">$150,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 <tr class="even">
@@ -1535,7 +1535,7 @@ In this study, we looked on the 0,1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ001&gt;00</td>
 <td align="left">$135,000,000</td>
-<td align="left">$1,085,341</td>
+<td align="left">$1,085,710</td>
 <td align="left">$10,000</td>
 </tr>
 </tbody>
@@ -1628,42 +1628,42 @@ which are above the mean.
 <td align="right">1</td>
 <td align="left">HURRICANE</td>
 <td align="left">$4,451,850,000</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="left">FLOOD</td>
 <td align="left">$3,312,490,770</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
 <td align="left">TORNADO</td>
 <td align="left">$2,722,436,940</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="left">WIND</td>
 <td align="left">$1,906,067,665</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">STORM</td>
-<td align="left">$797,084,200</td>
-<td align="left">$576,229,411</td>
+<td align="left">HAIL</td>
+<td align="left">$798,048,861</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">HAIL</td>
-<td align="left">$793,153,761</td>
-<td align="left">$576,229,411</td>
+<td align="left">STORM</td>
+<td align="left">$797,084,200</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 </tbody>
@@ -1726,70 +1726,70 @@ Just for curiosity, these are the less damaging events:
 <td align="right">25</td>
 <td align="left">DUST DEVIL</td>
 <td align="left">$20,500</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="even">
 <td align="right">24</td>
 <td align="left">DRY MICROBURST</td>
 <td align="left">$147,500</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="odd">
 <td align="right">23</td>
 <td align="left">AVALANCHE</td>
 <td align="left">$225,500</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="even">
 <td align="right">22</td>
 <td align="left">WINTER WEATHER/MIX</td>
 <td align="left">$252,000</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="odd">
 <td align="right">21</td>
 <td align="left">WATERSPOUT</td>
 <td align="left">$575,500</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="even">
 <td align="right">20</td>
 <td align="left">FOG</td>
 <td align="left">$810,000</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="odd">
 <td align="right">19</td>
 <td align="left">DENSE FOG</td>
 <td align="left">$815,000</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">URBAN/SML STREAM FLD</td>
 <td align="left">$1,341,000</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="odd">
 <td align="right">17</td>
 <td align="left">WINTER WEATHER</td>
 <td align="left">$1,567,000</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 <tr class="even">
 <td align="right">16</td>
 <td align="left">LANDSLIDE</td>
 <td align="left">$2,065,500</td>
-<td align="left">$576,229,411</td>
+<td align="left">$576,425,215</td>
 <td align="left">$5,740,000</td>
 </tr>
 </tbody>
