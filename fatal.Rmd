@@ -18,15 +18,10 @@ qt <- quantile(fatal.df$fatalities, probs=seq(.9,1,0.001))
 
 # display only the qts next to fatal events
 qt[(length(qt)-(length(qt[qt>=1])+1)): length(qt)]
+```
 
-# distribution plot
-plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
-
-plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
-        labs(title="All events") +
-        theme(plot.title = element_text(hjust = 0.5))       
-
-```             
+    
+         
 
 Looking at this distribution, we can infer that the vast majority of those occurrences were not fatal at all: **`r names(qt[qt==0])[length(qt[qt==0])]` occurrences didn't caused any fatalities.**
 
@@ -51,9 +46,20 @@ fatal.df <- filter(fatal.df, fatalities > 0) %>%
 
 qt <- quantile(fatal.df$fatalities, probs=seq(.975,1,0.005))
 qt
+```
+
+Distribution plots
+
+```{r fatal-distr3, cache=TRUE}
 
 
 # distribution plot
+plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
+
+plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
+        labs(title="All events") +
+        theme(plot.title = element_text(hjust = 0.5))   
+
 plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
 
 plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + xlim(0,qt[1]) + 
@@ -124,7 +130,7 @@ plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=event))
 ```
 
 
-The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in `r worst.fatal.single.st`, `r worst.fatal.single.ct`, on `r worst.fatal.single.dt`, killing `r worst.fatal.single.kill` people. **
+The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in `r worst.fatal.single.st`, `r worst.fatal.single.ct`, on `r worst.fatal.single.dt`, killing `r worst.fatal.single.kill` people.**
 
 However, if we compare this single awful event to the mean of fatalities caused, we see that this is very unlikely to happen.
 
@@ -195,7 +201,7 @@ plt.fatal.all <- ggplot(data=fatal.all.df, aes(event, total, fill=event))
 ```
 
 
-The most fatal event along the time is the **`r worst.fatal.all.ev`. It has killed `r worst.fatal.all.kill` people until now. **
+The most fatal event along the time is the **`r worst.fatal.all.ev`. It has killed `r worst.fatal.all.kill` people until now.**
 
 
 Just for curiosity, these are the less fatal among the fatal events:

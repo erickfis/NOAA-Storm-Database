@@ -237,13 +237,6 @@ occurrences.
     ##  99.1%  99.2%  99.3%  99.4%  99.5%  99.6%  99.7%  99.8%  99.9% 100.0% 
     ##      0      0      1      1      1      1      1      2      2     30
 
-    # distribution plot
-    plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
-
-    plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
-            labs(title="All events") +
-            theme(plot.title = element_text(hjust = 0.5))       
-
 Looking at this distribution, we can infer that the vast majority of
 those occurrences were not fatal at all: **99.2% occurrences didn't
 caused any fatalities.**
@@ -271,7 +264,15 @@ common values.
     ## 97.5%   98% 98.5%   99% 99.5%  100% 
     ##  7.00  9.72 11.00 14.72 23.26 30.00
 
+Distribution plots
+
     # distribution plot
+    plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
+
+    plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
+            labs(title="All events") +
+            theme(plot.title = element_text(hjust = 0.5))   
+
     plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
 
     plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + xlim(0,qt[1]) + 
@@ -283,7 +284,7 @@ common values.
                  bottom="Figure 1 - Distribution of fatalities: all events VS fatal events")
     grid.rect(gp=gpar(fill=NA))
 
-![](readme_files/figure-markdown_strict/fatal-distr2-1.png)
+![](readme_files/figure-markdown_strict/fatal-distr3-1.png)
 
 Looking at this distribution, we can infer that **95% of the fatal
 occurrences caused up to 7 fattalities**.
@@ -458,7 +459,7 @@ In this study, we looked on the 5% deadliest occurrences.
 ![](readme_files/figure-markdown_strict/fatal-plot-single-1.png)
 
 The single most fatal event was a **HEAT|WARM, that occurred in AZ,
-AZZ023, on 2005-07-12, killing 30 people. **
+AZZ023, on 2005-07-12, killing 30 people.**
 
 However, if we compare this single awful event to the mean of fatalities
 caused, we see that this is very unlikely to happen.
@@ -569,7 +570,7 @@ which are above the mean.
 ![](readme_files/figure-markdown_strict/fatal-plot-alltime-1.png)
 
 The most fatal event along the time is the **TORNADO. It has killed 219
-people until now. **
+people until now.**
 
 Just for curiosity, these are the less fatal among the fatal events:
 
@@ -669,13 +670,6 @@ occurrences.
     ## 97.9% 98.1% 98.3% 98.5% 98.7% 98.9% 99.1% 99.3% 99.5% 99.7% 99.9% 
     ##     0     0     1     1     1     1     2     3     4     7    22
 
-    # distribution plot
-    plt.distr.inj0 <- ggplot(injuring.df, aes(injuries))
-
-    plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..density..)) + xlim(0,0.5) + 
-            labs(title="All events") +
-            theme(plot.title = element_text(hjust = 0.5))       
-
 Looking at this distribution, we can infer that the vast majority of
 those occurrences were not injuring at all: **98.1% occurrences didn't
 caused any injuries**
@@ -702,6 +696,16 @@ values.
     ##  97.5%    98%  98.5%    99%  99.5%   100% 
     ##  42.60  50.84  59.84  98.92 133.20 350.00
 
+Distribution plots
+
+    # distribution plot
+    plt.distr.inj0 <- ggplot(injuring.df, aes(injuries))
+
+    plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..density..)) + xlim(0,0.5) + 
+            labs(title="All events") +
+            theme(plot.title = element_text(hjust = 0.5))
+
+
     # distribution plot
     plt.distr.inj1 <- ggplot(injuring.df, aes(injuries))
 
@@ -713,7 +717,7 @@ values.
                  bottom="Figure 2 - Distribution of Injuries: all events VS injuring events")
     grid.rect(gp=gpar(fill=NA))
 
-![](readme_files/figure-markdown_strict/injuring-distr-2-1.png)
+![](readme_files/figure-markdown_strict/injuring-distr-3-1.png)
 
 Looking at this distribution, we can infer that **95% of the injuring
 occurrences caused up to 42.6 injuries**.
@@ -1069,7 +1073,7 @@ In this study, we looked on the 5% most injuring occurrences.
 ![](readme_files/figure-markdown_strict/injuring-single-plot-1.png)
 
 The single most injuring event was a **TORNADO, that occurred in IL,
-WILL, on 1990-08-28, injuring 350 people. **
+WILL, on 1990-08-28, injuring 350 people.**
 
 However, if we compare this single awful event to the mean of injuries
 caused, we see that this is very unlikely to happen.
@@ -1150,7 +1154,7 @@ which are above the mean.
 </table>
 
 The most injuring event along the time is the **TORNADO. It has injuried
-people until now. **
+people until now.**
 
     # the plot
     plt.inj.all <- ggplot(data=injuring.all.df, aes(event, total, fill=event))
@@ -1287,13 +1291,6 @@ occurrences.
     ##    99.1%    99.3%    99.5%    99.7%    99.9% 
     ##  3500000  5000000 10000000 25000000 75000000
 
-    # distribution plot
-    plt.distr.prop0 <- ggplot(prop.df, aes(log(prop.ev)))
-
-    plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
-            labs(title="All events", x="log(amount $)") +
-            theme(plot.title = element_text(hjust = 0.5))       
-
 Looking at this distribution, we can infer that 95% of the occurrences
 caused less than **$800,000 in losses**.
 
@@ -1320,6 +1317,17 @@ common values.
     ##     99.9% 
     ## 132280000
 
+Distribution plots
+
+    # distribution plot
+    plt.distr.prop0 <- ggplot(prop.df, aes(log(prop.ev)))
+
+    plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+            labs(title="All events", x="log(amount $)") +
+            theme(plot.title = element_text(hjust = 0.5))       
+
+
+
     # distribution plot
     plt.distr.prop1 <- ggplot(prop.df, aes(log(prop.ev)))
 
@@ -1331,7 +1339,7 @@ common values.
                  bottom="Figure - Distribution of Losses: all events VS damaging events")
     grid.rect(gp=gpar(fill=NA)) 
 
-![](readme_files/figure-markdown_strict/prop-distr-2-1.png)
+![](readme_files/figure-markdown_strict/prop-distr-3-1.png)
 
 Looking at this distribution, we can infer that **95% of the damaging
 occurrences caused up to $132,280,000 in losses**.
@@ -1688,7 +1696,7 @@ which are above the mean.
 ![](readme_files/figure-markdown_strict/prop-all-plot-1.png)
 
 The most property damaging event along the time is the **HURRICANE. It
-has caused $4,451,850,000 in losses. **
+has caused $4,451,850,000 in losses.**
 
 Just for curiosity, these are the less damaging events:
 
@@ -1818,13 +1826,6 @@ occurrences.
     ##    99.1%    99.3%    99.5%    99.7%    99.9% 
     ##   500000   500000  1000000  3000000 20000000
 
-    # distribution plot
-    plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
-
-    plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
-            labs(title="All events", x="log(amount $)") +
-            theme(plot.title = element_text(hjust = 0.5))       
-
 Looking at this distribution, we can infer that 95% of the occurrences
 caused less than **$50,000 in losses**.
 
@@ -1853,6 +1854,16 @@ common values.
     ##     97.5%       98%     98.5%       99%     99.5%      100% 
     ##   5000000  10120000  16120000  20040000  50100000 500000000
 
+Distribution plots
+
+    # distribution plot
+    plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
+
+    plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+            labs(title="All events", x="log(amount $)") +
+            theme(plot.title = element_text(hjust = 0.5))  
+
+
     # distribution plot
     plt.distr.crop1 <- ggplot(crop.df, aes(log(crop.ev)))
 
@@ -1866,10 +1877,10 @@ common values.
                  bottom="Figure - Distribution of Losses: all events VS damaging events")
     grid.rect(gp=gpar(fill=NA))  
 
-![](readme_files/figure-markdown_strict/crop-distr-2-1.png)
+![](readme_files/figure-markdown_strict/crop-distr-3-1.png)
 
 Looking at this distribution, we can infer that **95% of the damaging
-occurrences caused up to $5,000,000 in losses**.
+occurrences caused up to $5,000,000 in losses.**
 
 In this study, we looked on the 5% most harmful occurrences.
 
@@ -2259,7 +2270,7 @@ In this study, we looked on the 5% most harmful occurrences.
 
 The single most economic damaging event to crops was a **DROUGHT, that
 occurred in OK, OKZ049 - , on 1998-07-06, causing U$ $500,000,000 in
-losses **.
+losses.**
 
 ### Most Crop Damaging event in all time
 
@@ -2364,7 +2375,7 @@ which are above the mean.
 ![](readme_files/figure-markdown_strict/crop-all-plot-1.png)
 
 The most crop damaging event along the time is the **DROUGHT. It has
-caused $951,577,000 in losses. **
+caused $951,577,000 in losses.**
 
 Just for curiosity, lets show now what are the less damaging among the
 events:
@@ -2473,16 +2484,16 @@ Results
 ### Population Health
 
 The single most fatal event was a **HEAT|WARM, that occurred in AZ,
-AZZ023, on 2005-07-12, killing 30 people. **
+AZZ023, on 2005-07-12, killing 30 people.**
 
 The most fatal event along the time is the **TORNADO. It has killed 219
-people until now. **
+people until now.**
 
 The single most injuring event was a **TORNADO, that occurred in IL,
-WILL, on 1990-08-28, injuring 350 people. **
+WILL, on 1990-08-28, injuring 350 people.**
 
 The most injuring event along the time is the **TORNADO. It has injuried
-people until now. **
+people until now.**
 
 ### Economic Damages
 
@@ -2491,11 +2502,11 @@ that occurred in FL, FLZ001&gt;00, on 2004-09-13, causing U$
 $4,000,000,000 in losses**.
 
 The most property damaging event along the time is the **HURRICANE. It
-has caused $4,451,850,000 in losses. **
+has caused $4,451,850,000 in losses.**
 
 The single most economic damaging event to crops was a **DROUGHT, that
 occurred in OK, OKZ049 - , on 1998-07-06, causing U$ $500,000,000 in
-losses **.
+losses**.
 
 The most crop damaging event along the time is the **DROUGHT. It has
-caused $951,577,000 in losses. **
+caused $951,577,000 in losses.**

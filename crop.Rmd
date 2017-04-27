@@ -18,13 +18,6 @@ qt <- quantile(crop.df$crop.ev, probs=seq(.975,1,0.002))
 # display only the qts next to harmfull events
 qt
 
-# distribution plot
-plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
-
-plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
-        labs(title="All events", x="log(amount $)") +
-        theme(plot.title = element_text(hjust = 0.5))       
-
  
 ```
 
@@ -53,6 +46,20 @@ crop.df <- crop.df %>% filter(crop.ev > 0) %>%
 
 qt <- quantile(crop.df$crop.ev, probs=seq(.975,1,0.005))
 qt
+```
+
+Distribution plots
+
+
+```{r crop-distr-3, cache=TRUE}
+
+# distribution plot
+plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
+
+plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+        labs(title="All events", x="log(amount $)") +
+        theme(plot.title = element_text(hjust = 0.5))  
+
 
 # distribution plot
 plt.distr.crop1 <- ggplot(crop.df, aes(log(crop.ev)))
@@ -69,7 +76,7 @@ grid.rect(gp=gpar(fill=NA))
 ```
 
 
-Looking at this distribution, we can infer that **95% of the damaging occurrences caused up to `r dollar(qt[1])` in losses**.
+Looking at this distribution, we can infer that **95% of the damaging occurrences caused up to `r dollar(qt[1])` in losses.**
 
 In this study, we looked on the 5% most harmful occurrences. 
 
@@ -124,7 +131,7 @@ plt.crop.single <- ggplot(crop95.df, aes(day, crop.ev, colour=event))
   
 ```
 
-The single most economic damaging  event to crops was a **`r worst.crop.single.ev`, that occurred in `r worst.crop.single.st`, `r worst.crop.single.ct`, on `r worst.crop.single.dt`, causing U$ `r worst.crop.single.value` in losses **.
+The single most economic damaging  event to crops was a **`r worst.crop.single.ev`, that occurred in `r worst.crop.single.st`, `r worst.crop.single.ct`, on `r worst.crop.single.dt`, causing U$ `r worst.crop.single.value` in losses.**
 
 
 ### Most Crop Damaging event in all time
@@ -192,7 +199,7 @@ plt.crop.all <- ggplot(data=crop.all.df, aes(event, total.raw, fill=event))
 
 
 
-The most crop damaging event along the time is the **`r worst.crop.all.ev`. It has caused `r worst.crop.total` in losses. **
+The most crop damaging event along the time is the **`r worst.crop.all.ev`. It has caused `r worst.crop.total` in losses.**
 
 
 Just for curiosity, lets show now what are the less damaging among the  events:

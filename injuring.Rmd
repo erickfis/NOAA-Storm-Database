@@ -19,13 +19,6 @@ qt <- quantile(injuring.df$injuries, probs=seq(.975,1,0.002))
 # display only the qts next to injuring events
 qt[(length(qt)-(length(qt[qt>=1])+1)): length(qt)]
  
-# distribution plot
-plt.distr.inj0 <- ggplot(injuring.df, aes(injuries))
-
-plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..density..)) + xlim(0,0.5) + 
-        labs(title="All events") +
-        theme(plot.title = element_text(hjust = 0.5))       
-
 ```
 
 Looking at this distribution, we can infer that the vast majority of those occurrences were not injuring at all: **`r names(qt[qt==0])[length(qt[qt==0])]` occurrences didn't caused any injuries**
@@ -47,6 +40,20 @@ injuring.df <- injuring.df %>% filter(injuries > 0) %>%
 
 qt <- quantile(injuring.df$injuries, probs=seq(.975,1,0.005))
 qt
+```
+
+Distribution plots
+
+
+```{r injuring-distr-3, cache=TRUE}
+
+# distribution plot
+plt.distr.inj0 <- ggplot(injuring.df, aes(injuries))
+
+plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..density..)) + xlim(0,0.5) + 
+        labs(title="All events") +
+        theme(plot.title = element_text(hjust = 0.5))
+
 
 # distribution plot
 plt.distr.inj1 <- ggplot(injuring.df, aes(injuries))
@@ -116,7 +123,7 @@ plt.inj.single <- ggplot(injuring95.df, aes(day, injuries, colour=event))
 
 
 
-The single most injuring event was a **`r worst.injuring.single.ev`, that occurred in `r worst.injuring.single.st`, `r worst.injuring.single.ct`, on `r worst.injuring.single.dt`, injuring `r worst.injuring.single.inj` people. **
+The single most injuring event was a **`r worst.injuring.single.ev`, that occurred in `r worst.injuring.single.st`, `r worst.injuring.single.ct`, on `r worst.injuring.single.dt`, injuring `r worst.injuring.single.inj` people.**
 
 However, if we compare this single awful event to the mean of injuries caused, we see that this is very unlikely to happen.
 
@@ -157,7 +164,7 @@ kable(injuring.all.df[,c(5,1:4)])
 
 ```
 
-The most injuring event along the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now. **
+The most injuring event along the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now.**
 
 
 ```{r injuring-all-plot, cache=TRUE}

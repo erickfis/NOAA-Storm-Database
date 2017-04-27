@@ -1,25 +1,25 @@
 
 ### Population Health
 
-The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in `r worst.fatal.single.st`, `r worst.fatal.single.ct`, on `r worst.fatal.single.dt`, killing `r worst.fatal.single.kill` people. **
+The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in `r worst.fatal.single.st`, `r worst.fatal.single.ct`, on `r worst.fatal.single.dt`, killing `r worst.fatal.single.kill` people.**
 
 
-The most fatal event along the time is the **`r worst.fatal.all.ev`. It has killed `r worst.fatal.all.kill` people until now. **
+The most fatal event along the time is the **`r worst.fatal.all.ev`. It has killed `r worst.fatal.all.kill` people until now.**
 
 
-The single most injuring event was a **`r worst.injuring.single.ev`, that occurred in `r worst.injuring.single.st`, `r worst.injuring.single.ct`, on `r worst.injuring.single.dt`, injuring `r worst.injuring.single.inj` people. **
+The single most injuring event was a **`r worst.injuring.single.ev`, that occurred in `r worst.injuring.single.st`, `r worst.injuring.single.ct`, on `r worst.injuring.single.dt`, injuring `r worst.injuring.single.inj` people.**
 
-The most injuring event along the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now. **
+The most injuring event along the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now.**
 
 ### Economic Damages
 
 The single most economic damaging  event to properties was a **`r worst.prop.single.ev`, that occurred in `r worst.prop.single.st`, `r worst.prop.single.ct`, on `r worst.prop.single.dt`, causing U$ `r worst.prop.single.value` in losses**.
 
 
-The most property damaging event along the time is the **`r worst.prop.all.ev`. It has caused `r worst.prop.total` in losses. **
+The most property damaging event along the time is the **`r worst.prop.all.ev`. It has caused `r worst.prop.total` in losses.**
 
 
-The single most economic damaging  event to crops was a **`r worst.crop.single.ev`, that occurred in `r worst.crop.single.st`, `r worst.crop.single.ct`, on `r worst.crop.single.dt`, causing U$ `r worst.crop.single.value` in losses **.
+The single most economic damaging  event to crops was a **`r worst.crop.single.ev`, that occurred in `r worst.crop.single.st`, `r worst.crop.single.ct`, on `r worst.crop.single.dt`, causing U$ `r worst.crop.single.value` in losses**.
 
 
-The most crop damaging event along the time is the **`r worst.crop.all.ev`. It has caused `r worst.crop.total` in losses. **
+The most crop damaging event along the time is the **`r worst.crop.all.ev`. It has caused `r worst.crop.total` in losses.**
