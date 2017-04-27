@@ -15,6 +15,14 @@ crop.df <- harm.df %>% filter(!is.na(crop.ev)) %>%
 # quantiles
 qt <- quantile(crop.df$crop.ev, probs=seq(.975,1,0.002))
 
+# distribution plot
+plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
+
+plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+        labs(title="All events", x="log(amount $)") +
+        theme(plot.title = element_text(hjust = 0.5))  
+
+
 # display only the qts next to harmfull events
 qt
 
@@ -53,12 +61,7 @@ Distribution plots
 
 ```{r crop-distr-3, cache=TRUE}
 
-# distribution plot
-plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
 
-plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
-        labs(title="All events", x="log(amount $)") +
-        theme(plot.title = element_text(hjust = 0.5))  
 
 
 # distribution plot

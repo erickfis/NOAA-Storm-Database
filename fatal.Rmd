@@ -12,9 +12,17 @@ fatal.df <- harm.df %>%
                 filter(!is.na(fatalities)) %>%
                 select(1:7)
 
-
+  
 # quantiles
 qt <- quantile(fatal.df$fatalities, probs=seq(.9,1,0.001))
+
+# distribution plot
+
+plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
+
+plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
+        labs(title="All events") +
+        theme(plot.title = element_text(hjust = 0.5))
 
 # display only the qts next to fatal events
 qt[(length(qt)-(length(qt[qt>=1])+1)): length(qt)]
@@ -54,12 +62,7 @@ Distribution plots
 
 
 # distribution plot
-plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
-
-plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
-        labs(title="All events") +
-        theme(plot.title = element_text(hjust = 0.5))   
-
+ 
 plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
 
 plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + xlim(0,qt[1]) + 

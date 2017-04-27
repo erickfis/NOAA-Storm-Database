@@ -227,9 +227,17 @@ occurrences.
                     filter(!is.na(fatalities)) %>%
                     select(1:7)
 
-
+      
     # quantiles
     qt <- quantile(fatal.df$fatalities, probs=seq(.9,1,0.001))
+
+    # distribution plot
+
+    plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
+
+    plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
+            labs(title="All events") +
+            theme(plot.title = element_text(hjust = 0.5))
 
     # display only the qts next to fatal events
     qt[(length(qt)-(length(qt[qt>=1])+1)): length(qt)]
@@ -267,12 +275,7 @@ common values.
 Distribution plots
 
     # distribution plot
-    plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
-
-    plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
-            labs(title="All events") +
-            theme(plot.title = element_text(hjust = 0.5))   
-
+     
     plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
 
     plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + xlim(0,qt[1]) + 
@@ -664,6 +667,14 @@ occurrences.
     # quantiles
     qt <- quantile(injuring.df$injuries, probs=seq(.975,1,0.002))
 
+    # distribution plot
+    plt.distr.inj0 <- ggplot(injuring.df, aes(injuries))
+
+    plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..density..)) + xlim(0,0.5) + 
+            labs(title="All events") +
+            theme(plot.title = element_text(hjust = 0.5))
+
+
     # display only the qts next to injuring events
     qt[(length(qt)-(length(qt[qt>=1])+1)): length(qt)]
 
@@ -697,14 +708,6 @@ values.
     ##  42.60  50.84  59.84  98.92 133.20 350.00
 
 Distribution plots
-
-    # distribution plot
-    plt.distr.inj0 <- ggplot(injuring.df, aes(injuries))
-
-    plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..density..)) + xlim(0,0.5) + 
-            labs(title="All events") +
-            theme(plot.title = element_text(hjust = 0.5))
-
 
     # distribution plot
     plt.distr.inj1 <- ggplot(injuring.df, aes(injuries))
@@ -1283,6 +1286,14 @@ occurrences.
     # quantiles
     qt <- quantile(prop.df$prop.ev, probs=seq(.975,1,0.002))
 
+    # distribution plot
+    plt.distr.prop0 <- ggplot(prop.df, aes(log(prop.ev)))
+
+    plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+            labs(title="All events", x="log(amount $)") +
+            theme(plot.title = element_text(hjust = 0.5))       
+
+
     # display only the qts next to harmfull events
     qt
 
@@ -1318,15 +1329,6 @@ common values.
     ## 132280000
 
 Distribution plots
-
-    # distribution plot
-    plt.distr.prop0 <- ggplot(prop.df, aes(log(prop.ev)))
-
-    plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
-            labs(title="All events", x="log(amount $)") +
-            theme(plot.title = element_text(hjust = 0.5))       
-
-
 
     # distribution plot
     plt.distr.prop1 <- ggplot(prop.df, aes(log(prop.ev)))
@@ -1818,6 +1820,14 @@ occurrences.
     # quantiles
     qt <- quantile(crop.df$crop.ev, probs=seq(.975,1,0.002))
 
+    # distribution plot
+    plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
+
+    plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+            labs(title="All events", x="log(amount $)") +
+            theme(plot.title = element_text(hjust = 0.5))  
+
+
     # display only the qts next to harmfull events
     qt
 
@@ -1855,14 +1865,6 @@ common values.
     ##   5000000  10120000  16120000  20040000  50100000 500000000
 
 Distribution plots
-
-    # distribution plot
-    plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
-
-    plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
-            labs(title="All events", x="log(amount $)") +
-            theme(plot.title = element_text(hjust = 0.5))  
-
 
     # distribution plot
     plt.distr.crop1 <- ggplot(crop.df, aes(log(crop.ev)))
