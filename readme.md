@@ -19,6 +19,9 @@ The database can be found on:
 
 <https://www.ncdc.noaa.gov/stormevents/ftp.jsp>
 
+RPubs version, with fewer plots, for Coursera:
+<http://rpubs.com/erickfis/noaa>
+
 Objective
 ---------
 
