@@ -1,6 +1,6 @@
 ---
 author: "erickfis"
-date: "27 de abril de 2017"
+date: "28 de abril de 2017"
 output: 
   md_document
 ---
@@ -43,7 +43,7 @@ The goal of this study is to answer the questions:
 
 1. Which types of events had the greatest economic consequences along all those years?
 
-1. Which were the places that were subject to the greatest losses, both in population health and economic consequences?
+1. Which were the places that were subject to the greatest losses, both in terms of human health and economic losses.
 
 ## Data Processing 
 
@@ -86,20 +86,25 @@ There were events that causes zero property damage but a lot of crop damage. The
 ```
 
 
-## Most aflicted locations - under construction
+
+## Most aflicted locations
 
 Most afflicted locations
 
-We have determined what locations had the worst impact from those events, both in terms of human health and economic losses.
+We have determined what locations had the worst outcome from those events, both in terms of human health and economic losses.
 
 
 ```{r child = 'locations.Rmd'}
 ```
 
 
-
 ## Results
 
 ```{r child = 'resultados.Rmd'}
 ```
+
+
+
+
+
 

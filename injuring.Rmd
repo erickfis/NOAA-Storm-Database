@@ -33,7 +33,7 @@ Looking at this distribution, we can infer that the vast majority of those occur
 
 On the other hand, injuring occurrences had to have at least 1 injury.
 
-Now, among the injuring occurrences, we are interested in the ones whose harm is beyond the confidence interval, ie. above 95% of the most common values. 
+Now, among the injuring occurrences, we are interested in the ones whose harm is beyond the confidence interval, ie. above 99% of the most common values. 
 
 ```{r injuring-distr-2, cache=TRUE}
 # subset for harm events
@@ -46,9 +46,12 @@ injuring.df <- injuring.df %>% filter(injuries > 0) %>%
 # quantiles, same as 
 # poisson.test(mean, conf.level = 0.95)
 
-qt <- quantile(injuring.df$injuries, probs=seq(.975,1,0.005))
+qt <- quantile(injuring.df$injuries, probs=seq(.999,1,0.005))
 qt
 ```
+
+Looking at this distribution, we can infer that **99.8% of the injuring occurrences caused up to `r qt[1]` injuries**.
+
 
 Distribution plots
 
@@ -63,27 +66,30 @@ plt.distr.inj1 <- plt.distr.inj1 + geom_density(aes(y=..density..)) + xlim(0,qt[
         labs(title="Injuring events") +
         theme(plot.title = element_text(hjust = 0.5))       
 
-grid.arrange(plt.distr.inj0, plt.distr.inj1, nrow=1, ncol=2, 
-             bottom="Figure 2 - Distribution of Injuries: all events VS injuring events")
-grid.rect(gp=gpar(fill=NA))
-
 ```
 
-Looking at this distribution, we can infer that **95% of the injuring occurrences caused up to `r qt[1]` injuries**.
 
-In this study, we looked on the 5% most injuring occurrences. 
+```{r inj-distribution, fig.width=7, fig.height=3}
+grid.arrange(plt.distr.inj0, plt.distr.inj1,
+             nrow=1, ncol=2, 
+             bottom="Population distribution")
+grid.rect(gp=gpar(fill=NA))
+```
+
+
+In this study, we looked on the 1% most injuring occurrences. 
 
 
 
 
 
 ```{r injuring-single-95, cache=TRUE}
-# subset for 95% CI
+# subset for 99% CI
 injuring95.df <- filter(injuring.df, injuries>qt[1])
 
 # create color pallete for all events
-colourCount = length(unique(injuring95.df$event))
-getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+colourCount.inj.single = length(unique(injuring95.df$event))
+getPalette = colorRampPalette(brewer.pal(colourCount.inj.single, "Set1"))
 
 # print a table
 kable(injuring95.df[,c(10,1:9)])
@@ -101,24 +107,25 @@ worst.injuring.single.inj <- injuring95.df$injuries[1]
 # the plot
 plt.inj.single <- ggplot(injuring95.df, aes(day, injuries, colour=event))
 
-(plt.inj.single <- plt.inj.single + geom_point() +
-        geom_text(aes(label=ifelse(rank <= 10,
-                as.character(day),""),
+plt.inj.single <- plt.inj.single + geom_point() +
+        geom_text(aes(label=ifelse(rank <= 3,
+                 paste0(as.character(day), ": ", injuries, " injuried") ,""),
                 hjust=-.03,vjust=0.5)) +
+
         geom_hline(aes(yintercept = mean), linetype=2) +
         geom_hline(aes(yintercept = median), linetype=3) +
-        labs(title="Most Injuring Events in a Single Occurrence",
-                    y="Injuries", x="Ocurrence Date") +
+        labs(title="Most Injuring",
+                    y="", x="") +
                 
         expand_limits(x=as.Date('2017-01-01'))+ #ok
-        scale_colour_manual(values = getPalette(colourCount))+                
+        scale_colour_manual(values = getPalette(colourCount.inj.single))+                
         theme(legend.title=element_blank()) +
         theme(legend.position="bottom") +
         guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5)) 
 
-)  
+plt.inj.single
 
 ```
 
@@ -152,8 +159,8 @@ injuring.all.df <- injuring.df %>% group_by(event) %>%
         filter(total >= mean(total))
 
 # create color pallete for all events
-colourCount = length(unique(injuring.all.df$event))
-getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+colourCount.inj.all = length(unique(injuring.all.df$event))
+getPalette = colorRampPalette(brewer.pal(colourCount.inj.all, "Set1"))
 
 # prepare text for inline R
 worst.injuring.all.ev <- injuring.all.df$event[1]
@@ -173,23 +180,23 @@ The most injuring event along the time is the **`r worst.injuring.all.ev`. It ha
 # the plot
 plt.inj.all <- ggplot(data=injuring.all.df, aes(event, total, fill=event))
 
-(plt.inj.all <- plt.inj.all + geom_bar(stat="identity") +
-     
+plt.inj.all <- plt.inj.all + geom_bar(stat="identity") +
         geom_text(aes(label=ifelse(total==max(total),
-                paste(event, max(total), sep=": "),'')),
+                paste0(event, ": ", max(total), " injuried"),'')),
                 hjust=0,vjust=2) +
         geom_hline(aes(yintercept = mean), linetype=1) +
         geom_hline(aes(yintercept = median), linetype=2) +
-        labs(title="Most Injuring events - all time", 
-             y="Injuries", x="") + 
+        labs(title="All time", 
+             y="", x="") + 
                 
         theme(legend.position="none") +        
-        scale_colour_manual(values = getPalette(colourCount))+                
+        scale_colour_manual(values = getPalette(colourCount.inj.all))+                
         theme(legend.title=element_blank()) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
                 
-)
+
+plt.inj.all
 
 ```
 

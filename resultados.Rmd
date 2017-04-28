@@ -1,6 +1,22 @@
 
 ### Population Health
 
+
+```{r health-plot, fig.width=10, fig.height=10}
+
+# plist <- list(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all)
+# n <- length(plist)
+# nCol <- floor(sqrt(n))
+# do.call("grid.arrange", c(plist, ncol=nCol))
+
+grid.arrange(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all, 
+             nrow=2, ncol=2,
+             bottom="Health impact")
+grid.rect(gp=gpar(fill=NA))
+```
+
+
+
 The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in `r worst.fatal.single.st`, `r worst.fatal.single.ct`, on `r worst.fatal.single.dt`, killing `r worst.fatal.single.kill` people.**
 
 
@@ -13,6 +29,16 @@ The most injuring event along the time is the **`r worst.injuring.all.ev`. It ha
 
 ### Economic Damages
 
+
+```{r economic-plot, fig.width=10, fig.height=10}
+grid.arrange(plt.prop.single, plt.prop.all,
+             plt.crop.single, plt.crop.all,
+             nrow=2, ncol=2,
+             bottom="Economic impact")
+grid.rect(gp=gpar(fill=NA))
+```
+
+
 The single most economic damaging  event to properties was a **`r worst.prop.single.ev`, that occurred in `r worst.prop.single.st`, `r worst.prop.single.ct`, on `r worst.prop.single.dt`, causing U$ `r worst.prop.single.value` in losses**.
 
 
@@ -23,3 +49,31 @@ The single most economic damaging  event to crops was a **`r worst.crop.single.e
 
 
 The most crop damaging event along the time is the **`r worst.crop.all.ev`. It has caused `r worst.crop.total` in losses.**
+
+
+### Most aflicted locations
+
+The county with the biggest fatality count is **`r worst.fatal.city.county`, in  `r worst.fatal.city.st`, with `r worst.fatal.city.count` people killed.**
+
+
+The county with the biggest injuries count is **`r worst.inj.city.county`, in  `r worst.inj.city.st`, with `r worst.inj.city.count` people injuried.**
+
+The county with the biggest property losses is **`r worst.prop.city.county`, in  `r worst.prop.city.st`, with `r worst.prop.city.count` in losses.**
+
+The county with the biggest croperty losses is **`r worst.crop.city.county`, in  `r worst.crop.city.st`, with `r worst.crop.city.count` in losses.**
+
+
+## Distribution of data
+
+```{r distribution, fig.width=10, fig.height=3}
+grid.arrange(plt.distr.fatal0, plt.distr.fatal1, plt.distr.inj0, plt.distr.inj1, 
+             nrow=1, ncol=4, 
+             bottom="Population distribution - fatalities and injuries")
+grid.rect(gp=gpar(fill=NA))             
+             
+             
+grid.arrange(plt.distr.prop0, plt.distr.prop1, plt.distr.crop0, plt.distr.crop1, 
+             nrow=1, ncol=4, 
+             bottom="Population distribution - property and crops losses")
+grid.rect(gp=gpar(fill=NA))   
+```

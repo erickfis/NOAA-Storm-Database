@@ -14,7 +14,7 @@ prop.df <- harm.df %>% filter(!is.na(prop.ev)) %>%
                 
 
 # quantiles
-qt <- quantile(prop.df$prop.ev, probs=seq(.975,1,0.002))
+qt <- quantile(prop.df$prop.ev, probs=seq(.999,1,0.002))
 
 # distribution plot
 plt.distr.prop0 <- ggplot(prop.df, aes(log(prop.ev)))
@@ -28,11 +28,11 @@ plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..density..)) + #xlim(0,
 qt
 ```
 
-Looking at this distribution, we can infer that 95% of the occurrences caused less than **`r dollar(qt[1])` in losses**.
+Looking at this distribution, we can infer that 99.8% of the occurrences caused less than **`r dollar(qt[1])` in losses**.
 
 On the other hand, damaging occurrences had to have damages above zero.
 
-Now, among the damaging occurrences, we are interested in the ones whose damages are beyond the confidence interval, ie. above 95% of the most common values. 
+Now, among the damaging occurrences, we are interested in the ones whose damages are above 99.8% of the most common values. 
 
 ```{r prop-distr-2, cache=TRUE}
 
@@ -51,6 +51,9 @@ qt <- quantile(prop.df$prop.ev, probs=seq(.999,1,0.002))
 qt
 ```
 
+Looking at this distribution, we can infer that **99.8% of the damaging occurrences caused up to `r dollar(qt[1])` in losses**.
+
+
 Distribution plots
 
 
@@ -63,27 +66,32 @@ plt.distr.prop1 <- plt.distr.prop1 + geom_density(aes(y=..density..)) + #xlim(0,
         labs(title="Damaging events", x="log(amount $)") +
         theme(plot.title = element_text(hjust = 0.5))     
 
-grid.arrange(plt.distr.prop0, plt.distr.prop1, nrow=1, ncol=2, 
-             bottom="Figure - Distribution of Losses: all events VS damaging events")
-grid.rect(gp=gpar(fill=NA)) 
 ```
 
-Looking at this distribution, we can infer that **95% of the damaging occurrences caused up to `r dollar(qt[1])` in losses**.
+```{r crop-distribution, fig.width=7, fig.height=3}
+grid.arrange(plt.distr.prop0, plt.distr.prop1,
+             nrow=1, ncol=2, 
+             bottom="Population distribution")
+grid.rect(gp=gpar(fill=NA))
+```
 
-In this study, we looked on the 0,1% most harmful occurrences. 
+
+
+
+In this study, we looked on the 1% most harmful occurrences. 
 
 ```{r prop-single-95, cache=TRUE}
 
-# subset for 95% CI
+# subset for 99% CI
 prop95.df <- filter(prop.df, prop.ev>qt[1])
 
 # create color pallete for all events
-colourCount = length(unique(prop95.df$event))
-getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+colourCount.prop.single = length(unique(prop95.df$event))
+getPalette = colorRampPalette(brewer.pal(colourCount.prop.single, "Set1"))
 
 
 # print a table
-kable(prop95.df[,c(13,1:6,8,11:12)])
+kable(prop95.df[1:20,c(13,1:6,8,11:12)])
 
 # prepare text for inline R
 worst.prop.single.ev <- prop95.df$event[1]
@@ -100,26 +108,26 @@ worst.prop.single.value <- prop95.df$value[1]
 
 plt.prop.single <- ggplot(prop95.df, aes(day, prop.ev, colour=event))
 
-(plt.prop.single <- plt.prop.single + geom_point() +
-        geom_text(aes(label=ifelse(rank <= 10,
+plt.prop.single <- plt.prop.single + geom_point() +
+        geom_text(aes(label=ifelse(rank <= 3,
                 as.character(day),""),
                 hjust=-.03,vjust=0.5)) +
         geom_hline(aes(yintercept = media.raw), linetype=2) +
          geom_hline(aes(yintercept = mediana.raw), linetype=3) +
-        labs(title="Most Property Dammaging Events in a Single Occurrence",
-                    y="Damages", x="") + 
+        labs(title="Property Dammaging",
+                    y="", x="") + 
                 
         expand_limits(x=as.Date('2017-01-01'))+ #ok
         scale_y_continuous(labels = dollar)+
         
-        scale_colour_manual(values = getPalette(colourCount))+                
+        scale_colour_manual(values = getPalette(colourCount.prop.single))+                
         theme(legend.title=element_blank()) +
         theme(legend.position="bottom") +
         guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5)) 
-)  
 
+plt.prop.single
   
 ```
 
@@ -155,8 +163,8 @@ prop.all.df <- prop.df %>% group_by(event) %>%
                 filter(total.raw > mean(total.raw))
                 
 # create color pallete for all events
-colourCount = length(unique(prop.all.df$event))
-getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+colourCount.prop.all = length(unique(prop.all.df$event))
+getPalette = colorRampPalette(brewer.pal(colourCount.prop.all, "Set1"))
 
 # prepare text for inline R
 worst.prop.all.ev <- prop.all.df$event[1]
@@ -174,24 +182,24 @@ kable(prop.all.df[, c(8,1,5:7)])
 
 plt.prop.all <- ggplot(data=prop.all.df, aes(event, total.raw, fill=event))
 
-(plt.prop.all <- plt.prop.all + geom_bar(stat="identity") +
+plt.prop.all <- plt.prop.all + geom_bar(stat="identity") +
                 
         geom_text(aes(label=ifelse(total.raw==max(total.raw),
                 paste(event, dollar(max(total.raw)), sep=": "),'')),
                 hjust=0,vjust=2) +
         geom_hline(aes(yintercept = media.raw), linetype=1) +
         geom_hline(aes(yintercept = mediana.raw), linetype=2) +
-        labs(title="Most property damaging event", y="Damages", x="") + 
+        labs(title="All time", y="", x="") + 
                 
         scale_y_continuous(labels = dollar)+
      
         theme(legend.position="none") +        
-        scale_colour_manual(values = getPalette(colourCount))+                
+        scale_colour_manual(values = getPalette(colourCount.prop.all))+                
         theme(legend.title=element_blank()) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
-  
-)  
+
+plt.prop.all  
 
 ```
 

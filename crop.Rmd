@@ -13,7 +13,7 @@ crop.df <- harm.df %>% filter(!is.na(crop.ev)) %>%
 
 
 # quantiles
-qt <- quantile(crop.df$crop.ev, probs=seq(.975,1,0.002))
+qt <- quantile(crop.df$crop.ev, probs=seq(.998,1,0.002))
 
 # distribution plot
 plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
@@ -29,11 +29,11 @@ qt
  
 ```
 
-Looking at this distribution, we can infer that 95% of the occurrences caused less than **`r dollar(qt[1])` in losses**.
+Looking at this distribution, we can infer that 99% of the occurrences caused less than **`r dollar(qt[1])` in losses**.
 
 On the other hand, damaging occurrences had to have damages above zero.
 
-Now, among the damaging occurrences, we are interested in the ones whose damages are beyond the confidence interval, ie. above 95% of the most common values. 
+Now, among the damaging occurrences, we are interested in the ones whose damages are above 99% of the most common values. 
 
 
 
@@ -52,17 +52,17 @@ crop.df <- crop.df %>% filter(crop.ev > 0) %>%
 # quantiles, same as 
 # poisson.test(mean, conf.level = 0.95)
 
-qt <- quantile(crop.df$crop.ev, probs=seq(.975,1,0.005))
+qt <- quantile(crop.df$crop.ev, probs=seq(.999,1,0.005))
 qt
 ```
+
+Looking at this distribution, we can infer that **99.8% of the damaging occurrences caused up to `r dollar(qt[1])` in losses.**
+
 
 Distribution plots
 
 
 ```{r crop-distr-3, cache=TRUE}
-
-
-
 
 # distribution plot
 plt.distr.crop1 <- ggplot(crop.df, aes(log(crop.ev)))
@@ -73,28 +73,33 @@ plt.distr.crop1 <- plt.distr.crop1 + geom_density(aes(y=..density..)) + #xlim(0,
         # theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))       
 
-grid.arrange(plt.distr.crop0, plt.distr.crop1, nrow=1, ncol=2, 
-             bottom="Figure - Distribution of Losses: all events VS damaging events")
-grid.rect(gp=gpar(fill=NA))  
+
 ```
 
 
-Looking at this distribution, we can infer that **95% of the damaging occurrences caused up to `r dollar(qt[1])` in losses.**
+```{r crop-distr-4, cache=TRUE, fig.width=7, fig.height=3}
+grid.arrange(plt.distr.crop0, plt.distr.crop1,
+             nrow=1, ncol=2, 
+             bottom="Population distribution")
+grid.rect(gp=gpar(fill=NA))
+```
 
-In this study, we looked on the 5% most harmful occurrences. 
+
+
+In this study, we looked on the 1% most harmful occurrences. 
 
 ```{r crop-single-95, cache=TRUE}
 
-# subset for 95% CI
+# subset for 99% CI
 crop95.df <- filter(crop.df, crop.ev>qt[1])
 
 # create color pallete for all events
-colourCount = length(unique(crop95.df$event))
-getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+colourCount.crop.single = length(unique(crop95.df$event))
+getPalette = colorRampPalette(brewer.pal(colourCount.crop.single, "Set1"))
 
 
 # print a table
-kable(crop95.df[,c(13,1:6,8,11:12)])
+kable(crop95.df[1:20,c(13,1:6,8,11:12)])
 
 worst.crop.single.ev <- crop95.df$event[1]
 worst.crop.single.st <- crop95.df$state[1]
@@ -111,25 +116,26 @@ worst.crop.single.value <- crop95.df$value[1]
 
 plt.crop.single <- ggplot(crop95.df, aes(day, crop.ev, colour=event))
 
-(plt.crop.single <- plt.crop.single + geom_point() +
-        geom_text(aes(label=ifelse(rank <= 10,
+plt.crop.single <- plt.crop.single + geom_point() +
+        geom_text(aes(label=ifelse(rank <= 3,
                 as.character(day),""),
                 hjust=-.03,vjust=0.5)) +
         geom_hline(aes(yintercept = media.raw), linetype=2) +
         geom_hline(aes(yintercept = mediana.raw), linetype=3) +
-        labs(title="Most Crop Dammaging Events in a Single Occurrence",
-                    y="Damages", x="") + 
+        labs(title="Crop Dammaging",
+                    y="", x="") + 
                 
         expand_limits(x=as.Date('2017-01-01'))+ #ok
         scale_y_continuous(labels = dollar)+
         
-        scale_colour_manual(values = getPalette(colourCount))+                
+        scale_colour_manual(values = getPalette(colourCount.crop.single))+                
         theme(legend.title=element_blank()) +
         theme(legend.position="bottom") +
         guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5)) 
-)  
+
+plt.crop.single
 
   
 ```
@@ -163,8 +169,8 @@ crop.all.df <- crop.df %>% group_by(event) %>%
                 filter(total.raw > mean(total.raw))
                 
 # create color pallete for all events
-colourCount = length(unique(crop.all.df$event))
-getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+colourCount.crop.all = length(unique(crop.all.df$event))
+getPalette = colorRampPalette(brewer.pal(colourCount.crop.all, "Set1"))
 
 # prepare text for inline R
 worst.crop.all.ev <- crop.all.df$event[1]
@@ -179,24 +185,24 @@ kable(crop.all.df[, c(8,1,5:7)])
 
 plt.crop.all <- ggplot(data=crop.all.df, aes(event, total.raw, fill=event))
 
-(plt.crop.all <- plt.crop.all + geom_bar(stat="identity") +
+plt.crop.all <- plt.crop.all + geom_bar(stat="identity") +
                 
         geom_text(aes(label=ifelse(total.raw==max(total.raw),
                 paste(event, dollar(max(total.raw)), sep=": "),'')),
                 hjust=0,vjust=2) +
         geom_hline(aes(yintercept = media.raw), linetype=1) +
         geom_hline(aes(yintercept = mediana.raw), linetype=2) +
-        labs(title="Most Crop damaging event", y="Damages", x="") + 
+        labs(title="All time", y="", x="") + 
                 
         scale_y_continuous(labels = dollar)+
      
         theme(legend.position="none") +        
-        scale_colour_manual(values = getPalette(colourCount))+                
+        scale_colour_manual(values = getPalette(colourCount.crop.all))+                
         theme(legend.title=element_blank()) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
-  
-)  
+
+plt.crop.all  
 
 ```
 
@@ -226,3 +232,7 @@ kable(crop.all.df[1:10, c(8,1,5:7)])
 
 
 ```
+
+
+
+
