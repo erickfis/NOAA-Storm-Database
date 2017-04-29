@@ -2471,11 +2471,6 @@ Unfortunatelly, these has been the worst counties for living in:
                             crop.dmg = sum(crop.ev, na.rm=TRUE)
                     )
 
-    # city.fatal <- cities.df$countyname[which(cities.df$fatalities == max(cities.df$fatalities))]
-    # city.inj <- cities.df$countyname[which(cities.df$injuries == max(cities.df$injuries))]
-    # city.prop <- cities.df$countyname[which(cities.df$prop.ev == max(cities.df$prop.dmg))]
-    # city.crop <- cities.df$countyname[which(cities.df$crop.ev == max(cities.df$crop.dmg))]
-
 ### Worst fatality count
 
     cities.fatal.df <- arrange(cities.df, desc(fatalities)) %>% ungroup(state, countyname) %>%
