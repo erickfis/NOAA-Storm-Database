@@ -68,7 +68,8 @@ Distribution plots
  
 plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
 
-plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + xlim(0,qt[1]) + 
+plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + 
+        xlim(0,(qt[1]/10)) + 
         labs(title="Fatal events") +
         theme(plot.title = element_text(hjust = 0.5))
 
@@ -120,8 +121,8 @@ plt.fatal.single <- plt.fatal.single + geom_point() +
                  paste0(as.character(day), ": ", fatalities, " killed") ,""),
                 hjust=-.03,vjust=0.5)) +
 
-        geom_hline(aes(yintercept = mean), linetype=2) +
-        geom_hline(aes(yintercept = median), linetype=3) +
+        # geom_hline(aes(yintercept = mean), linetype=2) +
+        # geom_hline(aes(yintercept = median), linetype=3) +
         labs(title="Most Fatal",
                     y="", x="") +
     
@@ -133,7 +134,8 @@ plt.fatal.single <- plt.fatal.single + geom_point() +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.fatal.single
+plt.fatal.single + labs(title="Most fatal Occurrence",
+                    y="Fatalities", x="")
 
 ```
 
@@ -192,7 +194,7 @@ plt.fatal.all <- plt.fatal.all + geom_bar(stat="identity") +
                 paste0(event, ": ", max(total), " killed"),'')),
                 hjust=0,vjust=2) +
         geom_hline(aes(yintercept = mean), linetype=1) +
-        geom_hline(aes(yintercept = median), linetype=2) +
+        # geom_hline(aes(yintercept = median), linetype=2) +
         labs(title="All time", y="",
              x="") + 
                 
@@ -202,7 +204,8 @@ plt.fatal.all <- plt.fatal.all + geom_bar(stat="identity") +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.fatal.all                
+plt.fatal.all + labs(title="Most fatal type of event - all time",
+                    y="Fatalities", x="")                
 
 ```
 

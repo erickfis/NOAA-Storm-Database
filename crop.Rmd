@@ -120,8 +120,8 @@ plt.crop.single <- plt.crop.single + geom_point() +
         geom_text(aes(label=ifelse(rank <= 3,
                 as.character(day),""),
                 hjust=-.03,vjust=0.5)) +
-        geom_hline(aes(yintercept = media.raw), linetype=2) +
-        geom_hline(aes(yintercept = mediana.raw), linetype=3) +
+        # geom_hline(aes(yintercept = media.raw), linetype=2) +
+        # geom_hline(aes(yintercept = mediana.raw), linetype=3) +
         labs(title="Crop Dammaging",
                     y="", x="") + 
                 
@@ -135,7 +135,8 @@ plt.crop.single <- plt.crop.single + geom_point() +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5)) 
 
-plt.crop.single
+plt.crop.single + labs(title="Most crop damaging Occurrence",
+                    y="Losses", x="")
 
   
 ```
@@ -191,7 +192,7 @@ plt.crop.all <- plt.crop.all + geom_bar(stat="identity") +
                 paste(event, dollar(max(total.raw)), sep=": "),'')),
                 hjust=0,vjust=2) +
         geom_hline(aes(yintercept = media.raw), linetype=1) +
-        geom_hline(aes(yintercept = mediana.raw), linetype=2) +
+        # geom_hline(aes(yintercept = mediana.raw), linetype=2) +
         labs(title="All time", y="", x="") + 
                 
         scale_y_continuous(labels = dollar)+
@@ -202,7 +203,8 @@ plt.crop.all <- plt.crop.all + geom_bar(stat="identity") +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.crop.all  
+plt.crop.all + labs(title="Most crops damaging type of event - all time",
+                    y="Losses", x="")
 
 ```
 

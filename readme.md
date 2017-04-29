@@ -338,7 +338,8 @@ Distribution plots
      
     plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
 
-    plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + xlim(0,qt[1]) + 
+    plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + 
+            xlim(0,(qt[1]/10)) + 
             labs(title="Fatal events") +
             theme(plot.title = element_text(hjust = 0.5))
 
@@ -478,8 +479,8 @@ In this study, we looked on the 1% deadliest occurrences.
                      paste0(as.character(day), ": ", fatalities, " killed") ,""),
                     hjust=-.03,vjust=0.5)) +
 
-            geom_hline(aes(yintercept = mean), linetype=2) +
-            geom_hline(aes(yintercept = median), linetype=3) +
+            # geom_hline(aes(yintercept = mean), linetype=2) +
+            # geom_hline(aes(yintercept = median), linetype=3) +
             labs(title="Most Fatal",
                         y="", x="") +
         
@@ -491,7 +492,8 @@ In this study, we looked on the 1% deadliest occurrences.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))                 
 
-    plt.fatal.single
+    plt.fatal.single + labs(title="Most fatal Occurrence",
+                        y="Fatalities", x="")
 
 ![](readme_files/figure-markdown_strict/fatal-plot-single-1.png)
 
@@ -590,7 +592,7 @@ which are above the mean.
                     paste0(event, ": ", max(total), " killed"),'')),
                     hjust=0,vjust=2) +
             geom_hline(aes(yintercept = mean), linetype=1) +
-            geom_hline(aes(yintercept = median), linetype=2) +
+            # geom_hline(aes(yintercept = median), linetype=2) +
             labs(title="All time", y="",
                  x="") + 
                     
@@ -600,7 +602,8 @@ which are above the mean.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))                 
 
-    plt.fatal.all                
+    plt.fatal.all + labs(title="Most fatal type of event - all time",
+                        y="Fatalities", x="")                
 
 ![](readme_files/figure-markdown_strict/fatal-plot-alltime-1.png)
 
@@ -747,7 +750,7 @@ Distribution plots
     # distribution plot
     plt.distr.inj1 <- ggplot(injuring.df, aes(injuries))
 
-    plt.distr.inj1 <- plt.distr.inj1 + geom_density(aes(y=..density..)) + xlim(0,qt[1]) + 
+    plt.distr.inj1 <- plt.distr.inj1 + geom_density(aes(y=..density..)) + xlim(0,(qt[1]/20)) + 
             labs(title="Injuring events") +
             theme(plot.title = element_text(hjust = 0.5))       
 
@@ -1008,8 +1011,8 @@ In this study, we looked on the 1% most injuring occurrences.
                      paste0(as.character(day), ": ", injuries, " injuried") ,""),
                     hjust=-.03,vjust=0.5)) +
 
-            geom_hline(aes(yintercept = mean), linetype=2) +
-            geom_hline(aes(yintercept = median), linetype=3) +
+            # geom_hline(aes(yintercept = mean), linetype=2) +
+            # geom_hline(aes(yintercept = median), linetype=3) +
             labs(title="Most Injuring",
                         y="", x="") +
                     
@@ -1021,9 +1024,14 @@ In this study, we looked on the 1% most injuring occurrences.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5)) 
 
-    plt.inj.single
+    plt.inj.single + labs(title="Most Injuring Occurrence",
+                        y="Injuries", x="") 
 
 ![](readme_files/figure-markdown_strict/injuring-single-plot-1.png)
+
+            # scale_y_continuous(expand = c(0, 0)) +
+            # geom_hline(aes(yintercept = mean), linetype=2) +
+            # geom_hline(aes(yintercept = median), linetype=3)
 
 The single most injuring event was a **TORNADO, that occurred in TX,
 WICHITA, on 1979-04-10, injuring 1700 people.**
@@ -1124,7 +1132,7 @@ The most injuring event along the time is the **TORNADO. It has injuried
                     paste0(event, ": ", max(total), " injuried"),'')),
                     hjust=0,vjust=2) +
             geom_hline(aes(yintercept = mean), linetype=1) +
-            geom_hline(aes(yintercept = median), linetype=2) +
+            # geom_hline(aes(yintercept = median), linetype=2) +
             labs(title="All time", 
                  y="", x="") + 
                     
@@ -1135,7 +1143,8 @@ The most injuring event along the time is the **TORNADO. It has injuried
             theme(plot.title = element_text(hjust = 0.5))                 
                     
 
-    plt.inj.all
+    plt.inj.all  + labs(title="Most Injuring type of event - all time",
+                        y="Injuries", x="")
 
 ![](readme_files/figure-markdown_strict/injuring-all-plot-1.png)
 
@@ -1586,8 +1595,8 @@ In this study, we looked on the 1% most harmful occurrences.
             geom_text(aes(label=ifelse(rank <= 3,
                     as.character(day),""),
                     hjust=-.03,vjust=0.5)) +
-            geom_hline(aes(yintercept = media.raw), linetype=2) +
-             geom_hline(aes(yintercept = mediana.raw), linetype=3) +
+            # geom_hline(aes(yintercept = media.raw), linetype=2) +
+             # geom_hline(aes(yintercept = mediana.raw), linetype=3) +
             labs(title="Property Dammaging",
                         y="", x="") + 
                     
@@ -1601,7 +1610,8 @@ In this study, we looked on the 1% most harmful occurrences.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5)) 
 
-    plt.prop.single
+    plt.prop.single + labs(title="Most property damaging Occurrence",
+                        y="Losses", x="")
 
 ![](readme_files/figure-markdown_strict/prop-single-plot-1.png)
 
@@ -1710,7 +1720,7 @@ which are above the mean.
                     paste(event, dollar(max(total.raw)), sep=": "),'')),
                     hjust=0,vjust=2) +
             geom_hline(aes(yintercept = media.raw), linetype=1) +
-            geom_hline(aes(yintercept = mediana.raw), linetype=2) +
+            # geom_hline(aes(yintercept = mediana.raw), linetype=2) +
             labs(title="All time", y="", x="") + 
                     
             scale_y_continuous(labels = dollar)+
@@ -1721,7 +1731,8 @@ which are above the mean.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))                 
 
-    plt.prop.all  
+    plt.prop.all + labs(title="Most property damaging type of event - all time",
+                        y="Losses", x="")
 
 ![](readme_files/figure-markdown_strict/prop-all-plot-1.png)
 
@@ -2194,8 +2205,8 @@ In this study, we looked on the 1% most harmful occurrences.
             geom_text(aes(label=ifelse(rank <= 3,
                     as.character(day),""),
                     hjust=-.03,vjust=0.5)) +
-            geom_hline(aes(yintercept = media.raw), linetype=2) +
-            geom_hline(aes(yintercept = mediana.raw), linetype=3) +
+            # geom_hline(aes(yintercept = media.raw), linetype=2) +
+            # geom_hline(aes(yintercept = mediana.raw), linetype=3) +
             labs(title="Crop Dammaging",
                         y="", x="") + 
                     
@@ -2209,7 +2220,8 @@ In this study, we looked on the 1% most harmful occurrences.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5)) 
 
-    plt.crop.single
+    plt.crop.single + labs(title="Most crop damaging Occurrence",
+                        y="Losses", x="")
 
 ![](readme_files/figure-markdown_strict/crop-single-plot-1.png)
 
@@ -2318,7 +2330,7 @@ which are above the mean.
                     paste(event, dollar(max(total.raw)), sep=": "),'')),
                     hjust=0,vjust=2) +
             geom_hline(aes(yintercept = media.raw), linetype=1) +
-            geom_hline(aes(yintercept = mediana.raw), linetype=2) +
+            # geom_hline(aes(yintercept = mediana.raw), linetype=2) +
             labs(title="All time", y="", x="") + 
                     
             scale_y_continuous(labels = dollar)+
@@ -2329,7 +2341,8 @@ which are above the mean.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))                 
 
-    plt.crop.all  
+    plt.crop.all + labs(title="Most crops damaging type of event - all time",
+                        y="Losses", x="")
 
 ![](readme_files/figure-markdown_strict/crop-all-plot-1.png)
 
