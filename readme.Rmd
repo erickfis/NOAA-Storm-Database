@@ -1,8 +1,23 @@
 ---
+title: "NOAA Storm Database - worst cases"
 author: "erickfis"
-date: "28 de abril de 2017"
-output: 
-  md_document
+date: "`r format(Sys.time(), '%Y %B, %d')`"
+# output:
+#   md_document
+
+# output:
+#   pdf_document:
+#         toc: true
+#         toc_depth: 3
+#         number_sections: true
+#         keep_tex: true
+
+output:
+        odt_document:
+        toc: true
+        toc_depth: 3
+        number_sections: true
+
 ---
 
 ```{r knit-rules, echo=FALSE}

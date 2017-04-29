@@ -12,12 +12,6 @@ cities.df <- harm.df %>%
                         prop.dmg = sum(prop.ev, na.rm=TRUE),
                         crop.dmg = sum(crop.ev, na.rm=TRUE)
                 )
-
-# city.fatal <- cities.df$countyname[which(cities.df$fatalities == max(cities.df$fatalities))]
-# city.inj <- cities.df$countyname[which(cities.df$injuries == max(cities.df$injuries))]
-# city.prop <- cities.df$countyname[which(cities.df$prop.ev == max(cities.df$prop.dmg))]
-# city.crop <- cities.df$countyname[which(cities.df$crop.ev == max(cities.df$crop.dmg))]
-
 ```
 
 ### Worst fatality count
