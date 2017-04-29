@@ -1,3 +1,6 @@
+NOAA Storm Database - worst cases
+=================================
+
 In this study we have analysed the NOAA Storm Database in order to
 determine what are the worst natural catastrophic events, both in terms
 of public health and in economic impact.
@@ -68,11 +71,13 @@ Reading original database:
     dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"), na.strings = "")
 
     ## 
-    Read 22.7% of 967216 rows
-    Read 47.6% of 967216 rows
-    Read 62.0% of 967216 rows
+    Read 18.6% of 967216 rows
+    Read 34.1% of 967216 rows
+    Read 49.6% of 967216 rows
+    Read 65.1% of 967216 rows
     Read 79.6% of 967216 rows
-    Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:07
+    Read 92.0% of 967216 rows
+    Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:08
 
     dados <-tbl_df(dados)
 
@@ -267,8 +272,7 @@ fatal and non-fatal events.
 Fatal Occurrences
 -----------------
 
-Most fatal in a single occurrence
----------------------------------
+### Most fatal in a single occurrence
 
 Most fatal in a single occurrence
 
@@ -500,8 +504,7 @@ on 1995-07-12, killing 583 people.**
 However, if we compare this single awful event to the mean of fatalities
 caused, we see that this is very unlikely to happen.
 
-Most fatal in all time
-----------------------
+### Most fatal in all time
 
 Most fatal in all time
 
@@ -684,8 +687,7 @@ Just for curiosity, these are the less fatal among the fatal events:
 Injuring Occurrences
 --------------------
 
-Most injuring in a single occurrence
-------------------------------------
+### Most injuring in a single occurrence
 
 Most injuring in a single occurrence
 
@@ -1039,8 +1041,7 @@ WICHITA, on 1979-04-10, injuring 1700 people.**
 However, if we compare this single awful event to the mean of injuries
 caused, we see that this is very unlikely to happen.
 
-Most injuring in all time
--------------------------
+### Most injuring in all time
 
 Most injuring in all time
 
@@ -1236,8 +1237,7 @@ property VS crop damaging events.
 Property losses
 ---------------
 
-Most Property Damaging event in a single occurrence
----------------------------------------------------
+### Most Property Damaging event in a single occurrence
 
 Most Property Damaging event in a single occurrence
 
@@ -1622,8 +1622,7 @@ The single most economic damaging event to properties was a **FLOOD,
 that occurred in CA, NAPA, on 2006-01-01, causing U$ $115,000,000,000 in
 losses**.
 
-Most Property Damaging event in all time
-----------------------------------------
+### Most Property Damaging event in all time
 
 Most Property Damaging event in all time
 
@@ -1846,8 +1845,7 @@ Just for curiosity, these are the less damaging events:
 Crop losses
 -----------
 
-Most Crop Damaging event in a single occurrence
------------------------------------------------
+### Most Crop Damaging event in a single occurrence
 
 Most Crop Damaging event in a single occurrence
 
@@ -2235,8 +2233,7 @@ The single most economic damaging event to crops was a **FLOOD, that
 occurred in IL, ADAMS, on 1993-08-31, causing U$ $5,000,000,000 in
 losses.**
 
-Most Crop Damaging event in all time
-------------------------------------
+### Most Crop Damaging event in all time
 
 Most Crop Damaging event in all time
 

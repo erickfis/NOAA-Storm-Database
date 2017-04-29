@@ -29,46 +29,6 @@
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{248,248,248}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\ImportTok}[1]{{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
-\newcommand{\BuiltInTok}[1]{{#1}}
-\newcommand{\ExtensionTok}[1]{{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
-\newcommand{\RegionMarkerTok}[1]{{#1}}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\NormalTok}[1]{{#1}}
 \usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
 \makeatletter
@@ -182,66 +142,17 @@ Data Processing
 This code loads the original data and them choose which variables are
 useful to answer our questions:
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(scales)}
-\KeywordTok{library}\NormalTok{(stringr)}
-\KeywordTok{library}\NormalTok{(data.table)}
-\KeywordTok{library}\NormalTok{(chron)}
-\KeywordTok{library}\NormalTok{(dplyr)}
-\KeywordTok{library}\NormalTok{(lubridate)}
-\KeywordTok{library}\NormalTok{(ggplot2)}
-\KeywordTok{library}\NormalTok{(rmarkdown)}
-\KeywordTok{library}\NormalTok{(RColorBrewer)}
-\KeywordTok{library}\NormalTok{(gridExtra)}
-\KeywordTok{library}\NormalTok{(grid)}
-\end{Highlighting}
-\end{Shaded}
-
 Reading original database:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{#fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"}
-
-\CommentTok{#download.file(fileUrl, "StormData.bz2", method = "curl")}
-
-\CommentTok{#Full data}
-\NormalTok{dados <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"bzcat %s | tr -d '}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{000'"}\NormalTok{, }\StringTok{"StormData.bz2"}\NormalTok{), }\DataTypeTok{na.strings =} \StringTok{""}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{verbatim}
 ## 
-Read 22.7% of 967216 rows
-Read 47.6% of 967216 rows
-Read 63.1% of 967216 rows
-Read 79.6% of 967216 rows
-Read 93.1% of 967216 rows
-Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:07
+Read 13.4% of 967216 rows
+Read 35.2% of 967216 rows
+Read 54.8% of 967216 rows
+Read 71.3% of 967216 rows
+Read 80.6% of 967216 rows
+Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:08
 \end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{dados <-}\KeywordTok{tbl_df}\NormalTok{(dados)}
-
-\CommentTok{# this do a sample data base, with 50000 obs, used for speeding up initial works:}
-\CommentTok{# linhas <- nrow(dados)}
-\CommentTok{# linhas <- sample(linhas,50000)}
-\CommentTok{# dataS <- dados[linhas,]}
-\CommentTok{# write.csv(dataS, "StormData")}
-
-\CommentTok{# dados <- fread(sprintf("bzcat %s | tr -d '\textbackslash{}\textbackslash{}000'", "StormData.bz2"))}
-\CommentTok{# dados <-tbl_df(dados)}
-\CommentTok{# dados <- select(dados, -1)}
-
-
-
-\CommentTok{# treating var names}
-\KeywordTok{names}\NormalTok{(dados) <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{"_"}\NormalTok{, }\StringTok{"."}\NormalTok{, }\KeywordTok{tolower}\NormalTok{(}\KeywordTok{names}\NormalTok{(dados)))}
-\KeywordTok{names}\NormalTok{(dados)   }
-\end{Highlighting}
-\end{Shaded}
 
 \begin{verbatim}
 ##  [1] "state.."    "bgn.date"   "bgn.time"   "time.zone"  "county"    
@@ -269,38 +180,6 @@ Also, in order to analyse various occurrences of the same event, we will
 measure the duration of the event, its magnitude and where the event
 occurred (state and county name).
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# select desired vars}
-\NormalTok{harm.df <-}\StringTok{ }\NormalTok{dados %>%}\StringTok{ }\KeywordTok{select}\NormalTok{(evtype, mag, state, countyname, bgn.date, end.date, }\DecValTok{23}\NormalTok{:}\DecValTok{28}\NormalTok{)}
-
-\CommentTok{# treat vars}
-\NormalTok{harm.df <-}\StringTok{ }\NormalTok{harm.df %>%}\StringTok{ }
-\StringTok{        }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{bgn.date =} \KeywordTok{mdy_hms}\NormalTok{(bgn.date), }\DataTypeTok{end.date =} \KeywordTok{mdy_hms}\NormalTok{(end.date),  }
-               \DataTypeTok{day =} \KeywordTok{as.Date}\NormalTok{(bgn.date, }\StringTok{"%m/%d/%Y"}\NormalTok{), }
-               \DataTypeTok{duration =} \NormalTok{-}\KeywordTok{as.period}\NormalTok{(}\KeywordTok{interval}\NormalTok{(end.date, bgn.date)),}
-               \DataTypeTok{event =} \KeywordTok{tolower}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(evtype)),}
-               \DataTypeTok{countyname =}\KeywordTok{strtrim}\NormalTok{(countyname,}\DecValTok{9}\NormalTok{)) %>%}
-\StringTok{        }\KeywordTok{select}\NormalTok{(event, }\DecValTok{2}\NormalTok{, day, duration, }\DecValTok{3}\NormalTok{:}\DecValTok{4}\NormalTok{, }\DecValTok{7}\NormalTok{:}\DecValTok{12}\NormalTok{)}
-
-\CommentTok{# fixing exp for economic data}
-\NormalTok{harm.df$propdmgexp[}\KeywordTok{which}\NormalTok{(harm.df$propdmgexp==}\StringTok{"K"}\NormalTok{)] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\DecValTok{3}\NormalTok{)}
-\NormalTok{harm.df$propdmgexp[}\KeywordTok{which}\NormalTok{(harm.df$propdmgexp==}\StringTok{"m"}\NormalTok{)] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\DecValTok{6}\NormalTok{)}
-\NormalTok{harm.df$propdmgexp[}\KeywordTok{which}\NormalTok{(harm.df$propdmgexp==}\StringTok{"M"}\NormalTok{)] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\DecValTok{6}\NormalTok{)}
-\NormalTok{harm.df$propdmgexp[}\KeywordTok{which}\NormalTok{(harm.df$propdmgexp==}\StringTok{"B"}\NormalTok{)] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\DecValTok{9}\NormalTok{)}
-\NormalTok{harm.df$propdmgexp <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(harm.df$propdmgexp)}
-
-\NormalTok{harm.df$cropdmgexp[}\KeywordTok{which}\NormalTok{(harm.df$cropdmgexp==}\StringTok{"K"}\NormalTok{)] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\DecValTok{3}\NormalTok{)}
-\NormalTok{harm.df$cropdmgexp[}\KeywordTok{which}\NormalTok{(harm.df$cropdmgexp==}\StringTok{"m"}\NormalTok{)] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\DecValTok{6}\NormalTok{)}
-\NormalTok{harm.df$cropdmgexp[}\KeywordTok{which}\NormalTok{(harm.df$cropdmgexp==}\StringTok{"M"}\NormalTok{)] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\DecValTok{6}\NormalTok{)}
-\NormalTok{harm.df$cropdmgexp[}\KeywordTok{which}\NormalTok{(harm.df$cropdmgexp==}\StringTok{"B"}\NormalTok{)] <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\DecValTok{9}\NormalTok{)}
-\NormalTok{harm.df$cropdmgexp <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(harm.df$cropdmgexp)}
-
-\NormalTok{harm.df <-}\StringTok{ }\KeywordTok{mutate}\NormalTok{(harm.df, }\DataTypeTok{prop.ev =} \NormalTok{propdmg*}\DecValTok{10}\NormalTok{^propdmgexp,}
-                \DataTypeTok{crop.ev =} \NormalTok{cropdmg*}\DecValTok{10}\NormalTok{^cropdmgexp)}
-\end{Highlighting}
-\end{Shaded}
-
 This is a really big database which data has been being registered by a
 lot of different people since 1950. Thus, as expected, there are
 variations on how people registered events.
@@ -308,23 +187,9 @@ variations on how people registered events.
 For exemple, the string ``snow'' was used to register a lot of events.
 They are the same type of event, but count as different:
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{eventos <-}\StringTok{ }\KeywordTok{grep}\NormalTok{(}\StringTok{"snow"}\NormalTok{, harm.df$event, }\DataTypeTok{value =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{eventos <-}\StringTok{ }\KeywordTok{sort}\NormalTok{(}\KeywordTok{unique}\NormalTok{(eventos))}
-\KeywordTok{length}\NormalTok{(eventos)}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{verbatim}
 ## [1] 118
 \end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{eventos[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{verbatim}
 ##  [1] "accumulated snowfall"           "blizzard and heavy snow"       
@@ -337,101 +202,6 @@ They are the same type of event, but count as different:
 This is why we decided to filter those events: we grouped them by its
 commom strings.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# treating event types}
-
-\NormalTok{eventos <-}\StringTok{ }\NormalTok{harm.df$event}
-\CommentTok{# first, need to see what are the event types}
-\NormalTok{contagem <-}\StringTok{ }\KeywordTok{sort}\NormalTok{(}\KeywordTok{table}\NormalTok{(eventos))}
-
-\CommentTok{# them we create this list of terms}
- 
-\NormalTok{lista.search <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}
-\StringTok{"dry"}\NormalTok{,        }
-\StringTok{"fog"}\NormalTok{,        }
-\StringTok{"wind"}\NormalTok{,}
-\StringTok{"winter"}\NormalTok{,}
-\StringTok{"slide"}\NormalTok{,}
-\StringTok{"snow"}\NormalTok{,}
-\StringTok{"flood"}\NormalTok{,}
-\StringTok{"fld"}\NormalTok{,}
-\StringTok{"cold|freez"}\NormalTok{,}
-\StringTok{"hurricane"}\NormalTok{,}
-\StringTok{"tornado"}\NormalTok{,}
-\StringTok{"rain|precip"}\NormalTok{,}
-\StringTok{"hail"}\NormalTok{,}
-\StringTok{"heat|warm"}\NormalTok{,}
-\StringTok{"tide"}\NormalTok{,}
-\StringTok{"storm"}\NormalTok{,}
-\StringTok{"record"}\NormalTok{,}
-\StringTok{"blizzard"}\NormalTok{,}
-\StringTok{"fire"}\NormalTok{,}
-\StringTok{"funnel"}\NormalTok{,}
-\StringTok{"surf"}\NormalTok{)}
-
-\NormalTok{lista.replace <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}
-\StringTok{"drought"}\NormalTok{,}
-\StringTok{"fog"}\NormalTok{,        }
-\StringTok{"wind"}\NormalTok{,}
-\StringTok{"winter"}\NormalTok{,}
-\StringTok{"slide"}\NormalTok{,}
-\StringTok{"snow"}\NormalTok{,}
-\StringTok{"flood"}\NormalTok{,}
-\StringTok{"flood"}\NormalTok{,}
-\StringTok{"cold"}\NormalTok{,}
-\StringTok{"hurricane"}\NormalTok{,}
-\StringTok{"tornado"}\NormalTok{,}
-\StringTok{"rain"}\NormalTok{,}
-\StringTok{"hail"}\NormalTok{,}
-\StringTok{"heat"}\NormalTok{,}
-\StringTok{"tide"}\NormalTok{,}
-\StringTok{"storm"}\NormalTok{,}
-\StringTok{"record temperature"}\NormalTok{,}
-\StringTok{"blizzard"}\NormalTok{,}
-\StringTok{"fire"}\NormalTok{,}
-\StringTok{"funnel"}\NormalTok{,}
-\StringTok{"surf"}\NormalTok{)}
-
-
-\NormalTok{for (i in }\DecValTok{1}\NormalTok{:}\KeywordTok{length}\NormalTok{(lista.search)) \{}
-        \NormalTok{eventos[}\KeywordTok{grepl}\NormalTok{(lista.search[i], eventos)] <-}\StringTok{ }\NormalTok{lista.replace[i]}
-        
-\NormalTok{\}}
-
-\CommentTok{# lets group the events whose count is < 5 and call it "other"}
-\NormalTok{contagem <-}\StringTok{ }\KeywordTok{sort}\NormalTok{(}\KeywordTok{table}\NormalTok{(eventos))}
-\NormalTok{outros <-}\StringTok{ }\KeywordTok{names}\NormalTok{(contagem[contagem<}\DecValTok{5}\NormalTok{])}
-\NormalTok{eventos[eventos %in%}\StringTok{ }\NormalTok{outros] <-}\StringTok{ "other"}
-\CommentTok{# sort(table(eventos))}
-
-\CommentTok{# returning treated events}
-\NormalTok{harm.df$event <-}\StringTok{ }\KeywordTok{toupper}\NormalTok{(eventos)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Treating County Names}
-\NormalTok{cidades <-}\StringTok{ }\KeywordTok{toupper}\NormalTok{(harm.df$countyname)}
-\NormalTok{cidades <-}\StringTok{ }\KeywordTok{str_trim}\NormalTok{(cidades)}
-
-\NormalTok{cidades <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{"_| |-"}\NormalTok{, }\StringTok{"."}\NormalTok{, cidades)}
-
-\NormalTok{cidades[}\KeywordTok{grep}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{.}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{.$"}\NormalTok{, cidades)] <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{.}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{."}\NormalTok{, }\StringTok{""}\NormalTok{,}
-                                \NormalTok{cidades[}\KeywordTok{grep}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{.}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{.$"}\NormalTok{, cidades)]}
-                                        \NormalTok{)}
-
-\NormalTok{cidades <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(cidades, }\DataTypeTok{split=}\StringTok{">"}\NormalTok{, }\DataTypeTok{fixed=}\OtherTok{TRUE}\NormalTok{), function(x) (x[}\DecValTok{1}\NormalTok{]))}
-\NormalTok{cidades <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(cidades, }\DataTypeTok{split=}\StringTok{"("}\NormalTok{, }\DataTypeTok{fixed=}\OtherTok{TRUE}\NormalTok{), function(x) (x[}\DecValTok{1}\NormalTok{]))}
-\NormalTok{cidades <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(cidades, }\DataTypeTok{split=}\StringTok{","}\NormalTok{, }\DataTypeTok{fixed=}\OtherTok{TRUE}\NormalTok{), function(x) (x[}\DecValTok{1}\NormalTok{]))}
-
-\NormalTok{harm.df$countyname <-}\StringTok{ }\NormalTok{cidades}
-
-\KeywordTok{rm}\NormalTok{(dados) }\CommentTok{# house cleanning}
-\end{Highlighting}
-\end{Shaded}
-
 \section{Human health: the most harmfull
 events}\label{human-health-the-most-harmfull-events}
 
@@ -443,7 +213,7 @@ fatal and non-fatal events.
 
 \subsection{Fatal Occurrences}\label{fatal-occurrences}
 
-\subsection{Most fatal in a single
+\subsubsection{Most fatal in a single
 occurrence}\label{most-fatal-in-a-single-occurrence}
 
 Most fatal in a single occurrence
@@ -451,30 +221,6 @@ Most fatal in a single occurrence
 In order to determine what were the most fatal events in a single
 occurrence, we need to see how fatalities are distributed along the
 occurrences.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset original data}
-\NormalTok{fatal.df <-}\StringTok{ }\NormalTok{harm.df %>%}\StringTok{ }
-\StringTok{                }\KeywordTok{filter}\NormalTok{(!}\KeywordTok{is.na}\NormalTok{(fatalities)) %>%}
-\StringTok{                }\KeywordTok{select}\NormalTok{(}\DecValTok{1}\NormalTok{:}\DecValTok{7}\NormalTok{)}
-
-  
-\CommentTok{# quantiles}
-\NormalTok{qt <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(fatal.df$fatalities, }\DataTypeTok{probs=}\KeywordTok{seq}\NormalTok{(.}\DecValTok{9}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.001}\NormalTok{))}
-
-\CommentTok{# distribution plot}
-
-\NormalTok{plt.distr.fatal0 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(fatal.df, }\KeywordTok{aes}\NormalTok{(fatalities))}
-
-\NormalTok{plt.distr.fatal0 <-}\StringTok{ }\NormalTok{plt.distr.fatal0 +}\StringTok{ }\KeywordTok{geom_density}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{..density..)) +}\StringTok{ }\KeywordTok{xlim}\NormalTok{(}\DecValTok{0}\NormalTok{,.}\DecValTok{5}\NormalTok{) +}\StringTok{ }
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"All events"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
-
-\CommentTok{# display only the qts next to fatal events}
-\NormalTok{qt[(}\KeywordTok{length}\NormalTok{(qt)-(}\KeywordTok{length}\NormalTok{(qt[qt>=}\DecValTok{1}\NormalTok{])+}\DecValTok{1}\NormalTok{)):}\StringTok{ }\KeywordTok{length}\NormalTok{(qt)]}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{verbatim}
 ##  99.1%  99.2%  99.3%  99.4%  99.5%  99.6%  99.7%  99.8%  99.9% 100.0% 
@@ -491,24 +237,6 @@ Now, among the fatal occurrences, we are interested in the ones whose
 fatalities are beyond the confidence interval, ie. above 99\% of the
 most common values.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset for fatal events}
-\NormalTok{fatal.df <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(fatal.df, fatalities >}\StringTok{ }\DecValTok{0}\NormalTok{) %>%}
-\StringTok{                }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(fatalities)) %>%}
-\StringTok{                }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(fatalities), }
-                \DataTypeTok{median =} \KeywordTok{median}\NormalTok{(fatalities),}
-                \DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(event)))}
-
-
-\CommentTok{# quantiles, same as }
-\CommentTok{# poisson.test(mean, conf.level = 0.95)}
-
-\NormalTok{qt <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(fatal.df$fatalities, }\DataTypeTok{probs=}\KeywordTok{seq}\NormalTok{(.}\DecValTok{999}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.005}\NormalTok{))}
-\NormalTok{qt}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{verbatim}
 ##  99.9% 
 ## 74.027
@@ -519,44 +247,9 @@ fatal occurrences caused up to 74.027 fattalities}.
 
 Distribution plots
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# distribution plot}
- 
-\NormalTok{plt.distr.fatal1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(fatal.df, }\KeywordTok{aes}\NormalTok{(fatalities))}
-
-\NormalTok{plt.distr.fatal1 <-}\StringTok{ }\NormalTok{plt.distr.fatal1 +}\StringTok{ }\KeywordTok{geom_density}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{..density..)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{xlim}\NormalTok{(}\DecValTok{0}\NormalTok{,(qt[}\DecValTok{1}\NormalTok{]/}\DecValTok{10}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Fatal events"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{grid.arrange}\NormalTok{(plt.distr.fatal0, plt.distr.fatal1, }\DataTypeTok{nrow=}\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol=}\DecValTok{2}\NormalTok{, }
-             \DataTypeTok{bottom=}\StringTok{"Population distribution"}\NormalTok{)}
-\KeywordTok{grid.rect}\NormalTok{(}\DataTypeTok{gp=}\KeywordTok{gpar}\NormalTok{(}\DataTypeTok{fill=}\OtherTok{NA}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/fatal-distr-4-1.pdf}
 
 In this study, we looked on the 1\% deadliest occurrences.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset for 99% CI}
-\NormalTok{fatal95.df <-}\StringTok{ }\NormalTok{fatal.df %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(fatalities>qt[}\DecValTok{1}\NormalTok{])}
-                
-\CommentTok{# create color pallete for all events}
-\NormalTok{colourCount.fatal.single =}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(fatal95.df$event))}
-\NormalTok{getPalette =}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{brewer.pal}\NormalTok{(colourCount.fatal.single, }\StringTok{"Set1"}\NormalTok{))}
-
-\CommentTok{# print a table}
-\KeywordTok{kable}\NormalTok{(fatal95.df[, }\KeywordTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{9}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rlrlrllrrr@{}}
 \toprule
@@ -581,45 +274,6 @@ mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# prepare text for inline R}
-\NormalTok{worst.fatal.single.ev <-}\StringTok{ }\NormalTok{fatal95.df$event[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.fatal.single.st <-}\StringTok{ }\NormalTok{fatal95.df$state[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.fatal.single.ct <-}\StringTok{ }\NormalTok{fatal95.df$countyname[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.fatal.single.dt <-}\StringTok{ }\NormalTok{fatal95.df$day[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.fatal.single.kill <-}\StringTok{ }\NormalTok{fatal95.df$fatalities[}\DecValTok{1}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# the plot}
-\NormalTok{plt.fatal.single <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(fatal95.df, }\KeywordTok{aes}\NormalTok{(day, fatalities, }\DataTypeTok{colour=}\NormalTok{event))}
-
-\NormalTok{plt.fatal.single <-}\StringTok{ }\NormalTok{plt.fatal.single +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() +}
-\StringTok{        }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\KeywordTok{ifelse}\NormalTok{(rank <=}\StringTok{ }\DecValTok{3}\NormalTok{,}
-                 \KeywordTok{paste0}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(day), }\StringTok{": "}\NormalTok{, fatalities, }\StringTok{" killed"}\NormalTok{) ,}\StringTok{""}\NormalTok{),}
-                \DataTypeTok{hjust=}\NormalTok{-.}\DecValTok{03}\NormalTok{,}\DataTypeTok{vjust=}\FloatTok{0.5}\NormalTok{)) +}
-
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = mean), linetype=2) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = median), linetype=3) +}
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most Fatal"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{""}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{) +}
-\StringTok{    }
-\StringTok{        }\KeywordTok{expand_limits}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{'2017-01-01'}\NormalTok{))+}\StringTok{ }\CommentTok{#ok}
-\StringTok{        }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{getPalette}\NormalTok{(colourCount.fatal.single))+}\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title=}\KeywordTok{element_blank}\NormalTok{()) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"bottom"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{guides}\NormalTok{(}\DataTypeTok{fill=}\KeywordTok{guide_legend}\NormalTok{(}\DataTypeTok{nrow=}\DecValTok{5}\NormalTok{, }\DataTypeTok{byrow=}\OtherTok{TRUE}\NormalTok{)) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))                 }
-
-\NormalTok{plt.fatal.single +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most fatal Occurrence"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{"Fatalities"}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/fatal-plot-single-1.pdf}
 
 The single most fatal event was a \textbf{HEAT, that occurred in IL,
@@ -628,7 +282,7 @@ ILZ003, on 1995-07-12, killing 583 people.}
 However, if we compare this single awful event to the mean of fatalities
 caused, we see that this is very unlikely to happen.
 
-\subsection{Most fatal in all time}\label{most-fatal-in-all-time}
+\subsubsection{Most fatal in all time}\label{most-fatal-in-all-time}
 
 Most fatal in all time
 
@@ -641,28 +295,6 @@ of this events.
 
 Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# totals per event}
-\NormalTok{fatal.all.df <-}\StringTok{ }\NormalTok{fatal.df %>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(event) %>%}
-\StringTok{        }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total =} \KeywordTok{sum}\NormalTok{(fatalities)) %>%}\StringTok{ }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(total)) %>%}\StringTok{ }
-\StringTok{        }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(total), }\DataTypeTok{median =} \KeywordTok{median}\NormalTok{(total),}
-               \DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(event))) %>%}
-\StringTok{        }\KeywordTok{filter}\NormalTok{(total >}\StringTok{ }\KeywordTok{mean}\NormalTok{(total))}
-
-\CommentTok{# create color pallete for all events}
-\NormalTok{colourCount.fatal.all =}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(fatal.all.df$event))}
-\NormalTok{getPalette =}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{brewer.pal}\NormalTok{(colourCount.fatal.all, }\StringTok{"Set1"}\NormalTok{))}
-
-\CommentTok{# prepare text for inline R}
-\NormalTok{worst.fatal.all.ev <-}\StringTok{ }\NormalTok{fatal.all.df$event[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.fatal.all.kill <-}\StringTok{ }\NormalTok{fatal.all.df$total[}\DecValTok{1}\NormalTok{]}
-
-\CommentTok{# a table}
-\KeywordTok{kable}\NormalTok{(fatal.all.df[,}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{4}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rlrrr@{}}
 \toprule
@@ -677,50 +309,12 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# the plot}
-\NormalTok{plt.fatal.all <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{fatal.all.df, }\KeywordTok{aes}\NormalTok{(event, total, }\DataTypeTok{fill=}\NormalTok{event))}
-
-\NormalTok{plt.fatal.all <-}\StringTok{ }\NormalTok{plt.fatal.all +}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\KeywordTok{ifelse}\NormalTok{(total==}\KeywordTok{max}\NormalTok{(total),}
-                \KeywordTok{paste0}\NormalTok{(event, }\StringTok{": "}\NormalTok{, }\KeywordTok{max}\NormalTok{(total), }\StringTok{" killed"}\NormalTok{),}\StringTok{''}\NormalTok{)),}
-                \DataTypeTok{hjust=}\DecValTok{0}\NormalTok{,}\DataTypeTok{vjust=}\DecValTok{2}\NormalTok{) +}
-\StringTok{        }\KeywordTok{geom_hline}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{yintercept =} \NormalTok{mean), }\DataTypeTok{linetype=}\DecValTok{1}\NormalTok{) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = median), linetype=2) +}
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"All time"}\NormalTok{, }\DataTypeTok{y=}\StringTok{""}\NormalTok{,}
-             \DataTypeTok{x=}\StringTok{""}\NormalTok{) +}\StringTok{ }
-\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"none"}\NormalTok{) +}\StringTok{        }
-\StringTok{        }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{getPalette}\NormalTok{(colourCount.fatal.all))+}\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title=}\KeywordTok{element_blank}\NormalTok{()) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))                 }
-
-\NormalTok{plt.fatal.all +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most fatal type of event - all time"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{"Fatalities"}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{)                }
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/fatal-plot-alltime-1.pdf}
 
 The most fatal event along the time is the \textbf{TORNADO. It has
 killed 5636 people until now.}
 
 Just for curiosity, these are the less fatal among the fatal events:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# sort for less dangerous, had to subset again due to previous filtering}
-\NormalTok{fatal.all.df <-}\StringTok{ }\NormalTok{fatal.df %>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(event) %>%}
-\StringTok{        }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total =} \KeywordTok{sum}\NormalTok{(fatalities)) %>%}\StringTok{ }\KeywordTok{arrange}\NormalTok{(total) %>%}\StringTok{ }
-\StringTok{        }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(total), }\DataTypeTok{median =} \KeywordTok{median}\NormalTok{(total),}
-               \DataTypeTok{rank =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{length}\NormalTok{(event),}\DecValTok{1}\NormalTok{, }\DataTypeTok{by=}\NormalTok{-}\DecValTok{1}\NormalTok{))}
-
-\CommentTok{# a table}
-\KeywordTok{kable}\NormalTok{(fatal.all.df[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{,}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{2}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rlr@{}}
 \toprule
@@ -742,7 +336,7 @@ rank & event & total\tabularnewline
 
 \subsection{Injuring Occurrences}\label{injuring-occurrences}
 
-\subsection{Most injuring in a single
+\subsubsection{Most injuring in a single
 occurrence}\label{most-injuring-in-a-single-occurrence}
 
 Most injuring in a single occurrence
@@ -750,30 +344,6 @@ Most injuring in a single occurrence
 In order to determine what were the most injuring events in a single
 occurrence, we need to see how injuries are distributed along the
 occurrences.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{rm}\NormalTok{(fatal.df,fatal.all.df, fatal95.df, qt) }\CommentTok{# cleannig house}
-
-
-\NormalTok{injuring.df <-}\StringTok{ }\NormalTok{harm.df %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(!}\KeywordTok{is.na}\NormalTok{(injuries)) %>%}
-\StringTok{                }\KeywordTok{select}\NormalTok{(}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{)}
-
-\CommentTok{# quantiles}
-\NormalTok{qt <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(injuring.df$injuries, }\DataTypeTok{probs=}\KeywordTok{seq}\NormalTok{(.}\DecValTok{975}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.002}\NormalTok{))}
-
-\CommentTok{# distribution plot}
-\NormalTok{plt.distr.inj0 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(injuring.df, }\KeywordTok{aes}\NormalTok{(injuries))}
-
-\NormalTok{plt.distr.inj0 <-}\StringTok{ }\NormalTok{plt.distr.inj0 +}\StringTok{ }\KeywordTok{geom_density}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{..density..)) +}\StringTok{ }\KeywordTok{xlim}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.5}\NormalTok{) +}\StringTok{ }
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"All events"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
-
-
-\CommentTok{# display only the qts next to injuring events}
-\NormalTok{qt[(}\KeywordTok{length}\NormalTok{(qt)-(}\KeywordTok{length}\NormalTok{(qt[qt>=}\DecValTok{1}\NormalTok{])+}\DecValTok{1}\NormalTok{)):}\StringTok{ }\KeywordTok{length}\NormalTok{(qt)]}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{verbatim}
 ## 97.7% 97.9% 98.1% 98.3% 98.5% 98.7% 98.9% 99.1% 99.3% 99.5% 99.7% 99.9% 
@@ -790,23 +360,6 @@ Now, among the injuring occurrences, we are interested in the ones whose
 harm is beyond the confidence interval, ie. above 99\% of the most
 common values.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset for harm events}
-\NormalTok{injuring.df <-}\StringTok{ }\NormalTok{injuring.df %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(injuries >}\StringTok{ }\DecValTok{0}\NormalTok{) %>%}
-\StringTok{                }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(injuries)) %>%}
-\StringTok{                }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(injuries), }
-                \DataTypeTok{median =} \KeywordTok{median}\NormalTok{(injuries),}
-                \DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(event)))}
-
-\CommentTok{# quantiles, same as }
-\CommentTok{# poisson.test(mean, conf.level = 0.95)}
-
-\NormalTok{qt <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(injuring.df$injuries, }\DataTypeTok{probs=}\KeywordTok{seq}\NormalTok{(.}\DecValTok{999}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.005}\NormalTok{))}
-\NormalTok{qt}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{verbatim}
 ## 99.9% 
 ##   500
@@ -817,43 +370,9 @@ injuring occurrences caused up to 500 injuries}.
 
 Distribution plots
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# distribution plot}
-\NormalTok{plt.distr.inj1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(injuring.df, }\KeywordTok{aes}\NormalTok{(injuries))}
-
-\NormalTok{plt.distr.inj1 <-}\StringTok{ }\NormalTok{plt.distr.inj1 +}\StringTok{ }\KeywordTok{geom_density}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{..density..)) +}\StringTok{ }\KeywordTok{xlim}\NormalTok{(}\DecValTok{0}\NormalTok{,(qt[}\DecValTok{1}\NormalTok{]/}\DecValTok{20}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Injuring events"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))       }
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{grid.arrange}\NormalTok{(plt.distr.inj0, plt.distr.inj1,}
-             \DataTypeTok{nrow=}\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol=}\DecValTok{2}\NormalTok{, }
-             \DataTypeTok{bottom=}\StringTok{"Population distribution"}\NormalTok{)}
-\KeywordTok{grid.rect}\NormalTok{(}\DataTypeTok{gp=}\KeywordTok{gpar}\NormalTok{(}\DataTypeTok{fill=}\OtherTok{NA}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/inj-distribution-1.pdf}
 
 In this study, we looked on the 1\% most injuring occurrences.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset for 99% CI}
-\NormalTok{injuring95.df <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(injuring.df, injuries>qt[}\DecValTok{1}\NormalTok{])}
-
-\CommentTok{# create color pallete for all events}
-\NormalTok{colourCount.inj.single =}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(injuring95.df$event))}
-\NormalTok{getPalette =}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{brewer.pal}\NormalTok{(colourCount.inj.single, }\StringTok{"Set1"}\NormalTok{))}
-
-\CommentTok{# print a table}
-\KeywordTok{kable}\NormalTok{(injuring95.df[,}\KeywordTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{9}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rlrlrllrrr@{}}
 \toprule
@@ -898,54 +417,7 @@ mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# prepare text for inline R}
-\NormalTok{worst.injuring.single.ev <-}\StringTok{ }\NormalTok{injuring95.df$event[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.injuring.single.st <-}\StringTok{ }\NormalTok{injuring95.df$state[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.injuring.single.ct <-}\StringTok{ }\NormalTok{injuring95.df$countyname[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.injuring.single.dt <-}\StringTok{ }\NormalTok{injuring95.df$day[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.injuring.single.inj <-}\StringTok{ }\NormalTok{injuring95.df$injuries[}\DecValTok{1}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# the plot}
-\NormalTok{plt.inj.single <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(injuring95.df, }\KeywordTok{aes}\NormalTok{(day, injuries, }\DataTypeTok{colour=}\NormalTok{event))}
-
-\NormalTok{plt.inj.single <-}\StringTok{ }\NormalTok{plt.inj.single +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() +}
-\StringTok{        }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\KeywordTok{ifelse}\NormalTok{(rank <=}\StringTok{ }\DecValTok{3}\NormalTok{,}
-                 \KeywordTok{paste0}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(day), }\StringTok{": "}\NormalTok{, injuries, }\StringTok{" injuried"}\NormalTok{) ,}\StringTok{""}\NormalTok{),}
-                \DataTypeTok{hjust=}\NormalTok{-.}\DecValTok{03}\NormalTok{,}\DataTypeTok{vjust=}\FloatTok{0.5}\NormalTok{)) +}
-
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = mean), linetype=2) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = median), linetype=3) +}
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most Injuring"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{""}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{) +}
-\StringTok{                }
-\StringTok{        }\KeywordTok{expand_limits}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{'2017-01-01'}\NormalTok{))+}\StringTok{ }\CommentTok{#ok}
-\StringTok{        }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{getPalette}\NormalTok{(colourCount.inj.single))+}\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title=}\KeywordTok{element_blank}\NormalTok{()) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"bottom"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{guides}\NormalTok{(}\DataTypeTok{fill=}\KeywordTok{guide_legend}\NormalTok{(}\DataTypeTok{nrow=}\DecValTok{5}\NormalTok{, }\DataTypeTok{byrow=}\OtherTok{TRUE}\NormalTok{)) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{)) }
-
-\NormalTok{plt.inj.single +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most Injuring Occurrence"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{"Injuries"}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{) }
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/injuring-single-plot-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-        \CommentTok{# scale_y_continuous(expand = c(0, 0)) +}
-        \CommentTok{# geom_hline(aes(yintercept = mean), linetype=2) +}
-        \CommentTok{# geom_hline(aes(yintercept = median), linetype=3)}
-\end{Highlighting}
-\end{Shaded}
 
 The single most injuring event was a \textbf{TORNADO, that occurred in
 TX, WICHITA, on 1979-04-10, injuring 1700 people.}
@@ -953,7 +425,8 @@ TX, WICHITA, on 1979-04-10, injuring 1700 people.}
 However, if we compare this single awful event to the mean of injuries
 caused, we see that this is very unlikely to happen.
 
-\subsection{Most injuring in all time}\label{most-injuring-in-all-time}
+\subsubsection{Most injuring in all
+time}\label{most-injuring-in-all-time}
 
 Most injuring in all time
 
@@ -966,29 +439,6 @@ of this events.
 
 Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# totals per event}
-\NormalTok{injuring.all.df <-}\StringTok{ }\NormalTok{injuring.df %>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(event) %>%}\StringTok{ }
-\StringTok{        }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total =} \KeywordTok{sum}\NormalTok{(injuries)) %>%}
-\StringTok{        }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(total)) %>%}\StringTok{ }
-\StringTok{        }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(total), }\DataTypeTok{median =} \KeywordTok{median}\NormalTok{(total),}
-               \DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(event)))  %>%}
-\StringTok{        }\KeywordTok{filter}\NormalTok{(total >=}\StringTok{ }\KeywordTok{mean}\NormalTok{(total))}
-
-\CommentTok{# create color pallete for all events}
-\NormalTok{colourCount.inj.all =}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(injuring.all.df$event))}
-\NormalTok{getPalette =}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{brewer.pal}\NormalTok{(colourCount.inj.all, }\StringTok{"Set1"}\NormalTok{))}
-
-\CommentTok{# prepare text for inline R}
-\NormalTok{worst.injuring.all.ev <-}\StringTok{ }\NormalTok{injuring.all.df$event[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.injuring.all.inj <-}\StringTok{ }\NormalTok{injuring.all.df$total[}\DecValTok{1}\NormalTok{]}
-
-\CommentTok{# a table}
-\KeywordTok{kable}\NormalTok{(injuring.all.df[,}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{4}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rlrrr@{}}
 \toprule
@@ -1006,49 +456,10 @@ rank & event & total & mean & median\tabularnewline
 The most injuring event along the time is the \textbf{TORNADO. It has
 injuried 91407 people until now.}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# the plot}
-\NormalTok{plt.inj.all <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{injuring.all.df, }\KeywordTok{aes}\NormalTok{(event, total, }\DataTypeTok{fill=}\NormalTok{event))}
-
-\NormalTok{plt.inj.all <-}\StringTok{ }\NormalTok{plt.inj.all +}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\KeywordTok{ifelse}\NormalTok{(total==}\KeywordTok{max}\NormalTok{(total),}
-                \KeywordTok{paste0}\NormalTok{(event, }\StringTok{": "}\NormalTok{, }\KeywordTok{max}\NormalTok{(total), }\StringTok{" injuried"}\NormalTok{),}\StringTok{''}\NormalTok{)),}
-                \DataTypeTok{hjust=}\DecValTok{0}\NormalTok{,}\DataTypeTok{vjust=}\DecValTok{2}\NormalTok{) +}
-\StringTok{        }\KeywordTok{geom_hline}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{yintercept =} \NormalTok{mean), }\DataTypeTok{linetype=}\DecValTok{1}\NormalTok{) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = median), linetype=2) +}
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"All time"}\NormalTok{, }
-             \DataTypeTok{y=}\StringTok{""}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{) +}\StringTok{ }
-\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"none"}\NormalTok{) +}\StringTok{        }
-\StringTok{        }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{getPalette}\NormalTok{(colourCount.inj.all))+}\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title=}\KeywordTok{element_blank}\NormalTok{()) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))                 }
-                
-
-\NormalTok{plt.inj.all  +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most Injuring type of event - all time"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{"Injuries"}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/injuring-all-plot-1.pdf}
 
 Just for curiosity, lets show now what are the less injuring among the
 injuring events:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# sort for less dangerous, had to subset again due to previous filtering}
-\NormalTok{injuring.all.df <-}\StringTok{ }\NormalTok{injuring.df %>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(event) %>%}
-\StringTok{        }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total =} \KeywordTok{sum}\NormalTok{(injuries)) %>%}\StringTok{ }\KeywordTok{arrange}\NormalTok{(total) %>%}\StringTok{ }
-\StringTok{        }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(total), }\DataTypeTok{median =} \KeywordTok{median}\NormalTok{(total),}
-               \DataTypeTok{rank =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{length}\NormalTok{(event),}\DecValTok{1}\NormalTok{, }\DataTypeTok{by=}\NormalTok{-}\DecValTok{1}\NormalTok{))}
-
-\CommentTok{# a table}
-\KeywordTok{kable}\NormalTok{(injuring.all.df[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{,}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{2}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rlr@{}}
 \toprule
@@ -1080,7 +491,7 @@ property VS crop damaging events.
 
 \subsection{Property losses}\label{property-losses}
 
-\subsection{Most Property Damaging event in a single
+\subsubsection{Most Property Damaging event in a single
 occurrence}\label{most-property-damaging-event-in-a-single-occurrence}
 
 Most Property Damaging event in a single occurrence
@@ -1088,31 +499,6 @@ Most Property Damaging event in a single occurrence
 In order to determine what were the most property damaging events in a
 single occurrence, we need to see how damages are distributed along the
 occurrences.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# property damages}
-\KeywordTok{rm}\NormalTok{(injuring.df, injuring.all.df, injuring95.df) }\CommentTok{# cleannig house}
-
-\NormalTok{prop.df <-}\StringTok{ }\NormalTok{harm.df %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(!}\KeywordTok{is.na}\NormalTok{(prop.ev)) %>%}
-\StringTok{                        }\KeywordTok{select}\NormalTok{(}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{,}\DecValTok{13}\NormalTok{)}
-                
-
-\CommentTok{# quantiles}
-\NormalTok{qt <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(prop.df$prop.ev, }\DataTypeTok{probs=}\KeywordTok{seq}\NormalTok{(.}\DecValTok{999}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.002}\NormalTok{))}
-
-\CommentTok{# distribution plot}
-\NormalTok{plt.distr.prop0 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(prop.df, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{log}\NormalTok{(prop.ev)))}
-
-\NormalTok{plt.distr.prop0 <-}\StringTok{ }\NormalTok{plt.distr.prop0 +}\StringTok{ }\KeywordTok{geom_density}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{..density..)) +}\StringTok{ }\CommentTok{#xlim(0,.5) + }
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"All events"}\NormalTok{, }\DataTypeTok{x=}\StringTok{"log(amount $)"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))       }
-
-
-\CommentTok{# display only the qts next to harmfull events}
-\NormalTok{qt}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{verbatim}
 ##    99.9% 
@@ -1127,24 +513,6 @@ On the other hand, damaging occurrences had to have damages above zero.
 Now, among the damaging occurrences, we are interested in the ones whose
 damages are above 99.8\% of the most common values.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset for harm events}
-\NormalTok{prop.df <-}\StringTok{ }\NormalTok{prop.df %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(prop.ev >}\StringTok{ }\DecValTok{0}\NormalTok{) %>%}
-\StringTok{                }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(prop.ev)) %>%}
-\StringTok{                }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{value =} \KeywordTok{dollar}\NormalTok{(prop.ev),}
-                        \DataTypeTok{media.raw =} \KeywordTok{mean}\NormalTok{(prop.ev), }
-                        \DataTypeTok{mediana.raw =} \KeywordTok{median}\NormalTok{(prop.ev),}
-                        \DataTypeTok{mean =} \KeywordTok{dollar}\NormalTok{(media.raw),}
-                        \DataTypeTok{median =} \KeywordTok{dollar}\NormalTok{(mediana.raw),}
-                        \DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(event)))}
-\CommentTok{# quantiles, same as }
-
-\NormalTok{qt <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(prop.df$prop.ev, }\DataTypeTok{probs=}\KeywordTok{seq}\NormalTok{(.}\DecValTok{999}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.002}\NormalTok{))}
-\NormalTok{qt}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{verbatim}
 ##     99.9% 
 ## 120000000
@@ -1155,44 +523,9 @@ damaging occurrences caused up to \$120,000,000 in losses}.
 
 Distribution plots
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# distribution plot}
-\NormalTok{plt.distr.prop1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(prop.df, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{log}\NormalTok{(prop.ev)))}
-
-\NormalTok{plt.distr.prop1 <-}\StringTok{ }\NormalTok{plt.distr.prop1 +}\StringTok{ }\KeywordTok{geom_density}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{..density..)) +}\StringTok{ }\CommentTok{#xlim(0,100) + }
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Damaging events"}\NormalTok{, }\DataTypeTok{x=}\StringTok{"log(amount $)"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))     }
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{grid.arrange}\NormalTok{(plt.distr.prop0, plt.distr.prop1,}
-             \DataTypeTok{nrow=}\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol=}\DecValTok{2}\NormalTok{, }
-             \DataTypeTok{bottom=}\StringTok{"Population distribution"}\NormalTok{)}
-\KeywordTok{grid.rect}\NormalTok{(}\DataTypeTok{gp=}\KeywordTok{gpar}\NormalTok{(}\DataTypeTok{fill=}\OtherTok{NA}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/crop-distribution-1.pdf}
 
 In this study, we looked on the 1\% most harmful occurrences.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset for 99% CI}
-\NormalTok{prop95.df <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(prop.df, prop.ev>qt[}\DecValTok{1}\NormalTok{])}
-
-\CommentTok{# create color pallete for all events}
-\NormalTok{colourCount.prop.single =}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(prop95.df$event))}
-\NormalTok{getPalette =}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{brewer.pal}\NormalTok{(colourCount.prop.single, }\StringTok{"Set1"}\NormalTok{))}
-
-
-\CommentTok{# print a table}
-\KeywordTok{kable}\NormalTok{(prop95.df[}\DecValTok{1}\NormalTok{:}\DecValTok{20}\NormalTok{,}\KeywordTok{c}\NormalTok{(}\DecValTok{13}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{11}\NormalTok{:}\DecValTok{12}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rlrlrlllll@{}}
 \toprule
@@ -1243,52 +576,13 @@ rank & event & mag & day & duration & state & countyname & value & mean
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# prepare text for inline R}
-\NormalTok{worst.prop.single.ev <-}\StringTok{ }\NormalTok{prop95.df$event[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.prop.single.st <-}\StringTok{ }\NormalTok{prop95.df$state[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.prop.single.ct <-}\StringTok{ }\NormalTok{prop95.df$countyname[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.prop.single.dt <-}\StringTok{ }\NormalTok{prop95.df$day[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.prop.single.value <-}\StringTok{ }\NormalTok{prop95.df$value[}\DecValTok{1}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{plt.prop.single <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(prop95.df, }\KeywordTok{aes}\NormalTok{(day, prop.ev, }\DataTypeTok{colour=}\NormalTok{event))}
-
-\NormalTok{plt.prop.single <-}\StringTok{ }\NormalTok{plt.prop.single +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() +}
-\StringTok{        }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\KeywordTok{ifelse}\NormalTok{(rank <=}\StringTok{ }\DecValTok{3}\NormalTok{,}
-                \KeywordTok{as.character}\NormalTok{(day),}\StringTok{""}\NormalTok{),}
-                \DataTypeTok{hjust=}\NormalTok{-.}\DecValTok{03}\NormalTok{,}\DataTypeTok{vjust=}\FloatTok{0.5}\NormalTok{)) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = media.raw), linetype=2) +}
-\StringTok{         }\CommentTok{# geom_hline(aes(yintercept = mediana.raw), linetype=3) +}
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Property Dammaging"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{""}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{) +}\StringTok{ }
-\StringTok{                }
-\StringTok{        }\KeywordTok{expand_limits}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{'2017-01-01'}\NormalTok{))+}\StringTok{ }\CommentTok{#ok}
-\StringTok{        }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{labels =} \NormalTok{dollar)+}
-\StringTok{        }
-\StringTok{        }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{getPalette}\NormalTok{(colourCount.prop.single))+}\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title=}\KeywordTok{element_blank}\NormalTok{()) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"bottom"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{guides}\NormalTok{(}\DataTypeTok{fill=}\KeywordTok{guide_legend}\NormalTok{(}\DataTypeTok{nrow=}\DecValTok{5}\NormalTok{, }\DataTypeTok{byrow=}\OtherTok{TRUE}\NormalTok{)) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{)) }
-
-\NormalTok{plt.prop.single +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most property damaging Occurrence"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{"Losses"}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/prop-single-plot-1.pdf}
 
 The single most economic damaging event to properties was a
 \textbf{FLOOD, that occurred in CA, NAPA, on 2006-01-01, causing U\$
 \$115,000,000,000 in losses}.
 
-\subsection{Most Property Damaging event in all
+\subsubsection{Most Property Damaging event in all
 time}\label{most-property-damaging-event-in-all-time}
 
 Most Property Damaging event in all time
@@ -1302,33 +596,6 @@ this events.
 
 Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# totals per event}
-\NormalTok{prop.all.df <-}\StringTok{ }\NormalTok{prop.df %>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(event) %>%}
-\StringTok{                }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total.raw =} \KeywordTok{sum}\NormalTok{(prop.ev)) %>%}
-\StringTok{                }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(total.raw)) %>%}
-\StringTok{                }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{media.raw =} \KeywordTok{mean}\NormalTok{(total.raw), }
-                        \DataTypeTok{mediana.raw =} \KeywordTok{median}\NormalTok{(total.raw),}
-                        \DataTypeTok{total =} \KeywordTok{dollar}\NormalTok{(total.raw),}
-                        \DataTypeTok{mean =} \KeywordTok{dollar}\NormalTok{(media.raw),}
-                        \DataTypeTok{median =} \KeywordTok{dollar}\NormalTok{(mediana.raw),}
-                        \DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(event))) %>%}
-\StringTok{                }\KeywordTok{filter}\NormalTok{(total.raw >}\StringTok{ }\KeywordTok{mean}\NormalTok{(total.raw))}
-                
-\CommentTok{# create color pallete for all events}
-\NormalTok{colourCount.prop.all =}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(prop.all.df$event))}
-\NormalTok{getPalette =}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{brewer.pal}\NormalTok{(colourCount.prop.all, }\StringTok{"Set1"}\NormalTok{))}
-
-\CommentTok{# prepare text for inline R}
-\NormalTok{worst.prop.all.ev <-}\StringTok{ }\NormalTok{prop.all.df$event[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.prop.total <-}\StringTok{ }\NormalTok{prop.all.df$total[}\DecValTok{1}\NormalTok{]}
-
-\CommentTok{# a table}
-\KeywordTok{kable}\NormalTok{(prop.all.df[, }\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{:}\DecValTok{7}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rllll@{}}
 \toprule
@@ -1350,56 +617,12 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{plt.prop.all <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{prop.all.df, }\KeywordTok{aes}\NormalTok{(event, total.raw, }\DataTypeTok{fill=}\NormalTok{event))}
-
-\NormalTok{plt.prop.all <-}\StringTok{ }\NormalTok{plt.prop.all +}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{) +}
-\StringTok{                }
-\StringTok{        }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\KeywordTok{ifelse}\NormalTok{(total.raw==}\KeywordTok{max}\NormalTok{(total.raw),}
-                \KeywordTok{paste}\NormalTok{(event, }\KeywordTok{dollar}\NormalTok{(}\KeywordTok{max}\NormalTok{(total.raw)), }\DataTypeTok{sep=}\StringTok{": "}\NormalTok{),}\StringTok{''}\NormalTok{)),}
-                \DataTypeTok{hjust=}\DecValTok{0}\NormalTok{,}\DataTypeTok{vjust=}\DecValTok{2}\NormalTok{) +}
-\StringTok{        }\KeywordTok{geom_hline}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{yintercept =} \NormalTok{media.raw), }\DataTypeTok{linetype=}\DecValTok{1}\NormalTok{) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = mediana.raw), linetype=2) +}
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"All time"}\NormalTok{, }\DataTypeTok{y=}\StringTok{""}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{) +}\StringTok{ }
-\StringTok{                }
-\StringTok{        }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{labels =} \NormalTok{dollar)+}
-\StringTok{     }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"none"}\NormalTok{) +}\StringTok{        }
-\StringTok{        }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{getPalette}\NormalTok{(colourCount.prop.all))+}\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title=}\KeywordTok{element_blank}\NormalTok{()) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))                 }
-
-\NormalTok{plt.prop.all +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most property damaging type of event - all time"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{"Losses"}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/prop-all-plot-1.pdf}
 
 The most property damaging event along the time is the \textbf{FLOOD. It
 has caused \$168,258,894,238 in losses.}
 
 Just for curiosity, these are the less damaging events:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{prop.all.df <-}\StringTok{ }\NormalTok{prop.df %>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(event) %>%}
-\StringTok{                }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total.raw =} \KeywordTok{sum}\NormalTok{(prop.ev)) %>%}
-\StringTok{                }\KeywordTok{arrange}\NormalTok{(total.raw) %>%}
-\StringTok{                }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{media.raw =} \KeywordTok{mean}\NormalTok{(total.raw), }
-                        \DataTypeTok{mediana.raw =} \KeywordTok{median}\NormalTok{(total.raw),}
-                        \DataTypeTok{total =} \KeywordTok{dollar}\NormalTok{(total.raw),}
-                        \DataTypeTok{mean =} \KeywordTok{dollar}\NormalTok{(media.raw),}
-                        \DataTypeTok{median =} \KeywordTok{dollar}\NormalTok{(mediana.raw),}
-                        \DataTypeTok{rank =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{length}\NormalTok{(event),}\DecValTok{1}\NormalTok{, }\DataTypeTok{by=}\NormalTok{-}\DecValTok{1}\NormalTok{))}
-
-
-
-\KeywordTok{kable}\NormalTok{(prop.all.df[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{:}\DecValTok{7}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rllll@{}}
 \toprule
@@ -1428,7 +651,7 @@ rank & event & total & mean & median\tabularnewline
 
 \subsection{Crop losses}\label{crop-losses}
 
-\subsection{Most Crop Damaging event in a single
+\subsubsection{Most Crop Damaging event in a single
 occurrence}\label{most-crop-damaging-event-in-a-single-occurrence}
 
 Most Crop Damaging event in a single occurrence
@@ -1436,31 +659,6 @@ Most Crop Damaging event in a single occurrence
 In order to determine what were the most crop damaging events in a
 single occurrence, we need to see how damages are distributed along the
 occurrences.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# crop damages}
-\KeywordTok{rm}\NormalTok{(prop.df, prop.all.df, prop95.df) }\CommentTok{# cleannig house}
-
-\NormalTok{crop.df <-}\StringTok{ }\NormalTok{harm.df %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(!}\KeywordTok{is.na}\NormalTok{(crop.ev)) %>%}
-\StringTok{                }\KeywordTok{select}\NormalTok{(}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{,}\DecValTok{14}\NormalTok{) }
-
-
-\CommentTok{# quantiles}
-\NormalTok{qt <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(crop.df$crop.ev, }\DataTypeTok{probs=}\KeywordTok{seq}\NormalTok{(.}\DecValTok{998}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.002}\NormalTok{))}
-
-\CommentTok{# distribution plot}
-\NormalTok{plt.distr.crop0 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(crop.df, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{log}\NormalTok{(crop.ev)))}
-
-\NormalTok{plt.distr.crop0 <-}\StringTok{ }\NormalTok{plt.distr.crop0 +}\StringTok{ }\KeywordTok{geom_density}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{..density..)) +}\StringTok{ }\CommentTok{#xlim(0,.5) + }
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"All events"}\NormalTok{, }\DataTypeTok{x=}\StringTok{"log(amount $)"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))  }
-
-
-\CommentTok{# display only the qts next to harmfull events}
-\NormalTok{qt}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{verbatim}
 ##      99.8%       100% 
@@ -1475,26 +673,6 @@ On the other hand, damaging occurrences had to have damages above zero.
 Now, among the damaging occurrences, we are interested in the ones whose
 damages are above 99\% of the most common values.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset for harm events}
-\NormalTok{crop.df <-}\StringTok{ }\NormalTok{crop.df %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(crop.ev >}\StringTok{ }\DecValTok{0}\NormalTok{) %>%}
-\StringTok{                }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(crop.ev)) %>%}
-\StringTok{                }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{value =} \KeywordTok{dollar}\NormalTok{(crop.ev),}
-                        \DataTypeTok{media.raw =} \KeywordTok{mean}\NormalTok{(crop.ev), }
-                        \DataTypeTok{mediana.raw =} \KeywordTok{median}\NormalTok{(crop.ev),}
-                        \DataTypeTok{mean =} \KeywordTok{dollar}\NormalTok{(media.raw),}
-                        \DataTypeTok{median =} \KeywordTok{dollar}\NormalTok{(mediana.raw),}
-                        \DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(event)))}
-
-\CommentTok{# quantiles, same as }
-\CommentTok{# poisson.test(mean, conf.level = 0.95)}
-
-\NormalTok{qt <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(crop.df$crop.ev, }\DataTypeTok{probs=}\KeywordTok{seq}\NormalTok{(.}\DecValTok{999}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.005}\NormalTok{))}
-\NormalTok{qt}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{verbatim}
 ##     99.9% 
 ## 336111520
@@ -1505,46 +683,9 @@ damaging occurrences caused up to \$336,111,520 in losses.}
 
 Distribution plots
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# distribution plot}
-\NormalTok{plt.distr.crop1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(crop.df, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{log}\NormalTok{(crop.ev)))}
-
-\NormalTok{plt.distr.crop1 <-}\StringTok{ }\NormalTok{plt.distr.crop1 +}\StringTok{ }\KeywordTok{geom_density}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{..density..)) +}\StringTok{ }\CommentTok{#xlim(0,qt[1]) + }
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Damaging events"}\NormalTok{, }\DataTypeTok{x=}\StringTok{"log(amount $)"}\NormalTok{) +}
-\StringTok{        }\CommentTok{# scale_x_continuous(labels = dollar)+}
-\StringTok{        }\CommentTok{# theme(axis.text.x = element_text(angle = 90, hjust = 1)) + }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))       }
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{grid.arrange}\NormalTok{(plt.distr.crop0, plt.distr.crop1,}
-             \DataTypeTok{nrow=}\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol=}\DecValTok{2}\NormalTok{, }
-             \DataTypeTok{bottom=}\StringTok{"Population distribution"}\NormalTok{)}
-\KeywordTok{grid.rect}\NormalTok{(}\DataTypeTok{gp=}\KeywordTok{gpar}\NormalTok{(}\DataTypeTok{fill=}\OtherTok{NA}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/crop-distr-4-1.pdf}
 
 In this study, we looked on the 1\% most harmful occurrences.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset for 99% CI}
-\NormalTok{crop95.df <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(crop.df, crop.ev>qt[}\DecValTok{1}\NormalTok{])}
-
-\CommentTok{# create color pallete for all events}
-\NormalTok{colourCount.crop.single =}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(crop95.df$event))}
-\NormalTok{getPalette =}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{brewer.pal}\NormalTok{(colourCount.crop.single, }\StringTok{"Set1"}\NormalTok{))}
-
-
-\CommentTok{# print a table}
-\KeywordTok{kable}\NormalTok{(crop95.df[}\DecValTok{1}\NormalTok{:}\DecValTok{20}\NormalTok{,}\KeywordTok{c}\NormalTok{(}\DecValTok{13}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{11}\NormalTok{:}\DecValTok{12}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rlrlrlllll@{}}
 \toprule
@@ -1595,51 +736,13 @@ rank & event & mag & day & duration & state & countyname & value & mean
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{worst.crop.single.ev <-}\StringTok{ }\NormalTok{crop95.df$event[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.crop.single.st <-}\StringTok{ }\NormalTok{crop95.df$state[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.crop.single.ct <-}\StringTok{ }\NormalTok{crop95.df$countyname[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.crop.single.dt <-}\StringTok{ }\NormalTok{crop95.df$day[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.crop.single.value <-}\StringTok{ }\NormalTok{crop95.df$value[}\DecValTok{1}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{plt.crop.single <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(crop95.df, }\KeywordTok{aes}\NormalTok{(day, crop.ev, }\DataTypeTok{colour=}\NormalTok{event))}
-
-\NormalTok{plt.crop.single <-}\StringTok{ }\NormalTok{plt.crop.single +}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() +}
-\StringTok{        }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\KeywordTok{ifelse}\NormalTok{(rank <=}\StringTok{ }\DecValTok{3}\NormalTok{,}
-                \KeywordTok{as.character}\NormalTok{(day),}\StringTok{""}\NormalTok{),}
-                \DataTypeTok{hjust=}\NormalTok{-.}\DecValTok{03}\NormalTok{,}\DataTypeTok{vjust=}\FloatTok{0.5}\NormalTok{)) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = media.raw), linetype=2) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = mediana.raw), linetype=3) +}
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Crop Dammaging"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{""}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{) +}\StringTok{ }
-\StringTok{                }
-\StringTok{        }\KeywordTok{expand_limits}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{'2017-01-01'}\NormalTok{))+}\StringTok{ }\CommentTok{#ok}
-\StringTok{        }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{labels =} \NormalTok{dollar)+}
-\StringTok{        }
-\StringTok{        }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{getPalette}\NormalTok{(colourCount.crop.single))+}\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title=}\KeywordTok{element_blank}\NormalTok{()) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"bottom"}\NormalTok{) +}
-\StringTok{        }\KeywordTok{guides}\NormalTok{(}\DataTypeTok{fill=}\KeywordTok{guide_legend}\NormalTok{(}\DataTypeTok{nrow=}\DecValTok{5}\NormalTok{, }\DataTypeTok{byrow=}\OtherTok{TRUE}\NormalTok{)) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{)) }
-
-\NormalTok{plt.crop.single +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most crop damaging Occurrence"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{"Losses"}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/crop-single-plot-1.pdf}
 
 The single most economic damaging event to crops was a \textbf{FLOOD,
 that occurred in IL, ADAMS, on 1993-08-31, causing U\$ \$5,000,000,000
 in losses.}
 
-\subsection{Most Crop Damaging event in all
+\subsubsection{Most Crop Damaging event in all
 time}\label{most-crop-damaging-event-in-all-time}
 
 Most Crop Damaging event in all time
@@ -1653,33 +756,6 @@ this events.
 
 Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# totals per event}
-\NormalTok{crop.all.df <-}\StringTok{ }\NormalTok{crop.df %>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(event) %>%}
-\StringTok{                }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total.raw =} \KeywordTok{sum}\NormalTok{(crop.ev)) %>%}
-\StringTok{                }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(total.raw)) %>%}
-\StringTok{                }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{media.raw =} \KeywordTok{mean}\NormalTok{(total.raw), }
-                        \DataTypeTok{mediana.raw =} \KeywordTok{median}\NormalTok{(total.raw),}
-                        \DataTypeTok{total =} \KeywordTok{dollar}\NormalTok{(total.raw),}
-                        \DataTypeTok{mean =} \KeywordTok{dollar}\NormalTok{(media.raw),}
-                        \DataTypeTok{median =} \KeywordTok{dollar}\NormalTok{(mediana.raw),}
-                        \DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(event))) %>%}
-\StringTok{                }\KeywordTok{filter}\NormalTok{(total.raw >}\StringTok{ }\KeywordTok{mean}\NormalTok{(total.raw))}
-                
-\CommentTok{# create color pallete for all events}
-\NormalTok{colourCount.crop.all =}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(crop.all.df$event))}
-\NormalTok{getPalette =}\StringTok{ }\KeywordTok{colorRampPalette}\NormalTok{(}\KeywordTok{brewer.pal}\NormalTok{(colourCount.crop.all, }\StringTok{"Set1"}\NormalTok{))}
-
-\CommentTok{# prepare text for inline R}
-\NormalTok{worst.crop.all.ev <-}\StringTok{ }\NormalTok{crop.all.df$event[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.crop.total <-}\StringTok{ }\NormalTok{crop.all.df$total[}\DecValTok{1}\NormalTok{]}
-
-\CommentTok{# a table}
-\KeywordTok{kable}\NormalTok{(crop.all.df[, }\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{:}\DecValTok{7}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rllll@{}}
 \toprule
@@ -1701,32 +777,6 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{plt.crop.all <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{crop.all.df, }\KeywordTok{aes}\NormalTok{(event, total.raw, }\DataTypeTok{fill=}\NormalTok{event))}
-
-\NormalTok{plt.crop.all <-}\StringTok{ }\NormalTok{plt.crop.all +}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{) +}
-\StringTok{                }
-\StringTok{        }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\KeywordTok{ifelse}\NormalTok{(total.raw==}\KeywordTok{max}\NormalTok{(total.raw),}
-                \KeywordTok{paste}\NormalTok{(event, }\KeywordTok{dollar}\NormalTok{(}\KeywordTok{max}\NormalTok{(total.raw)), }\DataTypeTok{sep=}\StringTok{": "}\NormalTok{),}\StringTok{''}\NormalTok{)),}
-                \DataTypeTok{hjust=}\DecValTok{0}\NormalTok{,}\DataTypeTok{vjust=}\DecValTok{2}\NormalTok{) +}
-\StringTok{        }\KeywordTok{geom_hline}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{yintercept =} \NormalTok{media.raw), }\DataTypeTok{linetype=}\DecValTok{1}\NormalTok{) +}
-\StringTok{        }\CommentTok{# geom_hline(aes(yintercept = mediana.raw), linetype=2) +}
-\StringTok{        }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"All time"}\NormalTok{, }\DataTypeTok{y=}\StringTok{""}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{) +}\StringTok{ }
-\StringTok{                }
-\StringTok{        }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{labels =} \NormalTok{dollar)+}
-\StringTok{     }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"none"}\NormalTok{) +}\StringTok{        }
-\StringTok{        }\KeywordTok{scale_colour_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{getPalette}\NormalTok{(colourCount.crop.all))+}\StringTok{                }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title=}\KeywordTok{element_blank}\NormalTok{()) +}
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{)) +}\StringTok{ }
-\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))                 }
-
-\NormalTok{plt.crop.all +}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Most crops damaging type of event - all time"}\NormalTok{,}
-                    \DataTypeTok{y=}\StringTok{"Losses"}\NormalTok{, }\DataTypeTok{x=}\StringTok{""}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/crop-all-plot-1.pdf}
 
 The most crop damaging event along the time is the \textbf{DROUGHT. It
@@ -1734,24 +784,6 @@ has caused \$13,972,581,000 in losses.}
 
 Just for curiosity, lets show now what are the less damaging among the
 events:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{crop.all.df <-}\StringTok{ }\NormalTok{crop.df %>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(event) %>%}
-\StringTok{                }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{total.raw =} \KeywordTok{sum}\NormalTok{(crop.ev)) %>%}
-\StringTok{                }\KeywordTok{arrange}\NormalTok{(total.raw) %>%}
-\StringTok{                }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{media.raw =} \KeywordTok{mean}\NormalTok{(total.raw), }
-                        \DataTypeTok{mediana.raw =} \KeywordTok{median}\NormalTok{(total.raw),}
-                        \DataTypeTok{total =} \KeywordTok{dollar}\NormalTok{(total.raw),}
-                        \DataTypeTok{mean =} \KeywordTok{dollar}\NormalTok{(media.raw),}
-                        \DataTypeTok{median =} \KeywordTok{dollar}\NormalTok{(mediana.raw),}
-                        \DataTypeTok{rank =} \KeywordTok{seq}\NormalTok{(}\KeywordTok{length}\NormalTok{(event),}\DecValTok{1}\NormalTok{, }\DataTypeTok{by=}\NormalTok{-}\DecValTok{1}\NormalTok{))}
-
-
-
-\KeywordTok{kable}\NormalTok{(crop.all.df[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{:}\DecValTok{7}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rllll@{}}
 \toprule
@@ -1787,34 +819,7 @@ events, both in terms of human health and economic losses.
 
 Unfortunatelly, these has been the worst counties for living in:
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# subset original data}
-\NormalTok{cities.df <-}\StringTok{ }\NormalTok{harm.df %>%}\StringTok{ }
-\StringTok{                }\KeywordTok{filter}\NormalTok{(!(}\KeywordTok{is.na}\NormalTok{(countyname) |}\StringTok{ }\KeywordTok{is.na}\NormalTok{(state))) %>%}
-\StringTok{                }\KeywordTok{select}\NormalTok{(}\DecValTok{6}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{7}\NormalTok{:}\DecValTok{14}\NormalTok{) %>%}
-\StringTok{                }\KeywordTok{group_by}\NormalTok{(state, countyname) %>%}
-\StringTok{                }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{fatalities =} \KeywordTok{sum}\NormalTok{(fatalities, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{),}
-                        \DataTypeTok{injuries =} \KeywordTok{sum}\NormalTok{(injuries, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{),}
-                        \DataTypeTok{prop.dmg =} \KeywordTok{sum}\NormalTok{(prop.ev, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{),}
-                        \DataTypeTok{crop.dmg =} \KeywordTok{sum}\NormalTok{(crop.ev, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{)}
-                \NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 \subsection{Worst fatality count}\label{worst-fatality-count}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{cities.fatal.df <-}\StringTok{ }\KeywordTok{arrange}\NormalTok{(cities.df, }\KeywordTok{desc}\NormalTok{(fatalities)) %>%}\StringTok{ }\KeywordTok{ungroup}\NormalTok{(state, countyname) %>%}
-\StringTok{      }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(fatalities)),}
-                \DataTypeTok{prop.dmg =} \KeywordTok{dollar}\NormalTok{(prop.dmg),}
-                \DataTypeTok{crop.dmg =} \KeywordTok{dollar}\NormalTok{(crop.dmg)}
-             \NormalTok{)}
-
-\KeywordTok{kable}\NormalTok{(cities.fatal.df[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rllrrll@{}}
 \toprule
@@ -1838,31 +843,10 @@ crop.dmg\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{worst.fatal.city.county <-}\StringTok{ }\NormalTok{cities.fatal.df$countyname[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.fatal.city.st <-}\StringTok{ }\NormalTok{cities.fatal.df$state[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.fatal.city.count <-}\StringTok{ }\NormalTok{cities.fatal.df$fatalities[}\DecValTok{1}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
 The county with the biggest fatality count is \textbf{ILZ003, in IL,
 with 605 people killed.}
 
 \subsection{Worst injuries count}\label{worst-injuries-count}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{rm}\NormalTok{(cities.fatal.df) }\CommentTok{# house cleanning}
-\NormalTok{cities.inj.df <-}\StringTok{ }\KeywordTok{arrange}\NormalTok{(cities.df, }\KeywordTok{desc}\NormalTok{(injuries)) %>%}\StringTok{ }\KeywordTok{ungroup}\NormalTok{(state, countyname) %>%}
-\StringTok{      }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(injuries)),}
-                \DataTypeTok{prop.dmg =} \KeywordTok{dollar}\NormalTok{(prop.dmg),}
-                \DataTypeTok{crop.dmg =} \KeywordTok{dollar}\NormalTok{(crop.dmg)}
-             \NormalTok{)}
-
-\KeywordTok{kable}\NormalTok{(cities.inj.df[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rllrrll@{}}
 \toprule
@@ -1886,32 +870,10 @@ crop.dmg\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{worst.inj.city.county <-}\StringTok{ }\NormalTok{cities.inj.df$countyname[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.inj.city.st <-}\StringTok{ }\NormalTok{cities.inj.df$state[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.inj.city.count <-}\StringTok{ }\NormalTok{cities.inj.df$injuries[}\DecValTok{1}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
 The county with the biggest injuries count is \textbf{WICHITA, in TX,
 with 1852 people injuried.}
 
 \subsection{Worst property losses}\label{worst-property-losses}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{rm}\NormalTok{(cities.inj.df) }\CommentTok{# house cleanning}
-
-\NormalTok{cities.prop.df <-}\StringTok{ }\KeywordTok{arrange}\NormalTok{(cities.df, }\KeywordTok{desc}\NormalTok{(prop.dmg)) %>%}\StringTok{ }\KeywordTok{ungroup}\NormalTok{(state, countyname) %>%}
-\StringTok{      }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(prop.dmg)),}
-                \DataTypeTok{prop.dmg =} \KeywordTok{dollar}\NormalTok{(prop.dmg),}
-                \DataTypeTok{crop.dmg =} \KeywordTok{dollar}\NormalTok{(crop.dmg)}
-      \NormalTok{)}
-
-\KeywordTok{kable}\NormalTok{(cities.prop.df[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rllrrll@{}}
 \toprule
@@ -1937,33 +899,10 @@ crop.dmg\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{worst.prop.city.county <-}\StringTok{ }\NormalTok{cities.prop.df$countyname[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.prop.city.st <-}\StringTok{ }\NormalTok{cities.prop.df$state[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.prop.city.count <-}\StringTok{ }\NormalTok{cities.prop.df$prop.dmg[}\DecValTok{1}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
 The county with the biggest property losses is \textbf{NAPA, in CA, with
 \$115,116,385,000 in losses.}
 
 \subsection{Worst crops losses}\label{worst-crops-losses}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{rm}\NormalTok{(cities.prop.df) }\CommentTok{# house cleanning}
-
-
-\NormalTok{cities.crop.df <-}\StringTok{ }\KeywordTok{arrange}\NormalTok{(cities.df, }\KeywordTok{desc}\NormalTok{(crop.dmg)) %>%}\StringTok{ }\KeywordTok{ungroup}\NormalTok{(state, countyname) %>%}
-\StringTok{      }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{rank =} \KeywordTok{seq_len}\NormalTok{(}\KeywordTok{length}\NormalTok{(crop.dmg)),}
-                \DataTypeTok{prop.dmg =} \KeywordTok{dollar}\NormalTok{(prop.dmg),}
-                \DataTypeTok{crop.dmg =} \KeywordTok{dollar}\NormalTok{(crop.dmg)}
-      \NormalTok{)}
-
-\KeywordTok{kable}\NormalTok{(cities.crop.df[}\DecValTok{1}\NormalTok{:}\DecValTok{10}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{1}\NormalTok{:}\DecValTok{6}\NormalTok{)])}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{longtable}[]{@{}rllrrll@{}}
 \toprule
@@ -1990,34 +929,12 @@ crop.dmg\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{worst.crop.city.county <-}\StringTok{ }\NormalTok{cities.crop.df$countyname[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.crop.city.st <-}\StringTok{ }\NormalTok{cities.crop.df$state[}\DecValTok{1}\NormalTok{]}
-\NormalTok{worst.crop.city.count <-}\StringTok{ }\NormalTok{cities.crop.df$crop.dmg[}\DecValTok{1}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
 The county with the biggest croperty losses is \textbf{ADAMS, in IL,
 with \$5,000,084,000 in losses.}
 
 \section{Results}\label{results}
 
 \subsection{Population Health}\label{population-health}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# plist <- list(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all)}
-\CommentTok{# n <- length(plist)}
-\CommentTok{# nCol <- floor(sqrt(n))}
-\CommentTok{# do.call("grid.arrange", c(plist, ncol=nCol))}
-
-\KeywordTok{grid.arrange}\NormalTok{(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all, }
-             \DataTypeTok{nrow=}\DecValTok{2}\NormalTok{, }\DataTypeTok{ncol=}\DecValTok{2}\NormalTok{,}
-             \DataTypeTok{bottom=}\StringTok{"Health impact"}\NormalTok{)}
-\KeywordTok{grid.rect}\NormalTok{(}\DataTypeTok{gp=}\KeywordTok{gpar}\NormalTok{(}\DataTypeTok{fill=}\OtherTok{NA}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
 \includegraphics{readme_files/figure-latex/health-plot-1.pdf}
 
@@ -2034,16 +951,6 @@ The most injuring event along the time is the \textbf{TORNADO. It has
 injuried 91407 people until now.}
 
 \subsection{Economic Damages}\label{economic-damages}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{grid.arrange}\NormalTok{(plt.prop.single, plt.prop.all,}
-             \NormalTok{plt.crop.single, plt.crop.all,}
-             \DataTypeTok{nrow=}\DecValTok{2}\NormalTok{, }\DataTypeTok{ncol=}\DecValTok{2}\NormalTok{,}
-             \DataTypeTok{bottom=}\StringTok{"Economic impact"}\NormalTok{)}
-\KeywordTok{grid.rect}\NormalTok{(}\DataTypeTok{gp=}\KeywordTok{gpar}\NormalTok{(}\DataTypeTok{fill=}\OtherTok{NA}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
 \includegraphics{readme_files/figure-latex/economic-plot-1.pdf}
 
@@ -2077,26 +984,7 @@ with \$5,000,084,000 in losses.}
 
 \subsection{Distribution of data}\label{distribution-of-data}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{grid.arrange}\NormalTok{(plt.distr.fatal0, plt.distr.fatal1, plt.distr.inj0, plt.distr.inj1, }
-             \DataTypeTok{nrow=}\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol=}\DecValTok{4}\NormalTok{, }
-             \DataTypeTok{bottom=}\StringTok{"Population distribution - fatalities and injuries"}\NormalTok{)}
-\KeywordTok{grid.rect}\NormalTok{(}\DataTypeTok{gp=}\KeywordTok{gpar}\NormalTok{(}\DataTypeTok{fill=}\OtherTok{NA}\NormalTok{))             }
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/distribution-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{grid.arrange}\NormalTok{(plt.distr.prop0, plt.distr.prop1, plt.distr.crop0, plt.distr.crop1, }
-             \DataTypeTok{nrow=}\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol=}\DecValTok{4}\NormalTok{, }
-             \DataTypeTok{bottom=}\StringTok{"Population distribution - property and crops losses"}\NormalTok{)}
-\KeywordTok{grid.rect}\NormalTok{(}\DataTypeTok{gp=}\KeywordTok{gpar}\NormalTok{(}\DataTypeTok{fill=}\OtherTok{NA}\NormalTok{))   }
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{readme_files/figure-latex/distribution-2.pdf}
 
 

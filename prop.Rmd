@@ -1,4 +1,4 @@
-## Most Property Damaging event in a single occurrence
+### Most Property Damaging event in a single occurrence
 Most Property Damaging event in a single occurrence
 
 In order to determine what were the most property damaging events in a single occurrence, we need to see how damages are distributed along the occurrences.
@@ -138,7 +138,7 @@ The single most economic damaging  event to properties was a **`r worst.prop.sin
 
 
 
-## Most Property Damaging event in all time
+### Most Property Damaging event in all time
 Most Property Damaging event in all time
 
 

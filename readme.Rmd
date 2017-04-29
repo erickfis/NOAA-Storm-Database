@@ -2,8 +2,8 @@
 title: "NOAA Storm Database - worst cases"
 author: "erickfis"
 date: "`r format(Sys.time(), '%Y %B, %d')`"
-# output:
-#   md_document
+output:
+  md_document
 
 # output: 
 #         html_document:
@@ -25,11 +25,11 @@ date: "`r format(Sys.time(), '%Y %B, %d')`"
 #         number_sections: true
 #         keep_tex: true
 
-output:
-        odt_document:
-        toc: true
-        toc_depth: 3
-        number_sections: true
+# output:
+#         odt_document:
+#         toc: true
+#         toc_depth: 3
+#         number_sections: true
 
 ---
 
@@ -40,6 +40,8 @@ opts_chunk$set(echo = TRUE, message = FALSE, include = TRUE,
                warning = FALSE, autodep = TRUE, options(scipen=999))
 
 ```
+
+# NOAA Storm Database - worst cases
 
 
 In this study we have analysed the NOAA Storm Database in order to determine what are the worst natural catastrophic events, both in terms of public health and in economic impact.

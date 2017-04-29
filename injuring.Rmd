@@ -1,4 +1,4 @@
-## Most injuring in a single occurrence
+### Most injuring in a single occurrence
 Most injuring in a single occurrence
 
 
@@ -141,7 +141,7 @@ However, if we compare this single awful event to the mean of injuries caused, w
 
 
 
-## Most injuring in all time
+### Most injuring in all time
 Most injuring in all time
 
 Notice that are several occurrences of the same type of event along the time. 
