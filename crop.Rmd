@@ -1,4 +1,4 @@
-### Most Crop Damaging event in a single occurrence
+## Most Crop Damaging event in a single occurrence
 Most Crop Damaging event in a single occurrence
 
 In order to determine what were the most crop damaging events in a single occurrence, we need to see how damages are distributed along the occurrences.
@@ -144,7 +144,7 @@ plt.crop.single + labs(title="Most crop damaging Occurrence",
 The single most economic damaging  event to crops was a **`r worst.crop.single.ev`, that occurred in `r worst.crop.single.st`, `r worst.crop.single.ct`, on `r worst.crop.single.dt`, causing U$ `r worst.crop.single.value` in losses.**
 
 
-### Most Crop Damaging event in all time
+## Most Crop Damaging event in all time
 Most Crop Damaging event in all time
 
 

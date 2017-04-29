@@ -1,5 +1,5 @@
 
-### Population Health
+## Population Health
 
 
 ```{r health-plot, fig.width=10, fig.height=10}
@@ -27,7 +27,7 @@ The single most injuring event was a **`r worst.injuring.single.ev`, that occurr
 
 The most injuring event along the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now.**
 
-### Economic Damages
+## Economic Damages
 
 
 ```{r economic-plot, fig.width=10, fig.height=10}
@@ -51,7 +51,7 @@ The single most economic damaging  event to crops was a **`r worst.crop.single.e
 The most crop damaging event along the time is the **`r worst.crop.all.ev`. It has caused `r worst.crop.total` in losses.**
 
 
-### Most aflicted locations
+## Most aflicted locations
 
 The county with the biggest fatality count is **`r worst.fatal.city.county`, in  `r worst.fatal.city.st`, with `r worst.fatal.city.count` people killed.**
 

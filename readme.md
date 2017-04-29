@@ -1,8 +1,3 @@
-NOAA Storm Database: the worst events
-=====================================
-
-NOAA Storm Database Study: the worst events
-
 In this study we have analysed the NOAA Storm Database in order to
 determine what are the worst natural catastrophic events, both in terms
 of public health and in economic impact.
@@ -23,7 +18,7 @@ RPubs version, with fewer plots, for Coursera:
 <http://rpubs.com/erickfis/noaa>
 
 Objective
----------
+=========
 
 The goal of this study is to answer the questions:
 
@@ -44,7 +39,7 @@ The goal of this study is to answer the questions:
     in terms of human health and economic losses.
 
 Data Processing
----------------
+===============
 
 Data Processing
 
@@ -261,7 +256,7 @@ commom strings.
     rm(dados) # house cleanning
 
 Human health: the most harmfull events
---------------------------------------
+======================================
 
 We have determined what events did more harm to human health.
 
@@ -269,9 +264,11 @@ There were occurrences that caused zero fatalities but a lot of
 injuries. The inverse is also true, so we did a separate analysis to
 fatal and non-fatal events.
 
-### Fatal Occurrences
+Fatal Occurrences
+-----------------
 
-### Most fatal in a single occurrence
+Most fatal in a single occurrence
+---------------------------------
 
 Most fatal in a single occurrence
 
@@ -503,7 +500,8 @@ on 1995-07-12, killing 583 people.**
 However, if we compare this single awful event to the mean of fatalities
 caused, we see that this is very unlikely to happen.
 
-### Most fatal in all time
+Most fatal in all time
+----------------------
 
 Most fatal in all time
 
@@ -683,9 +681,11 @@ Just for curiosity, these are the less fatal among the fatal events:
 </tbody>
 </table>
 
-### Injuring Occurrences
+Injuring Occurrences
+--------------------
 
-### Most injuring in a single occurrence
+Most injuring in a single occurrence
+------------------------------------
 
 Most injuring in a single occurrence
 
@@ -1039,7 +1039,8 @@ WICHITA, on 1979-04-10, injuring 1700 people.**
 However, if we compare this single awful event to the mean of injuries
 caused, we see that this is very unlikely to happen.
 
-### Most injuring in all time
+Most injuring in all time
+-------------------------
 
 Most injuring in all time
 
@@ -1223,7 +1224,7 @@ injuring events:
 </table>
 
 Economy: the the most harmfull events
--------------------------------------
+=====================================
 
 We have determined what events did more harm to economy, both in terms
 of property and crops damage.
@@ -1232,9 +1233,11 @@ There were events that causes zero property damage but a lot of crop
 damage. The inverse is also true, so we did a separate analysis to
 property VS crop damaging events.
 
-### Property losses
+Property losses
+---------------
 
-### Most Property Damaging event in a single occurrence
+Most Property Damaging event in a single occurrence
+---------------------------------------------------
 
 Most Property Damaging event in a single occurrence
 
@@ -1619,7 +1622,8 @@ The single most economic damaging event to properties was a **FLOOD,
 that occurred in CA, NAPA, on 2006-01-01, causing U$ $115,000,000,000 in
 losses**.
 
-### Most Property Damaging event in all time
+Most Property Damaging event in all time
+----------------------------------------
 
 Most Property Damaging event in all time
 
@@ -1839,9 +1843,11 @@ Just for curiosity, these are the less damaging events:
 </tbody>
 </table>
 
-### Crop losses
+Crop losses
+-----------
 
-### Most Crop Damaging event in a single occurrence
+Most Crop Damaging event in a single occurrence
+-----------------------------------------------
 
 Most Crop Damaging event in a single occurrence
 
@@ -2229,7 +2235,8 @@ The single most economic damaging event to crops was a **FLOOD, that
 occurred in IL, ADAMS, on 1993-08-31, causing U$ $5,000,000,000 in
 losses.**
 
-### Most Crop Damaging event in all time
+Most Crop Damaging event in all time
+------------------------------------
 
 Most Crop Damaging event in all time
 
@@ -2451,7 +2458,7 @@ events:
 </table>
 
 Most aflicted locations
------------------------
+=======================
 
 Most afflicted locations
 
@@ -2471,7 +2478,8 @@ Unfortunatelly, these has been the worst counties for living in:
                             crop.dmg = sum(crop.ev, na.rm=TRUE)
                     )
 
-### Worst fatality count
+Worst fatality count
+--------------------
 
     cities.fatal.df <- arrange(cities.df, desc(fatalities)) %>% ungroup(state, countyname) %>%
           mutate(rank = seq_len(length(fatalities)),
@@ -2594,7 +2602,8 @@ Unfortunatelly, these has been the worst counties for living in:
 The county with the biggest fatality count is **ILZ003, in IL, with 605
 people killed.**
 
-### Worst injuries count
+Worst injuries count
+--------------------
 
     rm(cities.fatal.df) # house cleanning
     cities.inj.df <- arrange(cities.df, desc(injuries)) %>% ungroup(state, countyname) %>%
@@ -2718,7 +2727,8 @@ people killed.**
 The county with the biggest injuries count is **WICHITA, in TX, with
 1852 people injuried.**
 
-### Worst property losses
+Worst property losses
+---------------------
 
     rm(cities.inj.df) # house cleanning
 
@@ -2843,7 +2853,8 @@ The county with the biggest injuries count is **WICHITA, in TX, with
 The county with the biggest property losses is **NAPA, in CA, with
 $115,116,385,000 in losses.**
 
-### Worst crops losses
+Worst crops losses
+------------------
 
     rm(cities.prop.df) # house cleanning
 
@@ -2970,9 +2981,10 @@ The county with the biggest croperty losses is **ADAMS, in IL, with
 $5,000,084,000 in losses.**
 
 Results
--------
+=======
 
-### Population Health
+Population Health
+-----------------
 
     # plist <- list(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all)
     # n <- length(plist)
@@ -2998,7 +3010,8 @@ WICHITA, on 1979-04-10, injuring 1700 people.**
 The most injuring event along the time is the **TORNADO. It has injuried
 91407 people until now.**
 
-### Economic Damages
+Economic Damages
+----------------
 
     grid.arrange(plt.prop.single, plt.prop.all,
                  plt.crop.single, plt.crop.all,
@@ -3022,7 +3035,8 @@ losses**.
 The most crop damaging event along the time is the **DROUGHT. It has
 caused $13,972,581,000 in losses.**
 
-### Most aflicted locations
+Most aflicted locations
+-----------------------
 
 The county with the biggest fatality count is **ILZ003, in IL, with 605
 people killed.**

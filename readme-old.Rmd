@@ -139,7 +139,7 @@ harm.df <- mutate(harm.df, prop.ev = propdmg*10^propdmgexp,
 There are occurrences that caused zero fatalities but a lot of injuries, so we will do a separate analisys to fatal and non-fatal events.
 
 
-### Most fatal event in a single occurrence
+## Most fatal event in a single occurrence
 Most fatal in a single occurrence
 
 
@@ -242,7 +242,7 @@ The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in 
 
 However, if we compare this single awfull event to the mean of fatalities caused, we see that this is very unlikelly to happen.
 
-### Most fatal in all time
+## Most fatal in all time
 Most fatal in all time
 
 Notice that are several occurrences of the same type of event allong the time. 
@@ -324,7 +324,7 @@ kable(fatal.all.df[1:20,c(5,1:2)])
 
 
 
-### Most injuring in a single occurrence
+## Most injuring in a single occurrence
 Most injuring in a single occurrence
 
 
@@ -425,7 +425,7 @@ The single most injuring event was a **`r worst.injuring.single.ev`, that occurr
 
 However, if we compare this single awfull event to the mean of injuries caused, we see that this is very unlikelly to happen.
 
-### Most injuring in all time
+## Most injuring in all time
 Most injuring in all time
 
 Notice that are several occurrences of the same type of event allong the time. 
@@ -513,7 +513,7 @@ Furthermore, there are events that causes zero property damage but tons of crop 
 do a separate analisys to property damage VS crop damage events
 
 
-### Most Property Damaging event in a single occurrence
+## Most Property Damaging event in a single occurrence
 Most Property Damaging event in a single occurrence
 
 In order to know what are the most Property Damaging events in a single occurrence, eed to see how damages are distributed allong the occurences.
@@ -590,7 +590,7 @@ plt.prop.single <- ggplot(prop95.df[1:10,], aes(day, prop.ev, colour=evtype))
 The single most economic damaging  event to properties was a **`r worst.prop.single.ev`, that occurred in `r worst.prop.single.st`, `r worst.prop.single.ct`, on `r worst.prop.single.dt`, costing U$ `r worst.prop.single.value` **.
 
 
-### Most Property Damaging event in all time
+## Most Property Damaging event in all time
 Most Property Damaging event in all time
 
 
@@ -658,7 +658,7 @@ kable(prop.all.df[1:10, c(1,5:7)])
 
 #######
 
-### Most Crop Damaging event in a single occurrence
+## Most Crop Damaging event in a single occurrence
 Most Crop Damaging event in a single occurrence
 
 In order to know what are the most crop Damaging events in a single occurrence, all we need to do is to filter and sort data, so we have the following table containing the ten worst occurrences:
@@ -710,7 +710,7 @@ The single most economic damaging  event to crops was a **`r worst.crop.single.e
 
 
 ########
-### Most Crop Damaging event in all time
+## Most Crop Damaging event in all time
 Most Crop Damaging event in all time
 
 
@@ -796,7 +796,7 @@ kable(crop.all.df[1:10, c(1,5:7)])
 
 ## Results
 
-### Impact on Human Health
+## Impact on Human Health
 The single most fatal event was a **`r worst.fatal.single.ev`, that occurred in `r worst.fatal.single.st`, `r worst.fatal.single.ct`, on `r worst.fatal.single.dt`, killing `r worst.fatal.single.kill` people. **
 
 
@@ -808,6 +808,6 @@ The single most injuring event was a **`r worst.injuring.single.ev`, that occurr
 
 The most injuring event allong the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now. **
 
-### Economic impact
+## Economic impact
 
 The single most economic damaging  event was a **`r worst.prop.single.ev`, that occurred in `r worst.prop.single.st`, `r worst.prop.single.ct`, on `r worst.prop.single.dt`, costing U$ `r worst.prop.single.value` **.

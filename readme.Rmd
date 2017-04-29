@@ -2,8 +2,21 @@
 title: "NOAA Storm Database - worst cases"
 author: "erickfis"
 date: "`r format(Sys.time(), '%Y %B, %d')`"
-output:
-  md_document
+# output:
+#   md_document
+
+# output: 
+#         html_document:
+#                 toc: true
+#                 toc_depth: 3
+#                 number_sections: true
+#                 self_contained: yes
+#                 # fig_width: 11
+#                 # fig_height: 7
+#                 fig_crop: false
+#         classoption: landscape
+
+
 
 # output:
 #   pdf_document:
@@ -12,11 +25,11 @@ output:
 #         number_sections: true
 #         keep_tex: true
 
-# output:
-#         odt_document:
-#         toc: true
-#         toc_depth: 3
-#         number_sections: true
+output:
+        odt_document:
+        toc: true
+        toc_depth: 3
+        number_sections: true
 
 ---
 
@@ -27,12 +40,6 @@ opts_chunk$set(echo = TRUE, message = FALSE, include = TRUE,
                warning = FALSE, autodep = TRUE, options(scipen=999))
 
 ```
-
-
-
-# NOAA Storm Database: the worst events
-
-NOAA Storm Database Study: the worst events
 
 
 In this study we have analysed the NOAA Storm Database in order to determine what are the worst natural catastrophic events, both in terms of public health and in economic impact.
@@ -50,7 +57,7 @@ RPubs version, with fewer plots, for Coursera:
 http://rpubs.com/erickfis/noaa
 
 
-## Objective
+# Objective
 
 
 The goal of this study is to answer the questions:
@@ -65,49 +72,49 @@ The goal of this study is to answer the questions:
 
 1. Which were the places that were subject to the greatest losses, both in terms of human health and economic losses.
 
-## Data Processing 
+# Data Processing 
 
 ```{r child = 'processamento.Rmd'}
 ```
 
 
-## Human health: the most harmfull events
+# Human health: the most harmfull events
 
 We have determined what events did more harm to human health.
 
 There were occurrences that caused zero fatalities but a lot of injuries.  The inverse is also true, so we did a separate analysis to fatal and non-fatal events.
 
 
-### Fatal Occurrences
+## Fatal Occurrences
 
 ```{r child = 'fatal.Rmd'}
 ```
 
-### Injuring Occurrences
+## Injuring Occurrences
 
 ```{r child = 'injuring.Rmd'}
 ```
 
 
-## Economy: the the most harmfull events
+# Economy: the the most harmfull events
 
 We have determined what events did more harm to economy, both in terms of property and crops damage.
 
 There were events that causes zero property damage but a lot of crop damage. The inverse is also true, so we did a separate analysis to property VS crop damaging events.
 
-### Property losses
+## Property losses
 
 ```{r child = 'prop.Rmd'}
 ```
 
-### Crop losses
+## Crop losses
 
 ```{r child = 'crop.Rmd'}
 ```
 
 
 
-## Most aflicted locations
+# Most aflicted locations
 
 Most afflicted locations
 
@@ -118,7 +125,7 @@ We have determined what locations had the worst outcome from those events, both 
 ```
 
 
-## Results
+# Results
 
 ```{r child = 'resultados.Rmd'}
 ```

@@ -14,7 +14,7 @@ cities.df <- harm.df %>%
                 )
 ```
 
-### Worst fatality count
+## Worst fatality count
     
 
 ```{r fatal-city}
@@ -39,7 +39,7 @@ worst.fatal.city.count <- cities.fatal.df$fatalities[1]
 The county with the biggest fatality count is **`r worst.fatal.city.county`, in  `r worst.fatal.city.st`, with `r worst.fatal.city.count` people killed.**
 
 
-### Worst injuries count
+## Worst injuries count
     
 
 ```{r inj-city}
@@ -63,7 +63,7 @@ worst.inj.city.count <- cities.inj.df$injuries[1]
 The county with the biggest injuries count is **`r worst.inj.city.county`, in  `r worst.inj.city.st`, with `r worst.inj.city.count` people injuried.**
 
 
-### Worst property losses
+## Worst property losses
 
 
 
@@ -88,7 +88,7 @@ worst.prop.city.count <- cities.prop.df$prop.dmg[1]
 
 The county with the biggest property losses is **`r worst.prop.city.county`, in  `r worst.prop.city.st`, with `r worst.prop.city.count` in losses.**
 
-### Worst crops losses
+## Worst crops losses
 
 
 ```{r crop-city}
