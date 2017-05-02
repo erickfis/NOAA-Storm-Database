@@ -20,7 +20,7 @@ qt <- quantile(crop.df$crop.ev, probs=seq(.998,1,0.002))
 # distribution plot
 plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
 
-plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..scaled..)) + #xlim(0,.5) + 
         labs(title="All events", x="log(amount $)") +
         theme(plot.title = element_text(hjust = 0.5))  
 
@@ -69,7 +69,7 @@ Distribution plots
 # distribution plot
 plt.distr.crop1 <- ggplot(crop.df, aes(log(crop.ev)))
 
-plt.distr.crop1 <- plt.distr.crop1 + geom_density(aes(y=..density..)) + #xlim(0,qt[1]) + 
+plt.distr.crop1 <- plt.distr.crop1 + geom_density(aes(y=..scaled..)) + #xlim(0,qt[1]) + 
         labs(title="Damaging events", x="log(amount $)") +
         # scale_x_continuous(labels = dollar)+
         # theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 

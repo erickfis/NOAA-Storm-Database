@@ -28,7 +28,7 @@ qt <- quantile(prop.df$prop.ev, probs=seq(.999,1,0.002))
 # distribution plot
 plt.distr.prop0 <- ggplot(prop.df, aes(log(prop.ev)))
 
-plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..scaled..)) + #xlim(0,.5) + 
         labs(title="All events", x="log(amount $)") +
         theme(plot.title = element_text(hjust = 0.5))       
 
@@ -71,7 +71,7 @@ Distribution plots
 # distribution plot
 plt.distr.prop1 <- ggplot(prop.df, aes(log(prop.ev)))
 
-plt.distr.prop1 <- plt.distr.prop1 + geom_density(aes(y=..density..)) + #xlim(0,100) + 
+plt.distr.prop1 <- plt.distr.prop1 + geom_density(aes(y=..scaled..)) + #xlim(0,100) + 
         labs(title="Damaging events", x="log(amount $)") +
         theme(plot.title = element_text(hjust = 0.5))     
 

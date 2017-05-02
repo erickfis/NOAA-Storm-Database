@@ -22,7 +22,7 @@ qt <- quantile(injuring.df$injuries, probs=seq(.975,1,0.002))
 # distribution plot
 plt.distr.inj0 <- ggplot(injuring.df, aes(injuries))
 
-plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..density..)) + xlim(0,0.5) + 
+plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..scaled..)) + xlim(0,0.5) + 
         labs(title="All events") +
         theme(plot.title = element_text(hjust = 0.5))
 
@@ -65,7 +65,7 @@ Distribution plots
 # distribution plot
 plt.distr.inj1 <- ggplot(injuring.df, aes(injuries))
 
-plt.distr.inj1 <- plt.distr.inj1 + geom_density(aes(y=..density..)) + xlim(0,(qt[1]/20)) + 
+plt.distr.inj1 <- plt.distr.inj1 + geom_density(aes(y=..scaled..)) + xlim(0,(qt[1]/20)) + 
         labs(title="Injuring events") +
         theme(plot.title = element_text(hjust = 0.5))       
 

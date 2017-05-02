@@ -29,7 +29,7 @@ qt <- quantile(fatal.df$fatalities, probs=seq(.9,1,0.001))
 
 plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
 
-plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
+plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..scaled..)) + xlim(0,.5) + 
         labs(title="All events") +
         theme(plot.title = element_text(hjust = 0.5))
 
@@ -77,7 +77,7 @@ Distribution plots
  
 plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
 
-plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + 
+plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..scaled..)) + 
         xlim(0,(qt[1]/10)) + 
         labs(title="Fatal events") +
         theme(plot.title = element_text(hjust = 0.5))
