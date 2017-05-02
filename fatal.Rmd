@@ -1,3 +1,12 @@
+# Human health: the most harmfull events
+
+We have determined what events did more harm to human health.
+
+There were occurrences that caused zero fatalities but a lot of injuries.  The inverse is also true, so we did a separate analysis to fatal and non-fatal events.
+
+
+## Fatal Occurrences
+
 ### Most fatal in a single occurrence
 
 Most fatal in a single occurrence
@@ -76,9 +85,8 @@ plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) +
 
 ```
 
-```{r fatal-distr-4, fig.width=7, fig.height=3}
-grid.arrange(plt.distr.fatal0, plt.distr.fatal1, nrow=1, ncol=2, 
-             bottom="Population distribution")
+```{r fatal-distr-4, fig.width=7, fig.height=3, fig.cap="Population distribution for fatalities / occurrences"}
+grid.arrange(plt.distr.fatal0, plt.distr.fatal1, nrow=1, ncol=2)
 grid.rect(gp=gpar(fill=NA))
 ```
 
@@ -98,7 +106,7 @@ colourCount.fatal.single = length(unique(fatal95.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.fatal.single, "Set1"))
 
 # print a table
-kable(fatal95.df[, c(10,1:9)])
+kable(fatal95.df[, c(10,1:9)], caption="Worst fatal occurrences")
 
 # prepare text for inline R
 worst.fatal.single.ev <- fatal95.df$event[1]
@@ -112,7 +120,7 @@ worst.fatal.single.kill <- fatal95.df$fatalities[1]
 
 
 
-```{r fatal-plot-single, cache=TRUE}
+```{r fatal-plot-single, cache=TRUE, fig.cap="Worst fatal occurrences"}
 # the plot
 plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=event))
 
@@ -134,7 +142,7 @@ plt.fatal.single <- plt.fatal.single + geom_point() +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.fatal.single + labs(title="Most fatal Occurrence",
+plt.fatal.single + labs(title="Worst fatal occurrences",
                     y="Fatalities", x="")
 
 ```
@@ -176,7 +184,7 @@ worst.fatal.all.ev <- fatal.all.df$event[1]
 worst.fatal.all.kill <- fatal.all.df$total[1]
 
 # a table
-kable(fatal.all.df[,c(5,1:4)])
+kable(fatal.all.df[,c(5,1:4)], caption="Total fatalities by event")
 
 
 ```
@@ -184,7 +192,7 @@ kable(fatal.all.df[,c(5,1:4)])
 
 
 
-```{r fatal-plot-alltime, cache=TRUE}
+```{r fatal-plot-alltime, cache=TRUE, fig.cap="Total fatalities by event"}
 
 # the plot
 plt.fatal.all <- ggplot(data=fatal.all.df, aes(event, total, fill=event))
@@ -204,14 +212,16 @@ plt.fatal.all <- plt.fatal.all + geom_bar(stat="identity") +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.fatal.all + labs(title="Most fatal type of event - all time",
-                    y="Fatalities", x="")                
+plt.fatal.all + labs(title="Total Fatalities - All time",
+             subtitle="Most fatal events of all time",
+                     y="Fatalities", x="")
 
 ```
 
 
 The most fatal event along the time is the **`r worst.fatal.all.ev`. It has killed `r worst.fatal.all.kill` people until now.**
 
+### Least fatal events
 
 Just for curiosity, these are the less fatal among the fatal events:
 
@@ -223,7 +233,7 @@ fatal.all.df <- fatal.df %>% group_by(event) %>%
                rank = seq(length(event),1, by=-1))
 
 # a table
-kable(fatal.all.df[1:10,c(5,1:2)])
+kable(fatal.all.df[1:10,c(5,1:2)], caption="Least fatal events")
 
 
 ```

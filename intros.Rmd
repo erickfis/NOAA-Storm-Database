@@ -1,0 +1,38 @@
+# Introduction
+
+In this study we have analysed the NOAA Storm Database in order to determine what are the worst natural catastrophic events, both in terms of public health and in economic impact.
+
+The U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage.
+
+The database currently contains data from January 1950 to January 2017, as entered by NOAA's National Weather Service (NWS).
+
+The database can be found on:
+
+https://www.ncdc.noaa.gov/stormevents/ftp.jsp
+
+
+RPubs version, with fewer plots, for Coursera:
+http://rpubs.com/erickfis/noaa
+
+
+# Objective
+
+
+The goal of this study is to answer the questions:
+
+1. Across the United States, which types of events were the most harmful with respect to population health ever recorded in a single occurrence?
+
+1. Which types of events caused most harm to population health along all those years?
+
+1. Which types of events had the greatest economic consequences in a single occurrence?
+
+1. Which types of events had the greatest economic consequences along all those years?
+
+1. Which were the places that were subject to the greatest losses, both in terms of human health and economic losses.
+
+
+# Methods
+
+To answer each one of those questions, we did a very simple **descriptive analysis** of data. 
+
+We used R tools to filter, sort and combine data, so we could get the total sum of fatalities, injuries and economic losses.

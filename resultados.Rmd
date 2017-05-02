@@ -1,8 +1,9 @@
+# Results
 
 ## Population Health
 
 
-```{r health-plot, fig.width=10, fig.height=10}
+```{r health-plot, fig.width=10, fig.height=10, fig.cap="Population Health: fatalities and injuries"}
 
 # plist <- list(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all)
 # n <- length(plist)
@@ -10,8 +11,7 @@
 # do.call("grid.arrange", c(plist, ncol=nCol))
 
 grid.arrange(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all, 
-             nrow=2, ncol=2,
-             bottom="Health impact")
+             nrow=2, ncol=2)
 grid.rect(gp=gpar(fill=NA))
 ```
 
@@ -30,11 +30,10 @@ The most injuring event along the time is the **`r worst.injuring.all.ev`. It ha
 ## Economic Damages
 
 
-```{r economic-plot, fig.width=10, fig.height=10}
+```{r economic-plot, fig.width=10, fig.height=10,fig.cap="Economic Damages: property and crops"}
 grid.arrange(plt.prop.single, plt.prop.all,
              plt.crop.single, plt.crop.all,
-             nrow=2, ncol=2,
-             bottom="Economic impact")
+             nrow=2, ncol=2)
 grid.rect(gp=gpar(fill=NA))
 ```
 
@@ -65,15 +64,15 @@ The county with the biggest croperty losses is **`r worst.crop.city.county`, in 
 
 ## Distribution of data
 
-```{r distribution, fig.width=10, fig.height=3}
+```{r distribution, fig.width=10, fig.height=3, fig.cap="Population distribution"}
 grid.arrange(plt.distr.fatal0, plt.distr.fatal1, plt.distr.inj0, plt.distr.inj1, 
              nrow=1, ncol=4, 
-             bottom="Population distribution - fatalities and injuries")
+             bottom="Fatalities and injuries")
 grid.rect(gp=gpar(fill=NA))             
              
              
 grid.arrange(plt.distr.prop0, plt.distr.prop1, plt.distr.crop0, plt.distr.crop1, 
              nrow=1, ncol=4, 
-             bottom="Population distribution - property and crops losses")
+             bottom="Property and crops losses")
 grid.rect(gp=gpar(fill=NA))   
 ```

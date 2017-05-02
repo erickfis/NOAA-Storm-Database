@@ -1,3 +1,10 @@
+# Most aflicted locations
+
+
+We have determined what locations had the worst outcome from those events, both in terms of human health and economic losses.
+
+
+
 Unfortunatelly, these has been the worst counties for living in:
 
 
@@ -25,7 +32,8 @@ cities.fatal.df <- arrange(cities.df, desc(fatalities)) %>% ungroup(state, count
                 crop.dmg = dollar(crop.dmg)
              )
 
-kable(cities.fatal.df[1:10, c(7,1:6)])
+kable(cities.fatal.df[1:10, c(7,1:6)], caption="Total fatalities by county")
+
 worst.fatal.city.county <- cities.fatal.df$countyname[1]
 worst.fatal.city.st <- cities.fatal.df$state[1]
 worst.fatal.city.count <- cities.fatal.df$fatalities[1]
@@ -50,7 +58,7 @@ cities.inj.df <- arrange(cities.df, desc(injuries)) %>% ungroup(state, countynam
                 crop.dmg = dollar(crop.dmg)
              )
 
-kable(cities.inj.df[1:10, c(7,1:6)])
+kable(cities.inj.df[1:10, c(7,1:6)], caption="Total injuries by county")
 
 worst.inj.city.county <- cities.inj.df$countyname[1]
 worst.inj.city.st <- cities.inj.df$state[1]
@@ -76,7 +84,7 @@ cities.prop.df <- arrange(cities.df, desc(prop.dmg)) %>% ungroup(state, countyna
                 crop.dmg = dollar(crop.dmg)
       )
 
-kable(cities.prop.df[1:10, c(7,1:6)])
+kable(cities.prop.df[1:10, c(7,1:6)], caption="Total property losses by county")
 
 worst.prop.city.county <- cities.prop.df$countyname[1]
 worst.prop.city.st <- cities.prop.df$state[1]
@@ -101,7 +109,7 @@ cities.crop.df <- arrange(cities.df, desc(crop.dmg)) %>% ungroup(state, countyna
                 crop.dmg = dollar(crop.dmg)
       )
 
-kable(cities.crop.df[1:10, c(7,1:6)])
+kable(cities.crop.df[1:10, c(7,1:6)], caption="Total crops losses by county")
 
 worst.crop.city.county <- cities.crop.df$countyname[1]
 worst.crop.city.st <- cities.crop.df$state[1]

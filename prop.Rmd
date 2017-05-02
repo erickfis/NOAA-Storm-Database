@@ -1,5 +1,14 @@
+# Economy: the the most harmfull events
+
+We have determined what events did more harm to economy, both in terms of property and crops damage.
+
+There were events that causes zero property damage but a lot of crop damage. The inverse is also true, so we did a separate analysis to property VS crop damaging events.
+
+## Property losses
+
+
+
 ### Most Property Damaging event in a single occurrence
-Most Property Damaging event in a single occurrence
 
 In order to determine what were the most property damaging events in a single occurrence, we need to see how damages are distributed along the occurrences.
 
@@ -68,10 +77,8 @@ plt.distr.prop1 <- plt.distr.prop1 + geom_density(aes(y=..density..)) + #xlim(0,
 
 ```
 
-```{r crop-distribution, fig.width=7, fig.height=3}
-grid.arrange(plt.distr.prop0, plt.distr.prop1,
-             nrow=1, ncol=2, 
-             bottom="Population distribution")
+```{r crop-distribution, fig.width=7, fig.height=3, fig.cap="Population distribution for losses / occurrences"}
+grid.arrange(plt.distr.prop0, plt.distr.prop1, nrow=1, ncol=2)
 grid.rect(gp=gpar(fill=NA))
 ```
 
@@ -90,8 +97,7 @@ colourCount.prop.single = length(unique(prop95.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.prop.single, "Set1"))
 
 
-# print a table
-kable(prop95.df[1:20,c(13,1:6,8,11:12)])
+
 
 # prepare text for inline R
 worst.prop.single.ev <- prop95.df$event[1]
@@ -99,12 +105,31 @@ worst.prop.single.st <- prop95.df$state[1]
 worst.prop.single.ct <- prop95.df$countyname[1]
 worst.prop.single.dt <- prop95.df$day[1]
 worst.prop.single.value <- prop95.df$value[1]
+worst.prop.single.mean <- prop95.df$mean[1]
+worst.prop.single.median <- prop95.df$median[1]
+
+
+
+
+```
+
+```{r tabela-prop-single}
+# print a table
+# 
+# pander(prop95.df[1:20,c(13,1:6,8,11:12)], caption="Worst property damaging occurrences - pander",  split.cells = 30, split.table = Inf)
+
+kable(prop95.df[1:20,c(13,1:6,8)], 
+      caption=paste("Worst property damaging occurrences, mean = ",
+                    worst.prop.single.mean, " and median = ",
+                    worst.prop.single.median))
+
+
 
 ```
 
 
 
-```{r prop-single-plot, cache=TRUE}
+```{r prop-single-plot, cache=TRUE, fig.cap="Worst property damaging occurrences"}
 
 plt.prop.single <- ggplot(prop95.df, aes(day, prop.ev, colour=event))
 
@@ -127,7 +152,7 @@ plt.prop.single <- plt.prop.single + geom_point() +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5)) 
 
-plt.prop.single + labs(title="Most property damaging Occurrence",
+plt.prop.single + labs(title="Worst property damaging occurrences",
                     y="Losses", x="")
   
 ```
@@ -170,16 +195,18 @@ getPalette = colorRampPalette(brewer.pal(colourCount.prop.all, "Set1"))
 # prepare text for inline R
 worst.prop.all.ev <- prop.all.df$event[1]
 worst.prop.total <- prop.all.df$total[1]
+```
 
+
+```{r prop-all-table}
 # a table
-kable(prop.all.df[, c(8,1,5:7)])
-
+kable(prop.all.df[, c(8,1,5:7)], caption="Total losses by event")
 
 ```
 
 
 
-```{r prop-all-plot, cache=TRUE}
+```{r prop-all-plot, cache=TRUE, fig.cap="Total Property Damages by event"}
 
 plt.prop.all <- ggplot(data=prop.all.df, aes(event, total.raw, fill=event))
 
@@ -200,8 +227,9 @@ plt.prop.all <- plt.prop.all + geom_bar(stat="identity") +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.prop.all + labs(title="Most property damaging type of event - all time",
-                    y="Losses", x="")
+plt.prop.all + labs(title="Total Damages - All time",
+             subtitle="Most property damaging events of all time",
+                     y="Losses", x="")
 
 ```
 
@@ -209,6 +237,7 @@ plt.prop.all + labs(title="Most property damaging type of event - all time",
 
 The most property damaging event along the time is the **`r worst.prop.all.ev`. It has caused `r worst.prop.total` in losses.**
 
+### Least property damaging events
 
 Just for curiosity, these are the less damaging events:
 
@@ -226,7 +255,7 @@ prop.all.df <- prop.df %>% group_by(event) %>%
 
 
 
-kable(prop.all.df[1:10, c(8,1,5:7)])
+kable(prop.all.df[1:10, c(8,1,5)], caption="Least property damaging events")
 
 
 ```

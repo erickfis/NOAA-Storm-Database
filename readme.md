@@ -1,6 +1,11 @@
 NOAA Storm Database - worst cases
 =================================
 
+*erickfis, 2017 maio, 02*
+
+Introduction
+============
+
 In this study we have analysed the NOAA Storm Database in order to
 determine what are the worst natural catastrophic events, both in terms
 of public health and in economic impact.
@@ -41,10 +46,17 @@ The goal of this study is to answer the questions:
 5.  Which were the places that were subject to the greatest losses, both
     in terms of human health and economic losses.
 
-Data Processing
-===============
+Methods
+=======
+
+To answer each one of those questions, we did a very simple
+**descriptive analysis** of data.
+
+We used R tools to filter, sort and combine data, so we could get the
+total sum of fatalities, injuries and economic losses.
 
 Data Processing
+===============
 
 This code loads the original data and them choose which variables are
 useful to answer our questions:
@@ -71,13 +83,12 @@ Reading original database:
     dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"), na.strings = "")
 
     ## 
-    Read 18.6% of 967216 rows
-    Read 34.1% of 967216 rows
-    Read 49.6% of 967216 rows
-    Read 65.1% of 967216 rows
-    Read 79.6% of 967216 rows
-    Read 92.0% of 967216 rows
-    Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:08
+    Read 20.7% of 967216 rows
+    Read 41.4% of 967216 rows
+    Read 55.8% of 967216 rows
+    Read 75.5% of 967216 rows
+    Read 82.7% of 967216 rows
+    Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:07
 
     dados <-tbl_df(dados)
 
@@ -87,7 +98,7 @@ Reading original database:
     # dataS <- dados[linhas,]
     # write.csv(dataS, "StormData")
 
-    # dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"))
+    # dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData-sample.bz2"))
     # dados <-tbl_df(dados)
     # dados <- select(dados, -1)
 
@@ -344,11 +355,11 @@ Distribution plots
             labs(title="Fatal events") +
             theme(plot.title = element_text(hjust = 0.5))
 
-    grid.arrange(plt.distr.fatal0, plt.distr.fatal1, nrow=1, ncol=2, 
-                 bottom="Population distribution")
+    grid.arrange(plt.distr.fatal0, plt.distr.fatal1, nrow=1, ncol=2)
     grid.rect(gp=gpar(fill=NA))
 
-![](readme_files/figure-markdown_strict/fatal-distr-4-1.png)
+![Population distribution for fatalities /
+occurrences](readme_files/figure-markdown_strict/fatal-distr-4-1.png)
 
 In this study, we looked on the 1% deadliest occurrences.
 
@@ -360,9 +371,10 @@ In this study, we looked on the 1% deadliest occurrences.
     getPalette = colorRampPalette(brewer.pal(colourCount.fatal.single, "Set1"))
 
     # print a table
-    kable(fatal95.df[, c(10,1:9)])
+    kable(fatal95.df[, c(10,1:9)], caption="Worst fatal occurrences")
 
 <table>
+<caption>Worst fatal occurrences</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -493,10 +505,11 @@ In this study, we looked on the 1% deadliest occurrences.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))                 
 
-    plt.fatal.single + labs(title="Most fatal Occurrence",
+    plt.fatal.single + labs(title="Worst fatal occurrences",
                         y="Fatalities", x="")
 
-![](readme_files/figure-markdown_strict/fatal-plot-single-1.png)
+![Worst fatal
+occurrences](readme_files/figure-markdown_strict/fatal-plot-single-1.png)
 
 The single most fatal event was a **HEAT, that occurred in IL, ILZ003,
 on 1995-07-12, killing 583 people.**
@@ -534,9 +547,10 @@ which are above the mean.
     worst.fatal.all.kill <- fatal.all.df$total[1]
 
     # a table
-    kable(fatal.all.df[,c(5,1:4)])
+    kable(fatal.all.df[,c(5,1:4)], caption="Total fatalities by event")
 
 <table>
+<caption>Total fatalities by event</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -603,13 +617,17 @@ which are above the mean.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))                 
 
-    plt.fatal.all + labs(title="Most fatal type of event - all time",
-                        y="Fatalities", x="")                
+    plt.fatal.all + labs(title="Total Fatalities - All time",
+                 subtitle="Most fatal events of all time",
+                         y="Fatalities", x="")
 
-![](readme_files/figure-markdown_strict/fatal-plot-alltime-1.png)
+![Total fatalities by
+event](readme_files/figure-markdown_strict/fatal-plot-alltime-1.png)
 
 The most fatal event along the time is the **TORNADO. It has killed 5636
 people until now.**
+
+### Least fatal events
 
 Just for curiosity, these are the less fatal among the fatal events:
 
@@ -620,9 +638,10 @@ Just for curiosity, these are the less fatal among the fatal events:
                    rank = seq(length(event),1, by=-1))
 
     # a table
-    kable(fatal.all.df[1:10,c(5,1:2)])
+    kable(fatal.all.df[1:10,c(5,1:2)], caption="Least fatal events")
 
 <table>
+<caption>Least fatal events</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -757,11 +776,11 @@ Distribution plots
             theme(plot.title = element_text(hjust = 0.5))       
 
     grid.arrange(plt.distr.inj0, plt.distr.inj1,
-                 nrow=1, ncol=2, 
-                 bottom="Population distribution")
+                 nrow=1, ncol=2)
     grid.rect(gp=gpar(fill=NA))
 
-![](readme_files/figure-markdown_strict/inj-distribution-1.png)
+![Population distribution for Injuries /
+occurrences](readme_files/figure-markdown_strict/inj-distribution-1.png)
 
 In this study, we looked on the 1% most injuring occurrences.
 
@@ -773,9 +792,10 @@ In this study, we looked on the 1% most injuring occurrences.
     getPalette = colorRampPalette(brewer.pal(colourCount.inj.single, "Set1"))
 
     # print a table
-    kable(injuring95.df[,c(10,1:9)])
+    kable(injuring95.df[,c(10,1:9)], caption="Worst injuring occurrences")
 
 <table>
+<caption>Worst injuring occurrences</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1026,14 +1046,14 @@ In this study, we looked on the 1% most injuring occurrences.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5)) 
 
-    plt.inj.single + labs(title="Most Injuring Occurrence",
-                        y="Injuries", x="") 
-
-![](readme_files/figure-markdown_strict/injuring-single-plot-1.png)
-
             # scale_y_continuous(expand = c(0, 0)) +
             # geom_hline(aes(yintercept = mean), linetype=2) +
             # geom_hline(aes(yintercept = median), linetype=3)
+    plt.inj.single + labs(title="Worst injuring occurrences",
+                        y="Injuries", x="") 
+
+![Worst injuring
+occurrences](readme_files/figure-markdown_strict/injuring-single-plot-1.png)
 
 The single most injuring event was a **TORNADO, that occurred in TX,
 WICHITA, on 1979-04-10, injuring 1700 people.**
@@ -1072,9 +1092,10 @@ which are above the mean.
     worst.injuring.all.inj <- injuring.all.df$total[1]
 
     # a table
-    kable(injuring.all.df[,c(5,1:4)])
+    kable(injuring.all.df[,c(5,1:4)], caption="Total injuries by event")
 
 <table>
+<caption>Total injuries by event</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1145,10 +1166,14 @@ The most injuring event along the time is the **TORNADO. It has injuried
             theme(plot.title = element_text(hjust = 0.5))                 
                     
 
-    plt.inj.all  + labs(title="Most Injuring type of event - all time",
-                        y="Injuries", x="")
+    plt.inj.all  + labs(title="Total Injuries - All time",
+                 subtitle="Most injuring events of all time",
+                         y="Injuries", x="")
 
-![](readme_files/figure-markdown_strict/injuring-all-plot-1.png)
+![Total Injuries by
+event](readme_files/figure-markdown_strict/injuring-all-plot-1.png)
+
+### Least injuring events
 
 Just for curiosity, lets show now what are the less injuring among the
 injuring events:
@@ -1160,9 +1185,10 @@ injuring events:
                    rank = seq(length(event),1, by=-1))
 
     # a table
-    kable(injuring.all.df[1:10,c(5,1:2)])
+    kable(injuring.all.df[1:10,c(5,1:2)], caption="Least injuring events")
 
 <table>
+<caption>Least injuring events</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1239,8 +1265,6 @@ Property losses
 
 ### Most Property Damaging event in a single occurrence
 
-Most Property Damaging event in a single occurrence
-
 In order to determine what were the most property damaging events in a
 single occurrence, we need to see how damages are distributed along the
 occurrences.
@@ -1306,12 +1330,11 @@ Distribution plots
             labs(title="Damaging events", x="log(amount $)") +
             theme(plot.title = element_text(hjust = 0.5))     
 
-    grid.arrange(plt.distr.prop0, plt.distr.prop1,
-                 nrow=1, ncol=2, 
-                 bottom="Population distribution")
+    grid.arrange(plt.distr.prop0, plt.distr.prop1, nrow=1, ncol=2)
     grid.rect(gp=gpar(fill=NA))
 
-![](readme_files/figure-markdown_strict/crop-distribution-1.png)
+![Population distribution for losses /
+occurrences](readme_files/figure-markdown_strict/crop-distribution-1.png)
 
 In this study, we looked on the 1% most harmful occurrences.
 
@@ -1323,10 +1346,28 @@ In this study, we looked on the 1% most harmful occurrences.
     getPalette = colorRampPalette(brewer.pal(colourCount.prop.single, "Set1"))
 
 
+
+
+    # prepare text for inline R
+    worst.prop.single.ev <- prop95.df$event[1]
+    worst.prop.single.st <- prop95.df$state[1]
+    worst.prop.single.ct <- prop95.df$countyname[1]
+    worst.prop.single.dt <- prop95.df$day[1]
+    worst.prop.single.value <- prop95.df$value[1]
+    worst.prop.single.mean <- prop95.df$mean[1]
+    worst.prop.single.median <- prop95.df$median[1]
+
     # print a table
-    kable(prop95.df[1:20,c(13,1:6,8,11:12)])
+    # 
+    # pander(prop95.df[1:20,c(13,1:6,8,11:12)], caption="Worst property damaging occurrences - pander",  split.cells = 30, split.table = Inf)
+
+    kable(prop95.df[1:20,c(13,1:6,8)], 
+          caption=paste("Worst property damaging occurrences, mean = ",
+                        worst.prop.single.mean, " and median = ",
+                        worst.prop.single.median))
 
 <table>
+<caption>Worst property damaging occurrences, mean = $1,791,099 and median = $10,000</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1337,8 +1378,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <th align="left">state</th>
 <th align="left">countyname</th>
 <th align="left">value</th>
-<th align="left">mean</th>
-<th align="left">median</th>
 </tr>
 </thead>
 <tbody>
@@ -1351,8 +1390,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">CA</td>
 <td align="left">NAPA</td>
 <td align="left">$115,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
@@ -1363,8 +1400,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">LA</td>
 <td align="left">LAZ040</td>
 <td align="left">$31,300,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
@@ -1375,8 +1410,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">LA</td>
 <td align="left">LAZ034</td>
 <td align="left">$16,930,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
@@ -1387,8 +1420,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">MS</td>
 <td align="left">MSZ080</td>
 <td align="left">$11,260,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
@@ -1399,8 +1430,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ068</td>
 <td align="left">$10,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
@@ -1411,8 +1440,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">MS</td>
 <td align="left">MSZ068</td>
 <td align="left">$7,350,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
@@ -1423,8 +1450,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">MS</td>
 <td align="left">MSZ018</td>
 <td align="left">$5,880,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
@@ -1435,8 +1460,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ055</td>
 <td align="left">$5,420,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
@@ -1447,8 +1470,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">TX</td>
 <td align="left">TXZ163</td>
 <td align="left">$5,150,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
@@ -1459,8 +1480,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">AL</td>
 <td align="left">ALZ001</td>
 <td align="left">$5,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">11</td>
@@ -1471,8 +1490,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">IL</td>
 <td align="left">ADAMS</td>
 <td align="left">$5,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
@@ -1483,8 +1500,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ041</td>
 <td align="left">$4,830,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
@@ -1495,8 +1510,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ001</td>
 <td align="left">$4,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">14</td>
@@ -1507,8 +1520,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">LA</td>
 <td align="left">LAZ027</td>
 <td align="left">$4,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">15</td>
@@ -1519,8 +1530,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">TX</td>
 <td align="left">TXZ213</td>
 <td align="left">$4,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">16</td>
@@ -1531,8 +1540,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">ND</td>
 <td align="left">NDZ027</td>
 <td align="left">$3,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">17</td>
@@ -1543,8 +1550,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">NC</td>
 <td align="left">NCZ007</td>
 <td align="left">$3,000,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
@@ -1555,8 +1560,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">MO</td>
 <td align="left">JASPER</td>
 <td align="left">$2,800,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="odd">
 <td align="right">19</td>
@@ -1567,8 +1570,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">LA</td>
 <td align="left">LAFOURCHE</td>
 <td align="left">$2,500,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 <tr class="even">
 <td align="right">20</td>
@@ -1579,18 +1580,9 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">AL</td>
 <td align="left">ALZ051</td>
 <td align="left">$2,500,000,000</td>
-<td align="left">$1,791,099</td>
-<td align="left">$10,000</td>
 </tr>
 </tbody>
 </table>
-
-    # prepare text for inline R
-    worst.prop.single.ev <- prop95.df$event[1]
-    worst.prop.single.st <- prop95.df$state[1]
-    worst.prop.single.ct <- prop95.df$countyname[1]
-    worst.prop.single.dt <- prop95.df$day[1]
-    worst.prop.single.value <- prop95.df$value[1]
 
     plt.prop.single <- ggplot(prop95.df, aes(day, prop.ev, colour=event))
 
@@ -1613,10 +1605,11 @@ In this study, we looked on the 1% most harmful occurrences.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5)) 
 
-    plt.prop.single + labs(title="Most property damaging Occurrence",
+    plt.prop.single + labs(title="Worst property damaging occurrences",
                         y="Losses", x="")
 
-![](readme_files/figure-markdown_strict/prop-single-plot-1.png)
+![Worst property damaging
+occurrences](readme_files/figure-markdown_strict/prop-single-plot-1.png)
 
 The single most economic damaging event to properties was a **FLOOD,
 that occurred in CA, NAPA, on 2006-01-01, causing U$ $115,000,000,000 in
@@ -1657,9 +1650,10 @@ which are above the mean.
     worst.prop.total <- prop.all.df$total[1]
 
     # a table
-    kable(prop.all.df[, c(8,1,5:7)])
+    kable(prop.all.df[, c(8,1,5:7)], caption="Total losses by event")
 
 <table>
+<caption>Total losses by event</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1734,13 +1728,17 @@ which are above the mean.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))                 
 
-    plt.prop.all + labs(title="Most property damaging type of event - all time",
-                        y="Losses", x="")
+    plt.prop.all + labs(title="Total Damages - All time",
+                 subtitle="Most property damaging events of all time",
+                         y="Losses", x="")
 
-![](readme_files/figure-markdown_strict/prop-all-plot-1.png)
+![Total Property Damages by
+event](readme_files/figure-markdown_strict/prop-all-plot-1.png)
 
 The most property damaging event along the time is the **FLOOD. It has
 caused $168,258,894,238 in losses.**
+
+### Least property damaging events
 
 Just for curiosity, these are the less damaging events:
 
@@ -1756,16 +1754,15 @@ Just for curiosity, these are the less damaging events:
 
 
 
-    kable(prop.all.df[1:10, c(8,1,5:7)])
+    kable(prop.all.df[1:10, c(8,1,5)], caption="Least property damaging events")
 
 <table>
+<caption>Least property damaging events</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
 <th align="left">total</th>
-<th align="left">mean</th>
-<th align="left">median</th>
 </tr>
 </thead>
 <tbody>
@@ -1773,71 +1770,51 @@ Just for curiosity, these are the less damaging events:
 <td align="right">46</td>
 <td align="left">RIP CURRENT</td>
 <td align="left">$1,000</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="even">
 <td align="right">45</td>
 <td align="left">HIGH SWELLS</td>
 <td align="left">$5,000</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="odd">
 <td align="right">44</td>
 <td align="left">URBAN/SMALL STREAM</td>
 <td align="left">$5,000</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="even">
 <td align="right">43</td>
 <td align="left">WINTRY MIX</td>
 <td align="left">$12,500</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="odd">
 <td align="right">42</td>
 <td align="left">FROST</td>
 <td align="left">$15,000</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="even">
 <td align="right">41</td>
 <td align="left">HIGH SEAS</td>
 <td align="left">$15,500</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="odd">
 <td align="right">40</td>
 <td align="left">WET MICROBURST</td>
 <td align="left">$35,000</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="even">
 <td align="right">39</td>
 <td align="left">MICROBURST</td>
 <td align="left">$80,000</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="odd">
 <td align="right">38</td>
 <td align="left">DENSE SMOKE</td>
 <td align="left">$100,000</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 <tr class="even">
 <td align="right">37</td>
 <td align="left">GUSTNADO</td>
 <td align="left">$102,050</td>
-<td align="left">$9,309,236,205</td>
-<td align="left">$6,537,750</td>
 </tr>
 </tbody>
 </table>
@@ -1846,8 +1823,6 @@ Crop losses
 -----------
 
 ### Most Crop Damaging event in a single occurrence
-
-Most Crop Damaging event in a single occurrence
 
 In order to determine what were the most crop damaging events in a
 single occurrence, we need to see how damages are distributed along the
@@ -1919,11 +1894,11 @@ Distribution plots
             theme(plot.title = element_text(hjust = 0.5))       
 
     grid.arrange(plt.distr.crop0, plt.distr.crop1,
-                 nrow=1, ncol=2, 
-                 bottom="Population distribution")
+                 nrow=1, ncol=2)
     grid.rect(gp=gpar(fill=NA))
 
-![](readme_files/figure-markdown_strict/crop-distr-4-1.png)
+![Population distribution for losses /
+occurrences](readme_files/figure-markdown_strict/crop-distr-4-1.png)
 
 In this study, we looked on the 1% most harmful occurrences.
 
@@ -1934,11 +1909,23 @@ In this study, we looked on the 1% most harmful occurrences.
     colourCount.crop.single = length(unique(crop95.df$event))
     getPalette = colorRampPalette(brewer.pal(colourCount.crop.single, "Set1"))
 
+    worst.crop.single.ev <- crop95.df$event[1]
+    worst.crop.single.st <- crop95.df$state[1]
+    worst.crop.single.ct <- crop95.df$countyname[1]
+    worst.crop.single.dt <- crop95.df$day[1]
+    worst.crop.single.value <- crop95.df$value[1]
+    worst.crop.single.mean <- crop95.df$mean[1]
+    worst.crop.single.median <- crop95.df$median[1]
+
 
     # print a table
-    kable(crop95.df[1:20,c(13,1:6,8,11:12)])
+    kable(crop95.df[1:20,c(13,1:6,8)],
+           caption=paste("Worst crops damaging occurrences, mean = ",
+                        worst.crop.single.mean, " and median = ",
+                        worst.crop.single.median))
 
 <table>
+<caption>Worst crops damaging occurrences, mean = $2,224,406 and median = $15,000</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1949,8 +1936,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <th align="left">state</th>
 <th align="left">countyname</th>
 <th align="left">value</th>
-<th align="left">mean</th>
-<th align="left">median</th>
 </tr>
 </thead>
 <tbody>
@@ -1963,8 +1948,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">IL</td>
 <td align="left">ADAMS</td>
 <td align="left">$5,000,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
@@ -1975,8 +1958,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">MS</td>
 <td align="left">MSZ001</td>
 <td align="left">$5,000,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
@@ -1987,8 +1968,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">MS</td>
 <td align="left">MSZ018</td>
 <td align="left">$1,510,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
@@ -1999,8 +1978,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">TX</td>
 <td align="left">TXZ091</td>
 <td align="left">$1,000,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
@@ -2011,8 +1988,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">CA</td>
 <td align="left">CAZ020</td>
 <td align="left">$596,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
@@ -2023,8 +1998,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">IA</td>
 <td align="left">IAZ004</td>
 <td align="left">$578,850,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
@@ -2035,8 +2008,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">TX</td>
 <td align="left">TXZ021</td>
 <td align="left">$515,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
@@ -2047,8 +2018,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">IA</td>
 <td align="left">IAZ004</td>
 <td align="left">$500,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
@@ -2059,8 +2028,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">OK</td>
 <td align="left">OKZ049</td>
 <td align="left">$500,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
@@ -2071,8 +2038,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">NC</td>
 <td align="left">NCZ007</td>
 <td align="left">$500,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">11</td>
@@ -2083,8 +2048,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">PA</td>
 <td align="left">PAZ006</td>
 <td align="left">$500,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
@@ -2095,8 +2058,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ072</td>
 <td align="left">$500,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
@@ -2107,8 +2068,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">MO</td>
 <td align="left">HENRY</td>
 <td align="left">$500,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">14</td>
@@ -2119,8 +2078,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">CA</td>
 <td align="left">CAZ089</td>
 <td align="left">$492,400,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">15</td>
@@ -2131,8 +2088,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">NE</td>
 <td align="left">NEZ039</td>
 <td align="left">$480,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">16</td>
@@ -2143,8 +2098,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">TX</td>
 <td align="left">TXZ021</td>
 <td align="left">$450,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">17</td>
@@ -2155,8 +2108,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">FL</td>
 <td align="left">FLZ068</td>
 <td align="left">$423,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
@@ -2167,8 +2118,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">TX</td>
 <td align="left">TXZ021</td>
 <td align="left">$420,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="odd">
 <td align="right">19</td>
@@ -2179,8 +2128,6 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">NC</td>
 <td align="left">NCZ029</td>
 <td align="left">$413,600,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 <tr class="even">
 <td align="right">20</td>
@@ -2191,17 +2138,9 @@ In this study, we looked on the 1% most harmful occurrences.
 <td align="left">AL</td>
 <td align="left">TALLADEGA</td>
 <td align="left">$400,000,000</td>
-<td align="left">$2,224,406</td>
-<td align="left">$15,000</td>
 </tr>
 </tbody>
 </table>
-
-    worst.crop.single.ev <- crop95.df$event[1]
-    worst.crop.single.st <- crop95.df$state[1]
-    worst.crop.single.ct <- crop95.df$countyname[1]
-    worst.crop.single.dt <- crop95.df$day[1]
-    worst.crop.single.value <- crop95.df$value[1]
 
     plt.crop.single <- ggplot(crop95.df, aes(day, crop.ev, colour=event))
 
@@ -2224,10 +2163,11 @@ In this study, we looked on the 1% most harmful occurrences.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5)) 
 
-    plt.crop.single + labs(title="Most crop damaging Occurrence",
+    plt.crop.single + labs(title="Worst crops damaging occurrences",
                         y="Losses", x="")
 
-![](readme_files/figure-markdown_strict/crop-single-plot-1.png)
+![Worst crops damaging
+occurrences](readme_files/figure-markdown_strict/crop-single-plot-1.png)
 
 The single most economic damaging event to crops was a **FLOOD, that
 occurred in IL, ADAMS, on 1993-08-31, causing U$ $5,000,000,000 in
@@ -2268,9 +2208,10 @@ which are above the mean.
     worst.crop.total <- crop.all.df$total[1]
 
     # a table
-    kable(crop.all.df[, c(8,1,5:7)])
+    kable(crop.all.df[, c(8,1,5:7)], caption="Total losses by event")
 
 <table>
+<caption>Total losses by event</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -2345,13 +2286,17 @@ which are above the mean.
             theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))                 
 
-    plt.crop.all + labs(title="Most crops damaging type of event - all time",
-                        y="Losses", x="")
+    plt.crop.all + labs(title="Total Damages - All time",
+                 subtitle="Most crops damaging events of all time",
+                         y="Losses", x="")
 
-![](readme_files/figure-markdown_strict/crop-all-plot-1.png)
+![Total Crop Damages by
+event](readme_files/figure-markdown_strict/crop-all-plot-1.png)
 
 The most crop damaging event along the time is the **DROUGHT. It has
 caused $13,972,581,000 in losses.**
+
+### Least crops damaging events
 
 Just for curiosity, lets show now what are the less damaging among the
 events:
@@ -2368,16 +2313,15 @@ events:
 
 
 
-    kable(crop.all.df[1:10, c(8,1,5:7)])
+    kable(crop.all.df[1:10, c(8,1,5)], caption="Least crops damaging events")
 
 <table>
+<caption>Least crops damaging events</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
 <th align="left">total</th>
-<th align="left">mean</th>
-<th align="left">median</th>
 </tr>
 </thead>
 <tbody>
@@ -2385,79 +2329,57 @@ events:
 <td align="right">22</td>
 <td align="left">GUSTNADO</td>
 <td align="left">$1,550</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="even">
 <td align="right">21</td>
 <td align="left">TSUNAMI</td>
 <td align="left">$20,000</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="odd">
 <td align="right">20</td>
 <td align="left">TYPHOON</td>
 <td align="left">$825,000</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="even">
 <td align="right">19</td>
 <td align="left">TIDE</td>
 <td align="left">$850,000</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="odd">
 <td align="right">18</td>
 <td align="left">LIGHTNING</td>
 <td align="left">$12,092,090</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="even">
 <td align="right">17</td>
 <td align="left">SLIDE</td>
 <td align="left">$20,017,000</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="odd">
 <td align="right">16</td>
 <td align="left">WINTER</td>
 <td align="left">$42,444,000</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="even">
 <td align="right">15</td>
 <td align="left">FROST</td>
 <td align="left">$66,000,000</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="odd">
 <td align="right">14</td>
 <td align="left">BLIZZARD</td>
 <td align="left">$112,060,000</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 <tr class="even">
 <td align="right">13</td>
 <td align="left">SNOW</td>
 <td align="left">$134,663,100</td>
-<td align="left">$2,231,988,917</td>
-<td align="left">$296,658,415</td>
 </tr>
 </tbody>
 </table>
 
 Most aflicted locations
 =======================
-
-Most afflicted locations
 
 We have determined what locations had the worst outcome from those
 events, both in terms of human health and economic losses.
@@ -2484,9 +2406,10 @@ Worst fatality count
                     crop.dmg = dollar(crop.dmg)
                  )
 
-    kable(cities.fatal.df[1:10, c(7,1:6)])
+    kable(cities.fatal.df[1:10, c(7,1:6)], caption="Total fatalities by county")
 
 <table>
+<caption>Total fatalities by county</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -2609,9 +2532,10 @@ Worst injuries count
                     crop.dmg = dollar(crop.dmg)
                  )
 
-    kable(cities.inj.df[1:10, c(7,1:6)])
+    kable(cities.inj.df[1:10, c(7,1:6)], caption="Total injuries by county")
 
 <table>
+<caption>Total injuries by county</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -2735,9 +2659,10 @@ Worst property losses
                     crop.dmg = dollar(crop.dmg)
           )
 
-    kable(cities.prop.df[1:10, c(7,1:6)])
+    kable(cities.prop.df[1:10, c(7,1:6)], caption="Total property losses by county")
 
 <table>
+<caption>Total property losses by county</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -2862,9 +2787,10 @@ Worst crops losses
                     crop.dmg = dollar(crop.dmg)
           )
 
-    kable(cities.crop.df[1:10, c(7,1:6)])
+    kable(cities.crop.df[1:10, c(7,1:6)], caption="Total crops losses by county")
 
 <table>
+<caption>Total crops losses by county</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -2989,11 +2915,11 @@ Population Health
     # do.call("grid.arrange", c(plist, ncol=nCol))
 
     grid.arrange(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all, 
-                 nrow=2, ncol=2,
-                 bottom="Health impact")
+                 nrow=2, ncol=2)
     grid.rect(gp=gpar(fill=NA))
 
-![](readme_files/figure-markdown_strict/health-plot-1.png)
+![Population Health: fatalities and
+injuries](readme_files/figure-markdown_strict/health-plot-1.png)
 
 The single most fatal event was a **HEAT, that occurred in IL, ILZ003,
 on 1995-07-12, killing 583 people.**
@@ -3012,11 +2938,11 @@ Economic Damages
 
     grid.arrange(plt.prop.single, plt.prop.all,
                  plt.crop.single, plt.crop.all,
-                 nrow=2, ncol=2,
-                 bottom="Economic impact")
+                 nrow=2, ncol=2)
     grid.rect(gp=gpar(fill=NA))
 
-![](readme_files/figure-markdown_strict/economic-plot-1.png)
+![Economic Damages: property and
+crops](readme_files/figure-markdown_strict/economic-plot-1.png)
 
 The single most economic damaging event to properties was a **FLOOD,
 that occurred in CA, NAPA, on 2006-01-01, causing U$ $115,000,000,000 in
@@ -3052,14 +2978,16 @@ Distribution of data
 
     grid.arrange(plt.distr.fatal0, plt.distr.fatal1, plt.distr.inj0, plt.distr.inj1, 
                  nrow=1, ncol=4, 
-                 bottom="Population distribution - fatalities and injuries")
+                 bottom="Fatalities and injuries")
     grid.rect(gp=gpar(fill=NA))             
 
-![](readme_files/figure-markdown_strict/distribution-1.png)
+![Population
+distribution](readme_files/figure-markdown_strict/distribution-1.png)
 
     grid.arrange(plt.distr.prop0, plt.distr.prop1, plt.distr.crop0, plt.distr.crop1, 
                  nrow=1, ncol=4, 
-                 bottom="Population distribution - property and crops losses")
+                 bottom="Property and crops losses")
     grid.rect(gp=gpar(fill=NA))   
 
-![](readme_files/figure-markdown_strict/distribution-2.png)
+![Population
+distribution](readme_files/figure-markdown_strict/distribution-2.png)

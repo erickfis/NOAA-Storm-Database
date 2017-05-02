@@ -1,3 +1,6 @@
+## Injuring Occurrences
+
+
 ### Most injuring in a single occurrence
 Most injuring in a single occurrence
 
@@ -69,10 +72,9 @@ plt.distr.inj1 <- plt.distr.inj1 + geom_density(aes(y=..density..)) + xlim(0,(qt
 ```
 
 
-```{r inj-distribution, fig.width=7, fig.height=3}
+```{r inj-distribution, fig.width=7, fig.height=3, fig.cap="Population distribution for Injuries / occurrences"}
 grid.arrange(plt.distr.inj0, plt.distr.inj1,
-             nrow=1, ncol=2, 
-             bottom="Population distribution")
+             nrow=1, ncol=2)
 grid.rect(gp=gpar(fill=NA))
 ```
 
@@ -92,7 +94,7 @@ colourCount.inj.single = length(unique(injuring95.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.inj.single, "Set1"))
 
 # print a table
-kable(injuring95.df[,c(10,1:9)])
+kable(injuring95.df[,c(10,1:9)], caption="Worst injuring occurrences")
 
 # prepare text for inline R
 worst.injuring.single.ev <- injuring95.df$event[1]
@@ -103,7 +105,7 @@ worst.injuring.single.inj <- injuring95.df$injuries[1]
 ```
 
 
-```{r injuring-single-plot, cache=TRUE}
+```{r injuring-single-plot, cache=TRUE, fig.cap="Worst injuring occurrences"}
 # the plot
 plt.inj.single <- ggplot(injuring95.df, aes(day, injuries, colour=event))
 
@@ -125,11 +127,13 @@ plt.inj.single <- plt.inj.single + geom_point() +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5)) 
 
-plt.inj.single + labs(title="Most Injuring Occurrence",
-                    y="Injuries", x="") 
+
         # scale_y_continuous(expand = c(0, 0)) +
         # geom_hline(aes(yintercept = mean), linetype=2) +
         # geom_hline(aes(yintercept = median), linetype=3)
+plt.inj.single + labs(title="Worst injuring occurrences",
+                    y="Injuries", x="") 
+
 
 ```
 
@@ -171,7 +175,7 @@ worst.injuring.all.ev <- injuring.all.df$event[1]
 worst.injuring.all.inj <- injuring.all.df$total[1]
 
 # a table
-kable(injuring.all.df[,c(5,1:4)])
+kable(injuring.all.df[,c(5,1:4)], caption="Total injuries by event")
 
 
 ```
@@ -179,7 +183,7 @@ kable(injuring.all.df[,c(5,1:4)])
 The most injuring event along the time is the **`r worst.injuring.all.ev`. It has injuried `r worst.injuring.all.inj` people until now.**
 
 
-```{r injuring-all-plot, cache=TRUE}
+```{r injuring-all-plot, fig.cap="Total Injuries by event"}
 
 # the plot
 plt.inj.all <- ggplot(data=injuring.all.df, aes(event, total, fill=event))
@@ -200,10 +204,15 @@ plt.inj.all <- plt.inj.all + geom_bar(stat="identity") +
         theme(plot.title = element_text(hjust = 0.5))                 
                 
 
-plt.inj.all  + labs(title="Most Injuring type of event - all time",
-                    y="Injuries", x="")
+plt.inj.all  + labs(title="Total Injuries - All time",
+             subtitle="Most injuring events of all time",
+                     y="Injuries", x="")
 
 ```
+
+### Least injuring events
+
+
 
 Just for curiosity, lets show now what are the less injuring among the injuring events:
 
@@ -216,7 +225,7 @@ injuring.all.df <- injuring.df %>% group_by(event) %>%
                rank = seq(length(event),1, by=-1))
 
 # a table
-kable(injuring.all.df[1:10,c(5,1:2)])
+kable(injuring.all.df[1:10,c(5,1:2)], caption="Least injuring events")
 
 
 

@@ -1,5 +1,7 @@
+## Crop losses
+
+
 ### Most Crop Damaging event in a single occurrence
-Most Crop Damaging event in a single occurrence
 
 In order to determine what were the most crop damaging events in a single occurrence, we need to see how damages are distributed along the occurrences.
 
@@ -77,10 +79,9 @@ plt.distr.crop1 <- plt.distr.crop1 + geom_density(aes(y=..density..)) + #xlim(0,
 ```
 
 
-```{r crop-distr-4, cache=TRUE, fig.width=7, fig.height=3}
+```{r crop-distr-4, cache=TRUE, fig.width=7, fig.height=3, fig.cap="Population distribution for losses / occurrences"}
 grid.arrange(plt.distr.crop0, plt.distr.crop1,
-             nrow=1, ncol=2, 
-             bottom="Population distribution")
+             nrow=1, ncol=2)
 grid.rect(gp=gpar(fill=NA))
 ```
 
@@ -97,22 +98,29 @@ crop95.df <- filter(crop.df, crop.ev>qt[1])
 colourCount.crop.single = length(unique(crop95.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.crop.single, "Set1"))
 
-
-# print a table
-kable(crop95.df[1:20,c(13,1:6,8,11:12)])
-
 worst.crop.single.ev <- crop95.df$event[1]
 worst.crop.single.st <- crop95.df$state[1]
 worst.crop.single.ct <- crop95.df$countyname[1]
 worst.crop.single.dt <- crop95.df$day[1]
 worst.crop.single.value <- crop95.df$value[1]
+worst.crop.single.mean <- crop95.df$mean[1]
+worst.crop.single.median <- crop95.df$median[1]
+
+
+# print a table
+kable(crop95.df[1:20,c(13,1:6,8)],
+       caption=paste("Worst crops damaging occurrences, mean = ",
+                    worst.crop.single.mean, " and median = ",
+                    worst.crop.single.median))
+
+
 
 
 ```
 
 
 
-```{r crop-single-plot, cache=TRUE}
+```{r crop-single-plot, cache=TRUE, fig.cap="Worst crops damaging occurrences"}
 
 plt.crop.single <- ggplot(crop95.df, aes(day, crop.ev, colour=event))
 
@@ -135,7 +143,7 @@ plt.crop.single <- plt.crop.single + geom_point() +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5)) 
 
-plt.crop.single + labs(title="Most crop damaging Occurrence",
+plt.crop.single + labs(title="Worst crops damaging occurrences",
                     y="Losses", x="")
 
   
@@ -178,11 +186,11 @@ worst.crop.all.ev <- crop.all.df$event[1]
 worst.crop.total <- crop.all.df$total[1]
 
 # a table
-kable(crop.all.df[, c(8,1,5:7)])
+kable(crop.all.df[, c(8,1,5:7)], caption="Total losses by event")
 
 ```
 
-```{r crop-all-plot, cache=TRUE}
+```{r crop-all-plot, cache=TRUE, fig.cap="Total Crop Damages by event"}
 
 plt.crop.all <- ggplot(data=crop.all.df, aes(event, total.raw, fill=event))
 
@@ -203,8 +211,9 @@ plt.crop.all <- plt.crop.all + geom_bar(stat="identity") +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.crop.all + labs(title="Most crops damaging type of event - all time",
-                    y="Losses", x="")
+plt.crop.all + labs(title="Total Damages - All time",
+             subtitle="Most crops damaging events of all time",
+                     y="Losses", x="")
 
 ```
 
@@ -213,7 +222,11 @@ plt.crop.all + labs(title="Most crops damaging type of event - all time",
 The most crop damaging event along the time is the **`r worst.crop.all.ev`. It has caused `r worst.crop.total` in losses.**
 
 
+### Least crops damaging events
+
 Just for curiosity, lets show now what are the less damaging among the  events:
+
+
 
 
 ```{r crop-less, cache=TRUE}
@@ -230,7 +243,7 @@ crop.all.df <- crop.df %>% group_by(event) %>%
 
 
 
-kable(crop.all.df[1:10, c(8,1,5:7)])
+kable(crop.all.df[1:10, c(8,1,5)], caption="Least crops damaging events")
 
 
 ```

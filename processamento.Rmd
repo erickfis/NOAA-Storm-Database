@@ -1,4 +1,4 @@
-Data Processing 
+# Data Processing 
 
 This code loads the original data and them choose which variables are useful to answer our questions:
 
@@ -37,7 +37,7 @@ dados <-tbl_df(dados)
 # dataS <- dados[linhas,]
 # write.csv(dataS, "StormData")
 
-# dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"))
+# dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData-sample.bz2"))
 # dados <-tbl_df(dados)
 # dados <- select(dados, -1)
 
