@@ -7,31 +7,25 @@ date: "`r format(Sys.time(), '%Y %B, %d')`"
 # to do
 ## baixar dados novos e adaptar
 
+
 output:
-   md_document
-
-
-# output:
-#         html_document:
+#         md_document:
 #                 toc: true
-#                 toc_depth: 3
-#                 number_sections: true
-#                 self_contained: yes
-#                 keep_md: false
-#                 fig_crop: false
-#                 classoption: landscape
+        
+        # html_document:
+        #         toc: true
+        #         toc_depth: 3
+        #         number_sections: true
+        #         self_contained: yes
+        #         keep_md: false
+        #         fig_crop: false
+        #         classoption: landscape
 
-
-# header-includes: 
-  # # - \usepackage{booktabs}
-  # - \usepackage{longtable}
-  # # - \usepackage{floatrow}
-# output:
-#   pdf_document:
-#         toc: true
-#         toc_depth: 3
-#         number_sections: true
-#         keep_tex: true
+        pdf_document:
+                toc: true
+                toc_depth: 3
+                number_sections: true
+                keep_tex: true
         
 
 
@@ -46,16 +40,13 @@ output:
 ```{r knit-rules, echo=FALSE}
 library(knitr)
 
-opts_chunk$set(echo = TRUE, message = FALSE, include = TRUE, 
+opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
                warning = FALSE, autodep = TRUE, options(scipen=999),
                fig.pos = 'H')
 
 ```
 
 
-# NOAA Storm Database - worst cases
-
-*erickfis, `r format(Sys.time(), '%Y %B, %d')`*
 
 ```{r child = 'intros.Rmd'}
 ```

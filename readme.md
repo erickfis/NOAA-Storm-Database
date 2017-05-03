@@ -1,10 +1,8 @@
-NOAA Storm Database - worst cases
-=================================
+# NOAA Storm Database - worst cases
 
-*erickfis, 2017 maio, 02*
 
-Introduction
-============
+*erickfis, 2017, May, 04th*
+
 
 In this study we have analysed the NOAA Storm Database in order to
 determine what are the worst natural catastrophic events, both in terms
@@ -24,6 +22,51 @@ The database can be found on:
 
 RPubs version, with fewer plots, for Coursera:
 <http://rpubs.com/erickfis/noaa>
+
+# Summary
+
+-   [Objective](#objective)
+-   [Methods](#methods)
+-   [Data Processing](#data-processing)
+-   [Human health: the most harmfull
+    events](#human-health-the-most-harmfull-events)
+    -   [Fatal Occurrences](#fatal-occurrences)
+        -   [Most fatal in a single
+            occurrence](#most-fatal-in-a-single-occurrence)
+        -   [Most fatal in all time](#most-fatal-in-all-time)
+        -   [Least fatal events](#least-fatal-events)
+    -   [Injuring Occurrences](#injuring-occurrences)
+        -   [Most injuring in a single
+            occurrence](#most-injuring-in-a-single-occurrence)
+        -   [Most injuring in all time](#most-injuring-in-all-time)
+        -   [Least injuring events](#least-injuring-events)
+-   [Economy: the the most harmfull
+    events](#economy-the-the-most-harmfull-events)
+    -   [Property losses](#property-losses)
+        -   [Most Property Damaging event in a single
+            occurrence](#most-property-damaging-event-in-a-single-occurrence)
+        -   [Most Property Damaging event in all
+            time](#most-property-damaging-event-in-all-time)
+        -   [Least property damaging
+            events](#least-property-damaging-events)
+    -   [Crop losses](#crop-losses)
+        -   [Most Crop Damaging event in a single
+            occurrence](#most-crop-damaging-event-in-a-single-occurrence)
+        -   [Most Crop Damaging event in all
+            time](#most-crop-damaging-event-in-all-time)
+        -   [Least crops damaging events](#least-crops-damaging-events)
+-   [Most aflicted locations](#most-aflicted-locations)
+    -   [Worst fatality count](#worst-fatality-count)
+    -   [Worst injuries count](#worst-injuries-count)
+    -   [Worst property losses](#worst-property-losses)
+    -   [Worst crops losses](#worst-crops-losses)
+-   [Results](#results)
+    -   [Population Health](#population-health)
+    -   [Economic Damages](#economic-damages)
+    -   [Most aflicted locations](#most-aflicted-locations-1)
+    -   [Distribution of data](#distribution-of-data)
+
+
 
 Objective
 =========
@@ -83,11 +126,11 @@ Reading original database:
     dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"), na.strings = "")
 
     ## 
-    Read 20.7% of 967216 rows
+    Read 21.7% of 967216 rows
     Read 41.4% of 967216 rows
-    Read 55.8% of 967216 rows
-    Read 75.5% of 967216 rows
-    Read 82.7% of 967216 rows
+    Read 56.9% of 967216 rows
+    Read 77.5% of 967216 rows
+    Read 83.7% of 967216 rows
     Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:07
 
     dados <-tbl_df(dados)
@@ -145,16 +188,32 @@ occurred (state and county name).
             select(event, 2, day, duration, 3:4, 7:12)
 
     # fixing exp for economic data
-    harm.df$propdmgexp[which(harm.df$propdmgexp=="K")] <- as.character(3)
-    harm.df$propdmgexp[which(harm.df$propdmgexp=="m")] <- as.character(6)
-    harm.df$propdmgexp[which(harm.df$propdmgexp=="M")] <- as.character(6)
-    harm.df$propdmgexp[which(harm.df$propdmgexp=="B")] <- as.character(9)
+
+    unique(harm.df$propdmgexp) # this shows what we need to look for
+
+    ##  [1] "K" "M" NA  "B" "m" "+" "0" "5" "6" "?" "4" "2" "3" "h" "7" "H" "-"
+    ## [18] "1" "8"
+
+    harm.df$propdmgexp[is.na(harm.df$propdmgexp)] <- as.character(0)
+    harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("+","?", "-"))] <- as.character(0)
+
+    harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("H","h"))] <- as.character(2)
+    harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("K","k"))] <- as.character(3)
+    harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("M","m"))] <- as.character(6)
+    harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("B","b"))] <- as.character(9)
     harm.df$propdmgexp <- as.numeric(harm.df$propdmgexp)
 
-    harm.df$cropdmgexp[which(harm.df$cropdmgexp=="K")] <- as.character(3)
-    harm.df$cropdmgexp[which(harm.df$cropdmgexp=="m")] <- as.character(6)
-    harm.df$cropdmgexp[which(harm.df$cropdmgexp=="M")] <- as.character(6)
-    harm.df$cropdmgexp[which(harm.df$cropdmgexp=="B")] <- as.character(9)
+
+    unique(harm.df$cropdmgexp) # this shows what we need to look for
+
+    ## [1] NA  "M" "K" "m" "B" "?" "0" "k" "2"
+
+    harm.df$cropdmgexp[is.na(harm.df$cropdmgexp)] <- as.character(0)
+    harm.df$cropdmgexp[which(harm.df$cropdmgexp == "?")] <- as.character(0)
+
+    harm.df$cropdmgexp[which(harm.df$cropdmgexp %in% c("K","k"))] <- as.character(3)
+    harm.df$cropdmgexp[which(harm.df$cropdmgexp %in% c("M","m"))] <- as.character(6)
+    harm.df$cropdmgexp[which(harm.df$cropdmgexp %in% c("B","b"))] <- as.character(9)
     harm.df$cropdmgexp <- as.numeric(harm.df$cropdmgexp)
 
     harm.df <- mutate(harm.df, prop.ev = propdmg*10^propdmgexp,
@@ -269,7 +328,7 @@ commom strings.
 
     harm.df$countyname <- cidades
 
-    rm(dados) # house cleanning
+    rm(dados, cidades) # house cleanning
 
 Human health: the most harmfull events
 ======================================
@@ -304,7 +363,7 @@ occurrences.
 
     plt.distr.fatal0 <- ggplot(fatal.df, aes(fatalities))
 
-    plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..density..)) + xlim(0,.5) + 
+    plt.distr.fatal0 <- plt.distr.fatal0 + geom_density(aes(y=..scaled..)) + xlim(0,.5) + 
             labs(title="All events") +
             theme(plot.title = element_text(hjust = 0.5))
 
@@ -350,7 +409,7 @@ Distribution plots
      
     plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
 
-    plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..density..)) + 
+    plt.distr.fatal1 <- plt.distr.fatal1 + geom_density(aes(y=..scaled..)) + 
             xlim(0,(qt[1]/10)) + 
             labs(title="Fatal events") +
             theme(plot.title = element_text(hjust = 0.5))
@@ -537,6 +596,11 @@ which are above the mean.
             mutate(mean = mean(total), median = median(total),
                    rank = seq_len(length(event))) %>%
             filter(total > mean(total))
+
+    # ordering events by rank, to plot later
+    fatal.all.df$event <- factor(fatal.all.df$event,
+                    levels = fatal.all.df$event[order(fatal.all.df$rank)])
+
 
     # create color pallete for all events
     colourCount.fatal.all = length(unique(fatal.all.df$event))
@@ -726,7 +790,7 @@ occurrences.
     # distribution plot
     plt.distr.inj0 <- ggplot(injuring.df, aes(injuries))
 
-    plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..density..)) + xlim(0,0.5) + 
+    plt.distr.inj0 <- plt.distr.inj0 + geom_density(aes(y=..scaled..)) + xlim(0,0.5) + 
             labs(title="All events") +
             theme(plot.title = element_text(hjust = 0.5))
 
@@ -771,7 +835,7 @@ Distribution plots
     # distribution plot
     plt.distr.inj1 <- ggplot(injuring.df, aes(injuries))
 
-    plt.distr.inj1 <- plt.distr.inj1 + geom_density(aes(y=..density..)) + xlim(0,(qt[1]/20)) + 
+    plt.distr.inj1 <- plt.distr.inj1 + geom_density(aes(y=..scaled..)) + xlim(0,(qt[1]/20)) + 
             labs(title="Injuring events") +
             theme(plot.title = element_text(hjust = 0.5))       
 
@@ -1083,6 +1147,11 @@ which are above the mean.
                    rank = seq_len(length(event)))  %>%
             filter(total >= mean(total))
 
+    # ordering events by rank, to plot later
+    injuring.all.df$event <- factor(injuring.all.df$event,
+                    levels = injuring.all.df$event[order(injuring.all.df$rank)])
+
+
     # create color pallete for all events
     colourCount.inj.all = length(unique(injuring.all.df$event))
     getPalette = colorRampPalette(brewer.pal(colourCount.inj.all, "Set1"))
@@ -1282,7 +1351,7 @@ occurrences.
     # distribution plot
     plt.distr.prop0 <- ggplot(prop.df, aes(log(prop.ev)))
 
-    plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+    plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..scaled..)) + #xlim(0,.5) + 
             labs(title="All events", x="log(amount $)") +
             theme(plot.title = element_text(hjust = 0.5))       
 
@@ -1291,10 +1360,10 @@ occurrences.
     qt
 
     ##    99.9% 
-    ## 53931800
+    ## 25000000
 
 Looking at this distribution, we can infer that 99.8% of the occurrences
-caused less than **$53,931,800 in losses**.
+caused less than **$25,000,000 in losses**.
 
 On the other hand, damaging occurrences had to have damages above zero.
 
@@ -1326,7 +1395,7 @@ Distribution plots
     # distribution plot
     plt.distr.prop1 <- ggplot(prop.df, aes(log(prop.ev)))
 
-    plt.distr.prop1 <- plt.distr.prop1 + geom_density(aes(y=..density..)) + #xlim(0,100) + 
+    plt.distr.prop1 <- plt.distr.prop1 + geom_density(aes(y=..scaled..)) + #xlim(0,100) + 
             labs(title="Damaging events", x="log(amount $)") +
             theme(plot.title = element_text(hjust = 0.5))     
 
@@ -1367,7 +1436,7 @@ In this study, we looked on the 1% most harmful occurrences.
                         worst.prop.single.median))
 
 <table>
-<caption>Worst property damaging occurrences, mean = $1,791,099 and median = $10,000</caption>
+<caption>Worst property damaging occurrences, mean = $1,790,432 and median = $10,000</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1640,6 +1709,10 @@ which are above the mean.
                             median = dollar(mediana.raw),
                             rank = seq_len(length(event))) %>%
                     filter(total.raw > mean(total.raw))
+
+    # ordering events by rank, to plot later
+    prop.all.df$event <- factor(prop.all.df$event,
+                    levels = prop.all.df$event[order(prop.all.df$rank)])
                     
     # create color pallete for all events
     colourCount.prop.all = length(unique(prop.all.df$event))
@@ -1667,43 +1740,43 @@ which are above the mean.
 <tr class="odd">
 <td align="right">1</td>
 <td align="left">FLOOD</td>
-<td align="left">$168,258,894,238</td>
-<td align="left">$9,309,236,205</td>
+<td align="left">$168,258,894,484</td>
+<td align="left">$9,309,236,278</td>
 <td align="left">$6,537,750</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="left">HURRICANE</td>
 <td align="left">$84,656,180,010</td>
-<td align="left">$9,309,236,205</td>
+<td align="left">$9,309,236,278</td>
 <td align="left">$6,537,750</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
 <td align="left">TORNADO</td>
-<td align="left">$57,003,317,814</td>
-<td align="left">$9,309,236,205</td>
+<td align="left">$57,003,317,876</td>
+<td align="left">$9,309,236,278</td>
 <td align="left">$6,537,750</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="left">STORM</td>
 <td align="left">$56,197,366,960</td>
-<td align="left">$9,309,236,205</td>
+<td align="left">$9,309,236,278</td>
 <td align="left">$6,537,750</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="left">WIND</td>
-<td align="left">$17,951,211,793</td>
-<td align="left">$9,309,236,205</td>
+<td align="left">$17,951,214,274</td>
+<td align="left">$9,309,236,278</td>
 <td align="left">$6,537,750</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
 <td align="left">HAIL</td>
-<td align="left">$15,977,047,956</td>
-<td align="left">$9,309,236,205</td>
+<td align="left">$15,977,048,513</td>
+<td align="left">$9,309,236,278</td>
 <td align="left">$6,537,750</td>
 </tr>
 </tbody>
@@ -1736,7 +1809,7 @@ which are above the mean.
 event](readme_files/figure-markdown_strict/prop-all-plot-1.png)
 
 The most property damaging event along the time is the **FLOOD. It has
-caused $168,258,894,238 in losses.**
+caused $168,258,894,484 in losses.**
 
 ### Least property damaging events
 
@@ -1841,7 +1914,7 @@ occurrences.
     # distribution plot
     plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
 
-    plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..density..)) + #xlim(0,.5) + 
+    plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..scaled..)) + #xlim(0,.5) + 
             labs(title="All events", x="log(amount $)") +
             theme(plot.title = element_text(hjust = 0.5))  
 
@@ -1850,10 +1923,10 @@ occurrences.
     qt
 
     ##      99.8%       100% 
-    ##    7000000 5000000000
+    ##    1000000 5000000000
 
 Looking at this distribution, we can infer that 99% of the occurrences
-caused less than **$7,000,000 in losses**.
+caused less than **$1,000,000 in losses**.
 
 On the other hand, damaging occurrences had to have damages above zero.
 
@@ -1877,17 +1950,17 @@ damages are above 99% of the most common values.
     qt
 
     ##     99.9% 
-    ## 336111520
+    ## 335499040
 
 Looking at this distribution, we can infer that **99.8% of the damaging
-occurrences caused up to $336,111,520 in losses.**
+occurrences caused up to $335,499,040 in losses.**
 
 Distribution plots
 
     # distribution plot
     plt.distr.crop1 <- ggplot(crop.df, aes(log(crop.ev)))
 
-    plt.distr.crop1 <- plt.distr.crop1 + geom_density(aes(y=..density..)) + #xlim(0,qt[1]) + 
+    plt.distr.crop1 <- plt.distr.crop1 + geom_density(aes(y=..scaled..)) + #xlim(0,qt[1]) + 
             labs(title="Damaging events", x="log(amount $)") +
             # scale_x_continuous(labels = dollar)+
             # theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
@@ -1925,7 +1998,7 @@ In this study, we looked on the 1% most harmful occurrences.
                         worst.crop.single.median))
 
 <table>
-<caption>Worst crops damaging occurrences, mean = $2,224,406 and median = $15,000</caption>
+<caption>Worst crops damaging occurrences, mean = $2,222,010 and median = $15,000</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -2198,7 +2271,12 @@ which are above the mean.
                             median = dollar(mediana.raw),
                             rank = seq_len(length(event))) %>%
                     filter(total.raw > mean(total.raw))
-                    
+
+
+    # ordering events by rank, to plot later
+    crop.all.df$event <- factor(crop.all.df$event,
+                    levels = crop.all.df$event[order(crop.all.df$rank)])
+
     # create color pallete for all events
     colourCount.crop.all = length(unique(crop.all.df$event))
     getPalette = colorRampPalette(brewer.pal(colourCount.crop.all, "Set1"))
@@ -2226,46 +2304,48 @@ which are above the mean.
 <td align="right">1</td>
 <td align="left">DROUGHT</td>
 <td align="left">$13,972,581,000</td>
-<td align="left">$2,231,988,917</td>
+<td align="left">$2,232,008,736</td>
 <td align="left">$296,658,415</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="left">FLOOD</td>
-<td align="left">$12,275,737,200</td>
-<td align="left">$2,231,988,917</td>
+<td align="left">$12,275,747,200</td>
+<td align="left">$2,232,008,736</td>
 <td align="left">$296,658,415</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
 <td align="left">STORM</td>
 <td align="left">$5,738,319,500</td>
-<td align="left">$2,231,988,917</td>
+<td align="left">$2,232,008,736</td>
 <td align="left">$296,658,415</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="left">HURRICANE</td>
 <td align="left">$5,505,292,800</td>
-<td align="left">$2,231,988,917</td>
+<td align="left">$2,232,008,736</td>
 <td align="left">$296,658,415</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="left">COLD</td>
 <td align="left">$3,298,176,550</td>
-<td align="left">$2,231,988,917</td>
+<td align="left">$2,232,008,736</td>
 <td align="left">$296,658,415</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
 <td align="left">HAIL</td>
-<td align="left">$3,046,470,470</td>
-<td align="left">$2,231,988,917</td>
+<td align="left">$3,046,887,473</td>
+<td align="left">$2,232,008,736</td>
 <td align="left">$296,658,415</td>
 </tr>
 </tbody>
 </table>
+
+    # plt.crop.all <- ggplot(data=crop.all.df, aes(x=reorder(event, total.raw), y=total.raw, fill=event))
 
     plt.crop.all <- ggplot(data=crop.all.df, aes(event, total.raw, fill=event))
 
@@ -2385,6 +2465,8 @@ We have determined what locations had the worst outcome from those
 events, both in terms of human health and economic losses.
 
 Unfortunatelly, these has been the worst counties for living in:
+
+    rm(crop.df, crop.all.df, crop95.df) # house cleanning
 
     # subset original data
     cities.df <- harm.df %>% 
@@ -2590,7 +2672,7 @@ Worst injuries count
 <td align="left">GREENE</td>
 <td align="right">37</td>
 <td align="right">1275</td>
-<td align="left">$269,935,250</td>
+<td align="left">$269,935,257</td>
 <td align="left">$0</td>
 </tr>
 <tr class="even">
@@ -2909,6 +2991,8 @@ Results
 Population Health
 -----------------
 
+    rm(cities.df, cities.crop.df) # house cleanning
+
     # plist <- list(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all)
     # n <- length(plist)
     # nCol <- floor(sqrt(n))
@@ -2949,7 +3033,7 @@ that occurred in CA, NAPA, on 2006-01-01, causing U$ $115,000,000,000 in
 losses**.
 
 The most property damaging event along the time is the **FLOOD. It has
-caused $168,258,894,238 in losses.**
+caused $168,258,894,484 in losses.**
 
 The single most economic damaging event to crops was a **FLOOD, that
 occurred in IL, ADAMS, on 1993-08-31, causing U$ $5,000,000,000 in

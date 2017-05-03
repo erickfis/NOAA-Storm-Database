@@ -176,7 +176,12 @@ crop.all.df <- crop.df %>% group_by(event) %>%
                         median = dollar(mediana.raw),
                         rank = seq_len(length(event))) %>%
                 filter(total.raw > mean(total.raw))
-                
+
+
+# ordering events by rank, to plot later
+crop.all.df$event <- factor(crop.all.df$event,
+                levels = crop.all.df$event[order(crop.all.df$rank)])
+
 # create color pallete for all events
 colourCount.crop.all = length(unique(crop.all.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.crop.all, "Set1"))
@@ -191,6 +196,8 @@ kable(crop.all.df[, c(8,1,5:7)], caption="Total losses by event")
 ```
 
 ```{r crop-all-plot, cache=TRUE, fig.cap="Total Crop Damages by event"}
+
+# plt.crop.all <- ggplot(data=crop.all.df, aes(x=reorder(event, total.raw), y=total.raw, fill=event))
 
 plt.crop.all <- ggplot(data=crop.all.df, aes(event, total.raw, fill=event))
 

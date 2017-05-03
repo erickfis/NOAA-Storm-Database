@@ -175,6 +175,11 @@ fatal.all.df <- fatal.df %>% group_by(event) %>%
                rank = seq_len(length(event))) %>%
         filter(total > mean(total))
 
+# ordering events by rank, to plot later
+fatal.all.df$event <- factor(fatal.all.df$event,
+                levels = fatal.all.df$event[order(fatal.all.df$rank)])
+
+
 # create color pallete for all events
 colourCount.fatal.all = length(unique(fatal.all.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.fatal.all, "Set1"))

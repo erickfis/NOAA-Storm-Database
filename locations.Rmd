@@ -9,6 +9,8 @@ Unfortunatelly, these has been the worst counties for living in:
 
 
 ```{r cities.df, cache=TRUE}
+rm(crop.df, crop.all.df, crop95.df) # house cleanning
+
 # subset original data
 cities.df <- harm.df %>% 
                 filter(!(is.na(countyname) | is.na(state))) %>%

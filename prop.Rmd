@@ -187,6 +187,10 @@ prop.all.df <- prop.df %>% group_by(event) %>%
                         median = dollar(mediana.raw),
                         rank = seq_len(length(event))) %>%
                 filter(total.raw > mean(total.raw))
+
+# ordering events by rank, to plot later
+prop.all.df$event <- factor(prop.all.df$event,
+                levels = prop.all.df$event[order(prop.all.df$rank)])
                 
 # create color pallete for all events
 colourCount.prop.all = length(unique(prop.all.df$event))

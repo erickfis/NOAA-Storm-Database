@@ -166,6 +166,11 @@ injuring.all.df <- injuring.df %>% group_by(event) %>%
                rank = seq_len(length(event)))  %>%
         filter(total >= mean(total))
 
+# ordering events by rank, to plot later
+injuring.all.df$event <- factor(injuring.all.df$event,
+                levels = injuring.all.df$event[order(injuring.all.df$rank)])
+
+
 # create color pallete for all events
 colourCount.inj.all = length(unique(injuring.all.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.inj.all, "Set1"))

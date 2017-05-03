@@ -5,6 +5,8 @@
 
 ```{r health-plot, fig.width=10, fig.height=10, fig.cap="Population Health: fatalities and injuries"}
 
+rm(cities.df, cities.crop.df) # house cleanning
+
 # plist <- list(plt.fatal.single, plt.fatal.all, plt.inj.single, plt.inj.all)
 # n <- length(plist)
 # nCol <- floor(sqrt(n))
