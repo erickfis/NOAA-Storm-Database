@@ -1,7 +1,8 @@
 # NOAA Storm Database - worst cases
 
 
-*erickfis, 2017, May, 04th*
+*erickfis, 2017, May, 06th*
+
 
 
 In this study we have analysed the NOAA Storm Database in order to
@@ -25,6 +26,7 @@ RPubs version, with fewer plots, for Coursera:
 
 # Summary
 
+-   [Introduction](#introduction)
 -   [Objective](#objective)
 -   [Methods](#methods)
 -   [Data Processing](#data-processing)
@@ -101,8 +103,8 @@ total sum of fatalities, injuries and economic losses.
 Data Processing
 ===============
 
-This code loads the original data and them choose which variables are
-useful to answer our questions:
+In order to answer our questions, the original database needed to be
+treated from its raw form to a more useful format.
 
     library(scales)
     library(stringr)
@@ -116,23 +118,23 @@ useful to answer our questions:
     library(gridExtra)
     library(grid)
 
-Reading original database:
+    # Reading original database:
 
     #fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
 
     #download.file(fileUrl, "StormData.bz2", method = "curl")
 
+    # looks for the already treated data base harm.rds. If not present, runs from the original
+    # data base. Else, just loads harm.rds
+
+    arquivos <- dir()
+    arquivos <- arquivos[grep("harm", arquivos)]
+
+
+    if (arquivos!="harm.rds"){
+
     #Full data
     dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"), na.strings = "")
-
-    ## 
-    Read 21.7% of 967216 rows
-    Read 41.4% of 967216 rows
-    Read 56.9% of 967216 rows
-    Read 77.5% of 967216 rows
-    Read 83.7% of 967216 rows
-    Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:07
-
     dados <-tbl_df(dados)
 
     # this do a sample data base, with 50000 obs, used for speeding up initial works:
@@ -149,31 +151,7 @@ Reading original database:
 
     # treating var names
     names(dados) <- gsub("_", ".", tolower(names(dados)))
-    names(dados)   
 
-    ##  [1] "state.."    "bgn.date"   "bgn.time"   "time.zone"  "county"    
-    ##  [6] "countyname" "state"      "evtype"     "bgn.range"  "bgn.azi"   
-    ## [11] "bgn.locati" "end.date"   "end.time"   "county.end" "countyendn"
-    ## [16] "end.range"  "end.azi"    "end.locati" "length"     "width"     
-    ## [21] "f"          "mag"        "fatalities" "injuries"   "propdmg"   
-    ## [26] "propdmgexp" "cropdmg"    "cropdmgexp" "wfo"        "stateoffic"
-    ## [31] "zonenames"  "latitude"   "longitude"  "latitude.e" "longitude."
-    ## [36] "remarks"    "refnum"
-
-This database has 902297 observations. Each observation corresponds to
-an event occurrence.
-
-To determine the most harmful events to human health, we will check the
-variables related to human health, which are "fatalities" and
-"injuries".
-
-To determine the most harmful events to economy, we will check the
-variables related to economic measures, from "propdmg" through
-"cropdmgexp".
-
-Also, in order to analyse various occurrences of the same event, we will
-measure the duration of the event, its magnitude and where the event
-occurred (state and county name).
 
     # select desired vars
     harm.df <- dados %>% select(evtype, mag, state, countyname, bgn.date, end.date, 23:28)
@@ -191,9 +169,6 @@ occurred (state and county name).
 
     unique(harm.df$propdmgexp) # this shows what we need to look for
 
-    ##  [1] "K" "M" NA  "B" "m" "+" "0" "5" "6" "?" "4" "2" "3" "h" "7" "H" "-"
-    ## [18] "1" "8"
-
     harm.df$propdmgexp[is.na(harm.df$propdmgexp)] <- as.character(0)
     harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("+","?", "-"))] <- as.character(0)
 
@@ -206,8 +181,6 @@ occurred (state and county name).
 
     unique(harm.df$cropdmgexp) # this shows what we need to look for
 
-    ## [1] NA  "M" "K" "m" "B" "?" "0" "k" "2"
-
     harm.df$cropdmgexp[is.na(harm.df$cropdmgexp)] <- as.character(0)
     harm.df$cropdmgexp[which(harm.df$cropdmgexp == "?")] <- as.character(0)
 
@@ -219,29 +192,6 @@ occurred (state and county name).
     harm.df <- mutate(harm.df, prop.ev = propdmg*10^propdmgexp,
                     crop.ev = cropdmg*10^cropdmgexp)
 
-This is a really big database which data has been being registered by a
-lot of different people since 1950. Thus, as expected, there are
-variations on how people registered events.
-
-For exemple, the string "snow" was used to register a lot of events.
-They are the same type of event, but count as different:
-
-    eventos <- grep("snow", harm.df$event, value = TRUE)
-    eventos <- sort(unique(eventos))
-    length(eventos)
-
-    ## [1] 118
-
-    eventos[1:10]
-
-    ##  [1] "accumulated snowfall"           "blizzard and heavy snow"       
-    ##  [3] "blizzard/heavy snow"            "blowing snow"                  
-    ##  [5] "blowing snow & extreme wind ch" "blowing snow- extreme wind chi"
-    ##  [7] "blowing snow/extreme wind chil" "cold and snow"                 
-    ##  [9] "drifting snow"                  "early snow"
-
-This is why we decided to filter those events: we grouped them by its
-commom strings.
 
     # treating event types
 
@@ -312,6 +262,7 @@ commom strings.
     # returning treated events
     harm.df$event <- toupper(eventos)
 
+
     # Treating County Names
     cidades <- toupper(harm.df$countyname)
     cidades <- str_trim(cidades)
@@ -329,6 +280,45 @@ commom strings.
     harm.df$countyname <- cidades
 
     rm(dados, cidades) # house cleanning
+    saveRDS(harm.df, "harm.rds")
+
+    } else {
+            harm.df <- readRDS("harm.rds")
+    }
+
+The necessary transformations were:
+
+-   sanitized var names
+-   evaluated duration of events
+-   evaluated damages values according to multipliers provided
+-   sanitized and grouped similar events: strong snow, heavy snow and
+    light snow all became just "snow"
+-   sanitized county names
+
+This database has 902297 observations. Each observation corresponds to
+an event occurrence.
+
+To determine the most harmful events to human health, we checked the
+variables related to human health, which are "fatalities" and
+"injuries".
+
+To determine the most harmful events to economy, we checked the
+variables related to economic measures, from "propdmg" through
+"cropdmgexp".
+
+Also, in order to analyse various occurrences of the same event, we
+measured the duration of the event, its magnitude and where the event
+occurred (state and county name).
+
+This is a really big database whose data has been being registered by a
+lot of different people since 1950. Thus, as expected, there are
+variations on how people registered events.
+
+For example, the string "snow" was used to register a lot of events.
+They are the same type of event, but count as different:
+
+This is why we decided to filter those events: we grouped them by its
+common strings.
 
 Human health: the most harmfull events
 ======================================

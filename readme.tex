@@ -82,7 +82,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2017 maio, 03}
+  \date{2017 maio, 07}
 
 
 \begin{document}
@@ -147,77 +147,50 @@ total sum of fatalities, injuries and economic losses.
 
 \section{Data Processing}\label{data-processing}
 
-This code loads the original data and them choose which variables are
-useful to answer our questions:
+In order to answer our questions, the original database needed to be
+treated from its raw form to a more useful format.
 
-Reading original database:
+The necessary transformations were:
 
-\begin{verbatim}
-## 
-Read 20.7% of 967216 rows
-Read 41.4% of 967216 rows
-Read 56.9% of 967216 rows
-Read 78.6% of 967216 rows
-Read 85.8% of 967216 rows
-Read 902297 rows and 37 (of 37) columns from 0.523 GB file in 00:00:07
-\end{verbatim}
-
-\begin{verbatim}
-##  [1] "state.."    "bgn.date"   "bgn.time"   "time.zone"  "county"    
-##  [6] "countyname" "state"      "evtype"     "bgn.range"  "bgn.azi"   
-## [11] "bgn.locati" "end.date"   "end.time"   "county.end" "countyendn"
-## [16] "end.range"  "end.azi"    "end.locati" "length"     "width"     
-## [21] "f"          "mag"        "fatalities" "injuries"   "propdmg"   
-## [26] "propdmgexp" "cropdmg"    "cropdmgexp" "wfo"        "stateoffic"
-## [31] "zonenames"  "latitude"   "longitude"  "latitude.e" "longitude."
-## [36] "remarks"    "refnum"
-\end{verbatim}
+\begin{itemize}
+\tightlist
+\item
+  sanitized var names
+\item
+  evaluated duration of events
+\item
+  evaluated damages values according to multipliers provided
+\item
+  sanitized and grouped similar events: strong snow, heavy snow and
+  light snow all became just ``snow''
+\item
+  sanitized county names
+\end{itemize}
 
 This database has 902297 observations. Each observation corresponds to
 an event occurrence.
 
-To determine the most harmful events to human health, we will check the
+To determine the most harmful events to human health, we checked the
 variables related to human health, which are ``fatalities'' and
 ``injuries''.
 
-To determine the most harmful events to economy, we will check the
+To determine the most harmful events to economy, we checked the
 variables related to economic measures, from ``propdmg'' through
 ``cropdmgexp''.
 
-Also, in order to analyse various occurrences of the same event, we will
-measure the duration of the event, its magnitude and where the event
+Also, in order to analyse various occurrences of the same event, we
+measured the duration of the event, its magnitude and where the event
 occurred (state and county name).
 
-\begin{verbatim}
-##  [1] "K" "M" NA  "B" "m" "+" "0" "5" "6" "?" "4" "2" "3" "h" "7" "H" "-"
-## [18] "1" "8"
-\end{verbatim}
-
-\begin{verbatim}
-## [1] NA  "M" "K" "m" "B" "?" "0" "k" "2"
-\end{verbatim}
-
-This is a really big database which data has been being registered by a
+This is a really big database whose data has been being registered by a
 lot of different people since 1950. Thus, as expected, there are
 variations on how people registered events.
 
-For exemple, the string ``snow'' was used to register a lot of events.
+For example, the string ``snow'' was used to register a lot of events.
 They are the same type of event, but count as different:
 
-\begin{verbatim}
-## [1] 118
-\end{verbatim}
-
-\begin{verbatim}
-##  [1] "accumulated snowfall"           "blizzard and heavy snow"       
-##  [3] "blizzard/heavy snow"            "blowing snow"                  
-##  [5] "blowing snow & extreme wind ch" "blowing snow- extreme wind chi"
-##  [7] "blowing snow/extreme wind chil" "cold and snow"                 
-##  [9] "drifting snow"                  "early snow"
-\end{verbatim}
-
 This is why we decided to filter those events: we grouped them by its
-commom strings.
+common strings.
 
 \section{Human health: the most harmfull
 events}\label{human-health-the-most-harmfull-events}
@@ -264,7 +237,7 @@ fatal occurrences caused up to 74.027 fattalities}.
 
 Distribution plots
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/fatal-distr-4-1.pdf}
 \caption{Population distribution for fatalities / occurrences}
@@ -301,7 +274,7 @@ mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/fatal-plot-single-1.pdf}
 \caption{Worst fatal occurrences}
@@ -345,7 +318,7 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/fatal-plot-alltime-1.pdf}
 \caption{Total fatalities by event}
@@ -417,7 +390,7 @@ injuring occurrences caused up to 500 injuries}.
 
 Distribution plots
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/inj-distribution-1.pdf}
 \caption{Population distribution for Injuries / occurrences}
@@ -474,7 +447,7 @@ mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/injuring-single-plot-1.pdf}
 \caption{Worst injuring occurrences}
@@ -522,7 +495,7 @@ rank & event & total & mean & median\tabularnewline
 The most injuring event along the time is the \textbf{TORNADO. It has
 injuried 91407 people until now.}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/injuring-all-plot-1.pdf}
 \caption{Total Injuries by event}
@@ -598,7 +571,7 @@ damaging occurrences caused up to \$120,000,000 in losses}.
 
 Distribution plots
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/crop-distribution-1.pdf}
 \caption{Population distribution for losses / occurrences}
@@ -662,7 +635,7 @@ value\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/prop-single-plot-1.pdf}
 \caption{Worst property damaging occurrences}
@@ -712,7 +685,7 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/prop-all-plot-1.pdf}
 \caption{Total Property Damages by event}
@@ -781,7 +754,7 @@ damaging occurrences caused up to \$335,499,040 in losses.}
 
 Distribution plots
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/crop-distr-4-1.pdf}
 \caption{Population distribution for losses / occurrences}
@@ -845,7 +818,7 @@ value\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/crop-single-plot-1.pdf}
 \caption{Worst crops damaging occurrences}
@@ -895,7 +868,7 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/crop-all-plot-1.pdf}
 \caption{Total Crop Damages by event}
@@ -1081,7 +1054,7 @@ with \$5,000,084,000 in losses.}
 
 \subsection{Population Health}\label{population-health}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/health-plot-1.pdf}
 \caption{Population Health: fatalities and injuries}
@@ -1101,7 +1074,7 @@ injuried 91407 people until now.}
 
 \subsection{Economic Damages}\label{economic-damages}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
 \centering
 \includegraphics{readme_files/figure-latex/economic-plot-1.pdf}
 \caption{Economic Damages: property and crops}

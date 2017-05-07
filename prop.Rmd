@@ -37,11 +37,14 @@ plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..scaled..)) + #xlim(0,.
 qt
 ```
 
+
 Looking at this distribution, we can infer that 99.8% of the occurrences caused less than **`r dollar(qt[1])` in losses**.
 
 On the other hand, damaging occurrences had to have damages above zero.
 
 Now, among the damaging occurrences, we are interested in the ones whose damages are above 99.8% of the most common values. 
+
+
 
 ```{r prop-distr-2, cache=TRUE}
 
@@ -59,6 +62,7 @@ prop.df <- prop.df %>% filter(prop.ev > 0) %>%
 qt <- quantile(prop.df$prop.ev, probs=seq(.999,1,0.002))
 qt
 ```
+
 
 Looking at this distribution, we can infer that **99.8% of the damaging occurrences caused up to `r dollar(qt[1])` in losses**.
 
