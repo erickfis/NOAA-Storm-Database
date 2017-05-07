@@ -106,7 +106,9 @@ colourCount.fatal.single = length(unique(fatal95.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.fatal.single, "Set1"))
 
 # print a table
-kable(fatal95.df[, c(10,1:9)], caption="Worst fatal occurrences")
+# kable(fatal95.df[, c(10,1:9)], caption="Worst fatal occurrences")
+kable(fatal95.df[, c(10,1:9)])
+
 
 # prepare text for inline R
 worst.fatal.single.ev <- fatal95.df$event[1]
@@ -189,8 +191,8 @@ worst.fatal.all.ev <- fatal.all.df$event[1]
 worst.fatal.all.kill <- fatal.all.df$total[1]
 
 # a table
-kable(fatal.all.df[,c(5,1:4)], caption="Total fatalities by event")
-
+# kable(fatal.all.df[,c(5,1:4)], caption="Total fatalities by event")
+kable(fatal.all.df[,c(5,1:4)])
 
 ```
 
@@ -238,7 +240,8 @@ fatal.all.df <- fatal.df %>% group_by(event) %>%
                rank = seq(length(event),1, by=-1))
 
 # a table
-kable(fatal.all.df[1:10,c(5,1:2)], caption="Least fatal events")
+# kable(fatal.all.df[1:10,c(5,1:2)], caption="Least fatal events")
+kable(fatal.all.df[1:10,c(5,1:2)])
 
 
 ```

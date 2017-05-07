@@ -94,7 +94,8 @@ colourCount.inj.single = length(unique(injuring95.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.inj.single, "Set1"))
 
 # print a table
-kable(injuring95.df[,c(10,1:9)], caption="Worst injuring occurrences")
+# kable(injuring95.df[,c(10,1:9)], caption="Worst injuring occurrences")
+kable(injuring95.df[,c(10,1:9)])
 
 # prepare text for inline R
 worst.injuring.single.ev <- injuring95.df$event[1]
@@ -180,7 +181,8 @@ worst.injuring.all.ev <- injuring.all.df$event[1]
 worst.injuring.all.inj <- injuring.all.df$total[1]
 
 # a table
-kable(injuring.all.df[,c(5,1:4)], caption="Total injuries by event")
+# kable(injuring.all.df[,c(5,1:4)], caption="Total injuries by event")
+kable(injuring.all.df[,c(5,1:4)])
 
 
 ```
@@ -230,8 +232,9 @@ injuring.all.df <- injuring.df %>% group_by(event) %>%
                rank = seq(length(event),1, by=-1))
 
 # a table
-kable(injuring.all.df[1:10,c(5,1:2)], caption="Least injuring events")
+# kable(injuring.all.df[1:10,c(5,1:2)], caption="Least injuring events")
 
+kable(injuring.all.df[1:10,c(5,1:2)])
 
 
 ```

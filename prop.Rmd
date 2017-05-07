@@ -117,16 +117,19 @@ worst.prop.single.median <- prop95.df$median[1]
 
 ```
 
-```{r tabela-prop-single}
+```{r tabela-prop-single, results="asis"}
 # print a table
 # 
-# pander(prop95.df[1:20,c(13,1:6,8,11:12)], caption="Worst property damaging occurrences - pander",  split.cells = 30, split.table = Inf)
+# pander(prop95.df[1:20,c(13,1:6,8)], caption="Worst property damaging occurrences - pander",  split.cells = 30, split.table = Inf)
 
-kable(prop95.df[1:20,c(13,1:6,8)], 
-      caption=paste("Worst property damaging occurrences, mean = ",
-                    worst.prop.single.mean, " and median = ",
-                    worst.prop.single.median))
 
+
+# kable(prop95.df[1:20,c(13,1:6,8)], 
+#       caption=paste("Worst property damaging occurrences, mean = ",
+#                     worst.prop.single.mean, " and median = ",
+#                     worst.prop.single.median))
+
+kable(prop95.df[1:20,c(13,1:6,8)])
 
 
 ```
@@ -208,7 +211,8 @@ worst.prop.total <- prop.all.df$total[1]
 
 ```{r prop-all-table}
 # a table
-kable(prop.all.df[, c(8,1,5:7)], caption="Total losses by event")
+# kable(prop.all.df[, c(8,1,5:7)], caption="Total losses by event")
+kable(prop.all.df[, c(8,1,5:7)])
 
 ```
 
@@ -263,7 +267,8 @@ prop.all.df <- prop.df %>% group_by(event) %>%
 
 
 
-kable(prop.all.df[1:10, c(8,1,5)], caption="Least property damaging events")
+# kable(prop.all.df[1:10, c(8,1,5)], caption="Least property damaging events")
+kable(prop.all.df[1:10, c(8,1,5)])
 
 
 ```

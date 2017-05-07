@@ -1,93 +1,3 @@
-\documentclass[]{article}
-\usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-\fi
-% use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
-\usepackage[margin=1in]{geometry}
-\usepackage{hyperref}
-\hypersetup{unicode=true,
-            pdftitle={NOAA Storm Database - worst cases},
-            pdfauthor={erickfis},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\usepackage{longtable,booktabs}
-\usepackage{graphicx,grffile}
-\makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
-
-%%% Change title format to be more compact
-\usepackage{titling}
-
-% Create subtitle command for use in maketitle
-\newcommand{\subtitle}[1]{
-  \posttitle{
-    \begin{center}\large#1\end{center}
-    }
-}
-
-\setlength{\droptitle}{-2em}
-  \title{NOAA Storm Database - worst cases}
-  \pretitle{\vspace{\droptitle}\centering\huge}
-  \posttitle{\par}
-  \author{erickfis}
-  \preauthor{\centering\large\emph}
-  \postauthor{\par}
-  \predate{\centering\large\emph}
-  \postdate{\par}
-  \date{2017 maio, 07}
-
-
-\begin{document}
-\maketitle
-
 {
 \setcounter{tocdepth}{3}
 \tableofcontents
@@ -237,7 +147,7 @@ fatal occurrences caused up to 74.027 fattalities}.
 
 Distribution plots
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/fatal-distr-4-1.pdf}
 \caption{Population distribution for fatalities / occurrences}
@@ -246,6 +156,12 @@ Distribution plots
 In this study, we looked on the 1\% deadliest occurrences.
 
 \begin{longtable}[]{@{}rlrlrllrrr@{}}
+\caption{Worst fatal occurrences}\tabularnewline
+\toprule
+rank & event & mag & day & duration & state & countyname & fatalities &
+mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & mag & day & duration & state & countyname & fatalities &
 mean & median\tabularnewline
@@ -268,7 +184,7 @@ mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/fatal-plot-single-1.pdf}
 \caption{Worst fatal occurrences}
@@ -295,6 +211,11 @@ Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
 
 \begin{longtable}[]{@{}rlrrr@{}}
+\caption{Total fatalities by event}\tabularnewline
+\toprule
+rank & event & total & mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total & mean & median\tabularnewline
 \midrule
@@ -307,7 +228,7 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/fatal-plot-alltime-1.pdf}
 \caption{Total fatalities by event}
@@ -320,7 +241,13 @@ killed 5636 people until now.}
 
 Just for curiosity, these are the less fatal among the fatal events:
 
+\suppressfloats
 \begin{longtable}[]{@{}rlr@{}}
+\caption{Least fatal events}\tabularnewline
+\toprule
+rank & event & total\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total\tabularnewline
 \midrule
@@ -374,7 +301,7 @@ injuring occurrences caused up to 500 injuries}.
 
 Distribution plots
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/inj-distribution-1.pdf}
 \caption{Population distribution for Injuries / occurrences}
@@ -383,6 +310,12 @@ Distribution plots
 In this study, we looked on the 1\% most injuring occurrences.
 
 \begin{longtable}[]{@{}rlrlrllrrr@{}}
+\caption{Worst injuring occurrences}\tabularnewline
+\toprule
+rank & event & mag & day & duration & state & countyname & injuries &
+mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & mag & day & duration & state & countyname & injuries &
 mean & median\tabularnewline
@@ -425,7 +358,7 @@ mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/injuring-single-plot-1.pdf}
 \caption{Worst injuring occurrences}
@@ -453,6 +386,11 @@ Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
 
 \begin{longtable}[]{@{}rlrrr@{}}
+\caption{Total injuries by event}\tabularnewline
+\toprule
+rank & event & total & mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total & mean & median\tabularnewline
 \midrule
@@ -468,7 +406,7 @@ rank & event & total & mean & median\tabularnewline
 The most injuring event along the time is the \textbf{TORNADO. It has
 injuried 91407 people until now.}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/injuring-all-plot-1.pdf}
 \caption{Total Injuries by event}
@@ -480,6 +418,11 @@ Just for curiosity, lets show now what are the less injuring among the
 injuring events:
 
 \begin{longtable}[]{@{}rlr@{}}
+\caption{Least injuring events}\tabularnewline
+\toprule
+rank & event & total\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total\tabularnewline
 \midrule
@@ -539,7 +482,8 @@ damaging occurrences caused up to \$120,000,000 in losses}.
 
 Distribution plots
 
-\begin{figure}[htbp]
+\suppressfloats
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/crop-distribution-1.pdf}
 \caption{Population distribution for losses / occurrences}
@@ -548,6 +492,13 @@ Distribution plots
 In this study, we looked on the 1\% most harmful occurrences.
 
 \begin{longtable}[]{@{}rlrlrlll@{}}
+\caption{Worst property damaging occurrences, mean = \$1,790,432 and
+median = \$10,000}\tabularnewline
+\toprule
+rank & event & mag & day & duration & state & countyname &
+value\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & mag & day & duration & state & countyname &
 value\tabularnewline
@@ -596,7 +547,7 @@ value\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/prop-single-plot-1.pdf}
 \caption{Worst property damaging occurrences}
@@ -622,6 +573,11 @@ Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
 
 \begin{longtable}[]{@{}rllll@{}}
+\caption{Total losses by event}\tabularnewline
+\toprule
+rank & event & total & mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total & mean & median\tabularnewline
 \midrule
@@ -641,7 +597,7 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/prop-all-plot-1.pdf}
 \caption{Total Property Damages by event}
@@ -656,6 +612,11 @@ events}\label{least-property-damaging-events}
 Just for curiosity, these are the less damaging events:
 
 \begin{longtable}[]{@{}rll@{}}
+\caption{Least property damaging events}\tabularnewline
+\toprule
+rank & event & total\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total\tabularnewline
 \midrule
@@ -705,7 +666,7 @@ damaging occurrences caused up to \$335,499,040 in losses.}
 
 Distribution plots
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/crop-distr-4-1.pdf}
 \caption{Population distribution for losses / occurrences}
@@ -714,6 +675,13 @@ Distribution plots
 In this study, we looked on the 1\% most harmful occurrences.
 
 \begin{longtable}[]{@{}rlrlrlll@{}}
+\caption{Worst crops damaging occurrences, mean = \$2,222,010 and median
+= \$15,000}\tabularnewline
+\toprule
+rank & event & mag & day & duration & state & countyname &
+value\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & mag & day & duration & state & countyname &
 value\tabularnewline
@@ -762,7 +730,7 @@ value\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/crop-single-plot-1.pdf}
 \caption{Worst crops damaging occurrences}
@@ -788,6 +756,11 @@ Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
 
 \begin{longtable}[]{@{}rllll@{}}
+\caption{Total losses by event}\tabularnewline
+\toprule
+rank & event & total & mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total & mean & median\tabularnewline
 \midrule
@@ -807,7 +780,7 @@ rank & event & total & mean & median\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/crop-all-plot-1.pdf}
 \caption{Total Crop Damages by event}
@@ -823,6 +796,11 @@ Just for curiosity, lets show now what are the less damaging among the
 events:
 
 \begin{longtable}[]{@{}rll@{}}
+\caption{Least crops damaging events}\tabularnewline
+\toprule
+rank & event & total\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total\tabularnewline
 \midrule
@@ -847,11 +825,15 @@ events, both in terms of human health and economic losses.
 
 Unfortunatelly, these has been the worst counties for living in:
 
-\newpage
-
 \subsection{Worst fatality count}\label{worst-fatality-count}
 
 \begin{longtable}[]{@{}rllrrll@{}}
+\caption{Total fatalities by county}\tabularnewline
+\toprule
+rank & state & countyname & fatalities & injuries & prop.dmg &
+crop.dmg\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & state & countyname & fatalities & injuries & prop.dmg &
 crop.dmg\tabularnewline
@@ -879,6 +861,12 @@ with 605 people killed.}
 \subsection{Worst injuries count}\label{worst-injuries-count}
 
 \begin{longtable}[]{@{}rllrrll@{}}
+\caption{Total injuries by county}\tabularnewline
+\toprule
+rank & state & countyname & fatalities & injuries & prop.dmg &
+crop.dmg\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & state & countyname & fatalities & injuries & prop.dmg &
 crop.dmg\tabularnewline
@@ -903,11 +891,15 @@ crop.dmg\tabularnewline
 The county with the biggest injuries count is \textbf{WICHITA, in TX,
 with 1852 people injuried.}
 
-\newpage
-
 \subsection{Worst property losses}\label{worst-property-losses}
 
 \begin{longtable}[]{@{}rllrrll@{}}
+\caption{Total property losses by county}\tabularnewline
+\toprule
+rank & state & countyname & fatalities & injuries & prop.dmg &
+crop.dmg\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & state & countyname & fatalities & injuries & prop.dmg &
 crop.dmg\tabularnewline
@@ -937,6 +929,12 @@ The county with the biggest property losses is \textbf{NAPA, in CA, with
 \subsection{Worst crops losses}\label{worst-crops-losses}
 
 \begin{longtable}[]{@{}rllrrll@{}}
+\caption{Total crops losses by county}\tabularnewline
+\toprule
+rank & state & countyname & fatalities & injuries & prop.dmg &
+crop.dmg\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & state & countyname & fatalities & injuries & prop.dmg &
 crop.dmg\tabularnewline
@@ -968,7 +966,7 @@ with \$5,000,084,000 in losses.}
 
 \subsection{Population Health}\label{population-health}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/health-plot-1.pdf}
 \caption{Population Health: fatalities and injuries}
@@ -988,7 +986,7 @@ injuried 91407 people until now.}
 
 \subsection{Economic Damages}\label{economic-damages}
 
-\begin{figure}[htbp]
+\suppressfloats\begin{figure}[htbp]
 \centering
 \includegraphics{readme_files/figure-latex/economic-plot-1.pdf}
 \caption{Economic Damages: property and crops}

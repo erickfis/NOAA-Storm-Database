@@ -108,10 +108,11 @@ worst.crop.single.median <- crop95.df$median[1]
 
 
 # print a table
-kable(crop95.df[1:20,c(13,1:6,8)],
-       caption=paste("Worst crops damaging occurrences, mean = ",
-                    worst.crop.single.mean, " and median = ",
-                    worst.crop.single.median))
+# kable(crop95.df[1:20,c(13,1:6,8)],
+#        caption=paste("Worst crops damaging occurrences, mean = ",
+#                     worst.crop.single.mean, " and median = ",
+#                     worst.crop.single.median))
+kable(crop95.df[1:20,c(13,1:6,8)])
 
 
 
@@ -191,7 +192,9 @@ worst.crop.all.ev <- crop.all.df$event[1]
 worst.crop.total <- crop.all.df$total[1]
 
 # a table
-kable(crop.all.df[, c(8,1,5:7)], caption="Total losses by event")
+# kable(crop.all.df[, c(8,1,5:7)], caption="Total losses by event")
+kable(crop.all.df[, c(8,1,5:7)])
+
 
 ```
 
@@ -250,8 +253,9 @@ crop.all.df <- crop.df %>% group_by(event) %>%
 
 
 
-kable(crop.all.df[1:10, c(8,1,5)], caption="Least crops damaging events")
+# kable(crop.all.df[1:10, c(8,1,5)], caption="Least crops damaging events")
 
+kable(crop.all.df[1:10, c(8,1,5)])
 
 ```
 
