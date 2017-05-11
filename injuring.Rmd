@@ -56,8 +56,6 @@ qt <- quantile(injuring.df$injuries, probs=seq(.999,1,0.005))
 Looking at this distribution, we can infer that **99.8% of the injuring occurrences caused up to `r qt[1]` injuries**.
 
 
-Distribution plots
-
 
 ```{r injuring-distr-3, cache=TRUE}
 
@@ -93,16 +91,22 @@ injuring95.df <- filter(injuring.df, injuries>qt[1])
 colourCount.inj.single = length(unique(injuring95.df$event))
 getPalette = colorRampPalette(brewer.pal(colourCount.inj.single, "Set1"))
 
-# print a table
-kable(injuring95.df[,c(10,1:9)], caption="Worst injuring occurrences")
-#kable(injuring95.df[,c(10,1:9)])
 
 # prepare text for inline R
 worst.injuring.single.ev <- injuring95.df$event[1]
 worst.injuring.single.st <- injuring95.df$state[1]
-worst.injuring.single.ct <- injuring95.df$countyname[1]
+worst.injuring.single.ct <- injuring95.df$county[1]
 worst.injuring.single.dt <- injuring95.df$day[1]
 worst.injuring.single.inj <- injuring95.df$injuries[1]
+worst.injuring.single.mean <- round(injuring95.df$mean[1],2)
+worst.injuring.single.median <- round(injuring95.df$median[1],2)
+
+# print a table
+
+kable(injuring95.df[, c(10,1,3,5:7)], 
+      caption=paste("Worst injuring occurrences, mean = ",
+                    worst.injuring.single.mean, " and median = ",
+                    worst.injuring.single.median))
 ```
 
 
@@ -147,7 +151,6 @@ However, if we compare this single awful event to the mean of injuries caused, w
 
 
 ### Most injuring in all time
-Most injuring in all time
 
 Notice that are several occurrences of the same type of event along the time. 
 
@@ -179,10 +182,14 @@ getPalette = colorRampPalette(brewer.pal(colourCount.inj.all, "Set1"))
 # prepare text for inline R
 worst.injuring.all.ev <- injuring.all.df$event[1]
 worst.injuring.all.inj <- injuring.all.df$total[1]
+worst.injuring.all.mean <- round(injuring.all.df$mean[1],2)
+worst.injuring.all.median <- round(injuring.all.df$median[1],2)
 
 # a table
-kable(injuring.all.df[,c(5,1:4)], caption="Total injuries by event")
-#kable(injuring.all.df[,c(5,1:4)])
+kable(injuring.all.df[,c(5,1:2)],
+      caption=paste("Total injuries by event, mean = ",
+                    worst.injuring.all.mean, " and median = ",
+                    worst.injuring.all.median))
 
 
 ```

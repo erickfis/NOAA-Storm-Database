@@ -13,9 +13,9 @@ rm(crop.df, crop.all.df, crop95.df) # house cleanning
 
 # subset original data
 cities.df <- harm.df %>% 
-                filter(!(is.na(countyname) | is.na(state))) %>%
+                filter(!(is.na(county) | is.na(state))) %>%
                 select(6,5,7:10) %>%
-                group_by(state, countyname) %>%
+                group_by(state, county) %>%
                 summarise(fatalities = sum(fatalities, na.rm=TRUE),
                         injuries = sum(injuries, na.rm=TRUE),
                         prop.dmg = sum(prop.ev, na.rm=TRUE),
@@ -29,7 +29,7 @@ cities.df <- harm.df %>%
 
 ```{r fatal-city}
 
-cities.fatal.df <- arrange(cities.df, desc(fatalities)) %>% ungroup(state, countyname) %>%
+cities.fatal.df <- arrange(cities.df, desc(fatalities)) %>% ungroup(state, county) %>%
       mutate(rank = seq_len(length(fatalities)),
                 prop.dmg = dollar(prop.dmg),
                 crop.dmg = dollar(crop.dmg)
@@ -38,7 +38,7 @@ cities.fatal.df <- arrange(cities.df, desc(fatalities)) %>% ungroup(state, count
 kable(cities.fatal.df[1:10, c(7,1:6)], caption="Total fatalities by county")
 #kable(cities.fatal.df[1:10, c(7,1:6)])
 
-worst.fatal.city.county <- cities.fatal.df$countyname[1]
+worst.fatal.city.county <- cities.fatal.df$county[1]
 worst.fatal.city.st <- cities.fatal.df$state[1]
 worst.fatal.city.count <- cities.fatal.df$fatalities[1]
 ```
@@ -51,7 +51,7 @@ The county with the biggest fatality count is **`r worst.fatal.city.county`, in 
 
 ```{r inj-city}
 rm(cities.fatal.df) # house cleanning
-cities.inj.df <- arrange(cities.df, desc(injuries)) %>% ungroup(state, countyname) %>%
+cities.inj.df <- arrange(cities.df, desc(injuries)) %>% ungroup(state, county) %>%
       mutate(rank = seq_len(length(injuries)),
                 prop.dmg = dollar(prop.dmg),
                 crop.dmg = dollar(crop.dmg)
@@ -60,7 +60,7 @@ cities.inj.df <- arrange(cities.df, desc(injuries)) %>% ungroup(state, countynam
 kable(cities.inj.df[1:10, c(7,1:6)], caption="Total injuries by county")
 #kable(cities.inj.df[1:10, c(7,1:6)])
 
-worst.inj.city.county <- cities.inj.df$countyname[1]
+worst.inj.city.county <- cities.inj.df$county[1]
 worst.inj.city.st <- cities.inj.df$state[1]
 worst.inj.city.count <- cities.inj.df$injuries[1]
 
@@ -79,7 +79,7 @@ The county with the biggest injuries count is **`r worst.inj.city.county`, in  `
 ```{r prop-city}
 rm(cities.inj.df) # house cleanning
 
-cities.prop.df <- arrange(cities.df, desc(prop.dmg)) %>% ungroup(state, countyname) %>%
+cities.prop.df <- arrange(cities.df, desc(prop.dmg)) %>% ungroup(state, county) %>%
       mutate(rank = seq_len(length(prop.dmg)),
                 prop.dmg = dollar(prop.dmg),
                 crop.dmg = dollar(crop.dmg)
@@ -88,7 +88,7 @@ cities.prop.df <- arrange(cities.df, desc(prop.dmg)) %>% ungroup(state, countyna
 kable(cities.prop.df[1:10, c(7,1:6)], caption="Total property losses by county")
 #kable(cities.prop.df[1:10, c(7,1:6)])
 
-worst.prop.city.county <- cities.prop.df$countyname[1]
+worst.prop.city.county <- cities.prop.df$county[1]
 worst.prop.city.st <- cities.prop.df$state[1]
 worst.prop.city.count <- cities.prop.df$prop.dmg[1]
 
@@ -107,7 +107,7 @@ The county with the biggest property losses is **`r worst.prop.city.county`, in 
 rm(cities.prop.df) # house cleanning
 
 
-cities.crop.df <- arrange(cities.df, desc(crop.dmg)) %>% ungroup(state, countyname) %>%
+cities.crop.df <- arrange(cities.df, desc(crop.dmg)) %>% ungroup(state, county) %>%
       mutate(rank = seq_len(length(crop.dmg)),
                 prop.dmg = dollar(prop.dmg),
                 crop.dmg = dollar(crop.dmg)
@@ -117,7 +117,7 @@ kable(cities.crop.df[1:10, c(7,1:6)], caption="Total crops losses by county")
 #kable(cities.crop.df[1:10, c(7,1:6)])
 
 
-worst.crop.city.county <- cities.crop.df$countyname[1]
+worst.crop.city.county <- cities.crop.df$county[1]
 worst.crop.city.st <- cities.crop.df$state[1]
 worst.crop.city.count <- cities.crop.df$crop.dmg[1]
 

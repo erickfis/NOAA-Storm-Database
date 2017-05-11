@@ -73,18 +73,80 @@ if(tem.novidade==1) { # them process the data
                         )
         }
         
-  
 # treating var names
         names(dados) <- gsub("_", ".", tolower(names(dados)))
 
 
-# select desired vars
-        harm.df <- dados %>% select(18, 20, event.type, magnitude, 
-                                    state, cz.name, 21:26)
-        rm(dados) # house cleanning
-
 # treat vars
+# treating event types
+        trata.eventos <- function(eventos) {
+                eventos <- tolower(as.character(eventos))
+                # first, need to see what are the event types
+                # unique(eventos)
+                # contagem <- sort(table(eventos))
+                
+                # them we create this list of terms
+                
+                lista.search <- c(
+                        "dry",        
+                        "fog",        
+                        "wind",
+                        "winter",
+                        "slide",
+                        "snow",
+                        "flood",
+                        "fld",
+                        "cold|freez",
+                        "hurricane",
+                        "tornado",
+                        "rain|precip",
+                        "hail",
+                        "heat|warm",
+                        "tide",
+                        "storm",
+                        "record",
+                        "blizzard",
+                        "fire",
+                        "funnel",
+                        "surf")
+                
+                lista.replace <- c(
+                        "drought",
+                        "fog",        
+                        "wind",
+                        "winter",
+                        "slide",
+                        "snow",
+                        "flood",
+                        "flood",
+                        "cold",
+                        "hurricane",
+                        "tornado",
+                        "rain",
+                        "hail",
+                        "heat",
+                        "tide",
+                        "storm",
+                        "record temperature",
+                        "blizzard",
+                        "fire",
+                        "funnel",
+                        "surf")
+                
+                
+                for (i in 1:length(lista.search)) {
+                        eventos[grepl(lista.search[i], eventos)] <- lista.replace[i]
+                        
+                }
+                
+                # lets group the events whose count is < 5 and call it "other"
+                contagem <- sort(table(eventos))
+                outros <- names(contagem[contagem<5])
+                eventos[eventos %in% outros] <- "other"
+                eventos
+        }
 
+# treating dates types
         arruma.data <- function(dia) {
         #adicionar prefixo 19 se menor que 99, 20 se > 99
         # 20## if year < 50, 19 if not
@@ -112,176 +174,99 @@ if(tem.novidade==1) { # them process the data
                 dia
         }
 
+# Treating County Names
+        treat.local <- function(cidades) {
+                cidades <- tolower(str_trim(cidades))
+                cidades <- gsub("_| |-", ".", cidades)
+                
+                # remove valley, coastal
+                cidades <-
+                gsub("valley|coastal|county", "", cidades)
+                
+                # remove ".."
+                # cidades[grep("\\.\\.$", cidades)] <-
+                #         gsub("\\.\\.", "", cidades[grep("\\.\\.$", cidades)])
+                cidades[grep("\\.+", cidades)] <-
+                        gsub("\\.+", ".", cidades[grep("\\.+", cidades)])
+                cidades[grep("\\.$+", cidades)] <-
+                        gsub("\\.+", "", cidades[grep("\\.$+", cidades)])
+                
+                # remove "> ( ,"
+                cidades <-
+                        sapply(strsplit(cidades, split = ">", fixed = TRUE),
+                                function(x) (x[1]))
+                cidades <-
+                        sapply(strsplit(cidades, split = "(", fixed = TRUE),
+                                function(x) (x[1]))
+                cidades <-
+                        sapply(strsplit(cidades, split = ",", fixed = TRUE),
+                                function(x) (x[1]))
+                cidades
+        }
 
-        harm.df$begin.date.time <- arruma.data(harm.df$begin.date.time)
-        harm.df$end.date.time <- arruma.data(harm.df$end.date.time)
+# fix exp data
+        eval.dmg <- function(dmg) {
+        # check for unique exp chars
+        # exp <- str_extract(str_trim(harm.df$damage.crops), "[aA-zZ]+")
+        # exp.unicos <- unique(exp)
+        # exp <- str_extract(str_trim(harm.df$damage.property), "[aA-zZ]+")
+        # exp.unicos <- unique(exp)  
+                # prepare exp, for 10^exp        
+                # remove white space and extract chars
+                exp <- str_extract(str_trim(dmg), "[aA-zZ]+")
+                exp[is.na(exp)] <- as.character(0) # NAs get 0
+                exp[which(exp %in% c("+","?", "-"))] <- as.character(0)
+                exp[which(exp %in% c("H","h"))] <- as.character(2)
+                exp[which(exp %in% c("K","k"))] <- as.character(3)
+                exp[which(exp %in% c("M","m"))] <- as.character(6)
+                exp[which(exp %in% c("B","b"))] <- as.character(9)
+                exp[which(exp %in% c("T","t"))] <- as.character(12)
+                exp <- as.numeric(exp)
+                
+                # prepare numbers for number*10^exp
+                number <- strsplit(dmg, split="[aA-zZ]", fixed=FALSE)
+                number <- sapply(number, function(x) (x[1]))
+                number <- as.numeric(number)
+                
+                # now evaluate them all
+                dmg <- number*10^exp
+                dmg
+        }
+        
+        dados$begin.date.time <- arruma.data(dados$begin.date.time)
+        dados$end.date.time <- arruma.data(dados$end.date.time)
 
-        harm.df <- harm.df %>% 
+        harm.df <- dados %>% 
                 transmute(
-                        event = tolower(as.character(event.type)),
+                        event = trata.eventos(event.type),
                         magnitude,
-                        day = as.Date(dmy_hms(harm.df$begin.date.time, 
-                                        locale = "en_US.utf8"), 
-                                "%m/%d/%Y"), 
+                        day = as.Date(dmy_hms(begin.date.time,
+                                        locale = "en_US.utf8"),
+                                "%m/%d/%Y"),
                         duration = as.period(interval(
-                                        dmy_hms(harm.df$end.date.time, 
+                                        dmy_hms(end.date.time, 
                                                 locale = "en_US.utf8"),
-                                        dmy_hms(harm.df$begin.date.time, 
+                                        dmy_hms(begin.date.time, 
                                                 locale = "en_US.utf8")
                                                 )
                                         ),
-                        state, countyname = cz.name,
+                        state = treat.local(state), county = treat.local(cz.name),
                         fatalities = as.numeric(deaths.direct) + 
                                 as.numeric(deaths.indirect),
                         injuries = as.numeric(injuries.direct) + 
                                 as.numeric(injuries.indirect),
-                        damage.property,
-                        damage.crops
-                )
-                
-
-# fix exp data
-# check for unique exp chars
-        exp <- str_extract(str_trim(harm.df$damage.crops), "[aA-zZ]+")
-        exp.unicos <- unique(exp)
-        exp <- str_extract(str_trim(harm.df$damage.property), "[aA-zZ]+")
-        exp.unicos <- unique(exp)                
-
-
-
-eval.dmg <- function(dmg) {
-# prepare exp, for 10^exp        
-# remove white space and extract chars
-        exp <- str_extract(str_trim(dmg), "[aA-zZ]+")
-        exp[is.na(exp)] <- as.character(0) # NAs get 0
-        exp[which(exp %in% c("+","?", "-"))] <- as.character(0)
-        exp[which(exp %in% c("H","h"))] <- as.character(2)
-        exp[which(exp %in% c("K","k"))] <- as.character(3)
-        exp[which(exp %in% c("M","m"))] <- as.character(6)
-        exp[which(exp %in% c("B","b"))] <- as.character(9)
-        exp[which(exp %in% c("T","t"))] <- as.character(12)
-        exp <- as.numeric(exp)
-
-# prepare numbers for number*10^exp
-        number <- strsplit(dmg, split="[aA-zZ]", fixed=FALSE)
-        number <- sapply(number, function(x) (x[1]))
-        number <- as.numeric(number)
-        
-        # now evaluate them all
-        dmg <- number*10^exp
-        dmg
-}
-
-
-        harm.df <- mutate(harm.df, 
                         prop.ev = eval.dmg(damage.property),
                         crop.ev = eval.dmg(damage.crops)
-                        ) 
+                ) 
 
-        harm.df <- select(harm.df, 1:8, 11:12)
-
-
-
-
-# treating event types
-
-        eventos <- harm.df$event
-# first, need to see what are the event types
-        # unique(eventos)
-        # contagem <- sort(table(eventos))
-
-# them we create this list of terms
- 
-        lista.search <- c(
-                "dry",        
-                "fog",        
-                "wind",
-                "winter",
-                "slide",
-                "snow",
-                "flood",
-                "fld",
-                "cold|freez",
-                "hurricane",
-                "tornado",
-                "rain|precip",
-                "hail",
-                "heat|warm",
-                "tide",
-                "storm",
-                "record",
-                "blizzard",
-                "fire",
-                "funnel",
-                "surf")
+        rm(dados) # house cleanning
         
-        lista.replace <- c(
-                "drought",
-                "fog",        
-                "wind",
-                "winter",
-                "slide",
-                "snow",
-                "flood",
-                "flood",
-                "cold",
-                "hurricane",
-                "tornado",
-                "rain",
-                "hail",
-                "heat",
-                "tide",
-                "storm",
-                "record temperature",
-                "blizzard",
-                "fire",
-                "funnel",
-                "surf")
-        
-        
-        for (i in 1:length(lista.search)) {
-                eventos[grepl(lista.search[i], eventos)] <- lista.replace[i]
-                
-        }
-        
-        # lets group the events whose count is < 5 and call it "other"
-        contagem <- sort(table(eventos))
-        outros <- names(contagem[contagem<5])
-        eventos[eventos %in% outros] <- "other"
-        # sort(table(eventos))
-        
-        # returning treated events
-        harm.df$event <- toupper(eventos)
-
-        
-        # Treating County Names
-        cidades <- toupper(harm.df$countyname)
-        cidades <- str_trim(cidades)
-        
-        cidades <- gsub("_| |-", ".", cidades)
-        
-        # remove ".."
-        cidades[grep("\\.\\.$", cidades)] <- 
-                gsub("\\.\\.", "", cidades[grep("\\.\\.$", cidades)])
-        
-        # remove "> ( ,"
-        cidades <- sapply(strsplit(cidades, split=">", fixed=TRUE),
-                          function(x) (x[1]))
-        cidades <- sapply(strsplit(cidades, split="(", fixed=TRUE),
-                          function(x) (x[1]))
-        cidades <- sapply(strsplit(cidades, split=",", fixed=TRUE),
-                          function(x) (x[1]))
-        
-        harm.df$countyname <- cidades
-        
-        rm(dados, cidades, eventos, contagem) # house cleanning
+        # end of processing - save the data
         saveRDS(harm.df, "data/harm.rds")
 
 } else { # just loads processed data
         harm.df <- readRDS("data/harm.rds")
 }
-
-
 
 ```
 
@@ -291,7 +276,7 @@ eval.dmg <- function(dmg) {
 The necessary transformations were:
 
 - sanitized var names
-- evaluated duration of events
+- evaluated duration of events, however they are not useful 
 - evaluated damages values according to multipliers provided
 - sanitized and grouped similar events: strong snow, heavy snow and light snow all became just "snow"
 - sanitized county names

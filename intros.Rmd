@@ -1,3 +1,5 @@
+\newpage
+
 # Introduction
 
 In this study we have analysed the NOAA Storm Database in order to determine what are the worst natural catastrophic events, both in terms of public health and in economic impact.
