@@ -19,7 +19,7 @@ In order to determine what were the most property damaging events in a single oc
 rm(injuring.df, injuring.all.df, injuring95.df) # cleannig house
 
 prop.df <- harm.df %>% filter(!is.na(prop.ev)) %>%
-                        select(1:6,13)
+                        select(1:6,9)
                 
 
 # quantiles
@@ -34,7 +34,7 @@ plt.distr.prop0 <- plt.distr.prop0 + geom_density(aes(y=..scaled..)) + #xlim(0,.
 
 
 # display only the qts next to harmfull events
-qt
+#qt
 ```
 
 
@@ -60,7 +60,7 @@ prop.df <- prop.df %>% filter(prop.ev > 0) %>%
 # quantiles, same as 
 
 qt <- quantile(prop.df$prop.ev, probs=seq(.999,1,0.002))
-qt
+#qt
 ```
 
 
@@ -117,19 +117,19 @@ worst.prop.single.median <- prop95.df$median[1]
 
 ```
 
-```{r tabela-prop-single, results="asis"}
+```{r tabela-prop-single}
 # print a table
 # 
 # pander(prop95.df[1:20,c(13,1:6,8)], caption="Worst property damaging occurrences - pander",  split.cells = 30, split.table = Inf)
 
 
 
-# kable(prop95.df[1:20,c(13,1:6,8)], 
-#       caption=paste("Worst property damaging occurrences, mean = ",
-#                     worst.prop.single.mean, " and median = ",
-#                     worst.prop.single.median))
+kable(prop95.df[1:20,c(13,1:6,8)],
+      caption=paste("Worst property damaging occurrences, mean = ",
+                    worst.prop.single.mean, " and median = ",
+                    worst.prop.single.median))
 
-kable(prop95.df[1:20,c(13,1:6,8)])
+# kable(prop95.df[1:20,c(13,1:6,8)])
 
 
 ```
@@ -171,7 +171,6 @@ The single most economic damaging  event to properties was a **`r worst.prop.sin
 
 
 ### Most Property Damaging event in all time
-Most Property Damaging event in all time
 
 
 Notice that are several occurrences of the same type of event along the time. 
@@ -211,8 +210,8 @@ worst.prop.total <- prop.all.df$total[1]
 
 ```{r prop-all-table}
 # a table
-# kable(prop.all.df[, c(8,1,5:7)], caption="Total losses by event")
-kable(prop.all.df[, c(8,1,5:7)])
+kable(prop.all.df[, c(8,1,5:7)], caption="Total losses by event")
+# kable(prop.all.df[, c(8,1,5:7)])
 
 ```
 
@@ -267,8 +266,8 @@ prop.all.df <- prop.df %>% group_by(event) %>%
 
 
 
-# kable(prop.all.df[1:10, c(8,1,5)], caption="Least property damaging events")
-kable(prop.all.df[1:10, c(8,1,5)])
+kable(prop.all.df[1:10, c(8,1,5)], caption="Least property damaging events")
+# kable(prop.all.df[1:10, c(8,1,5)])
 
 
 ```

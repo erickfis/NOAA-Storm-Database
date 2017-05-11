@@ -5,6 +5,7 @@ In order to answer our questions, the original database needed to be treated fro
 
 ```{r libraries}
 
+library(RCurl)
 library(scales)
 library(stringr)
 library(data.table)
@@ -16,184 +17,276 @@ library(rmarkdown)
 library(RColorBrewer)
 library(gridExtra)
 library(grid)
-library(pander)
 
 ```
 
 
+```{r processamento, cache=TRUE}
 
-```{r inittial-load, cache=TRUE}
-# Reading original database:
+# looks at ftp repository listing files
+url <- "ftp://ftp.ncdc.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
+arquivos.ftp <- getURL(url, ftp.use.epsv = FALSE,dirlistonly = TRUE) 
 
-#fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
-
-#download.file(fileUrl, "StormData.bz2", method = "curl")
-
-# looks for the already treated data base harm.rds. If not present, runs from the original
-# data base. Else, just loads harm.rds
-
-arquivos <- dir()
-arquivos <- arquivos[grep("harm", arquivos)]
+arquivos.ftp <- paste(strsplit(arquivos.ftp, "\n")[[1]], sep = "")
+arquivos.ftp <- arquivos.ftp[grep("details", arquivos.ftp)]
 
 
-if (arquivos!="harm.rds"){
+# compares ftp repo to files already downloaded
+arquivos.local <- dir("data/")
+arquivos.faltando <- arquivos.ftp[which(!(arquivos.ftp %in% arquivos.local))]
 
-#Full data
-dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData.bz2"), na.strings = "")
-dados <-tbl_df(dados)
+baixa.arquivos <- arquivos.faltando # for in line R, so when I see this print on report I will let the triggers do their job.
 
-# this do a sample data base, with 50000 obs, used for speeding up initial works:
-# linhas <- nrow(dados)
-# linhas <- sample(linhas,50000)
-# dataS <- dados[linhas,]
-# write.csv(dataS, "StormData")
+arquivos.faltando <- NULL # I'm deleting those files now to save space and don't wanna do this check automaticaly so soon
 
-# dados <- fread(sprintf("bzcat %s | tr -d '\\000'", "StormData-sample.bz2"))
-# dados <-tbl_df(dados)
-# dados <- select(dados, -1)
+tem.novidade <- 0 # start the trigger
 
+# if the lists of files are different, download new ones 
+# and set the trigger for new raw processing
 
+if(length(arquivos.faltando)>0) {
+        tem.novidade <- 1 # set trigger
+        arquivo <- character()
+                for (i in 1:length(arquivos.faltando)) {
+                        arquivo <- paste0(url, arquivos.faltando[i])
+                        download.file(arquivo, 
+                                paste0("data/", arquivos.faltando[i]),
+                                method = "curl")
+                }
+}        
 
+# if trigger is set, raw process again
+if(tem.novidade==1) { # them process the data
+        arquivos.local <- dir("data/")
+
+        dados <- fread(sprintf("gzip -dc %s | tr -d '\\000'",
+                                paste0("data/", arquivos.local[1])),
+                        na.strings = "")
+
+        for (i in 2:length(arquivos.local)) {
+                dados <- bind_rows(
+                        dados, fread(sprintf(
+                                "gzip -dc %s | tr -d '\\000'",
+                                paste0("data/", arquivos.local[i]),
+                                na.strings = "")
+                                )
+                        )
+        }
+        
+  
 # treating var names
-names(dados) <- gsub("_", ".", tolower(names(dados)))
+        names(dados) <- gsub("_", ".", tolower(names(dados)))
 
 
 # select desired vars
-harm.df <- dados %>% select(evtype, mag, state, countyname, bgn.date, end.date, 23:28)
+        harm.df <- dados %>% select(18, 20, event.type, magnitude, 
+                                    state, cz.name, 21:26)
+        rm(dados) # house cleanning
 
 # treat vars
-harm.df <- harm.df %>% 
-        mutate(bgn.date = mdy_hms(bgn.date), end.date = mdy_hms(end.date),  
-               day = as.Date(bgn.date, "%m/%d/%Y"), 
-               duration = -as.period(interval(end.date, bgn.date)),
-               event = tolower(as.character(evtype)),
-               countyname =strtrim(countyname,9)) %>%
-        select(event, 2, day, duration, 3:4, 7:12)
 
-# fixing exp for economic data
+        arruma.data <- function(dia) {
+        #adicionar prefixo 19 se menor que 99, 20 se > 99
+        # 20## if year < 50, 19 if not
+                condicao <- as.numeric(substr(dia,8,9))<50
 
-unique(harm.df$propdmgexp) # this shows what we need to look for
+                dia[condicao] <- paste0(
+                        # day-month
+                        substr(dia[condicao],1,7),
+                        #full year
+                        paste0("20", substr(dia[condicao],8,9)),
+                        # hours
+                        substr(dia[condicao],10,
+                                nchar(dia[condicao])) 
+                        )
 
-harm.df$propdmgexp[is.na(harm.df$propdmgexp)] <- as.character(0)
-harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("+","?", "-"))] <- as.character(0)
+                dia[!condicao] <- paste0(
+                        # day-month
+                        substr(dia[!condicao],1,7),
+                        #full year
+                        paste0("19", substr(dia[!condicao],8,9)), 
+                        # hours
+                        substr(dia[!condicao],10,
+                                nchar(dia[!condicao])) 
+                        )
+                dia
+        }
 
-harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("H","h"))] <- as.character(2)
-harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("K","k"))] <- as.character(3)
-harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("M","m"))] <- as.character(6)
-harm.df$propdmgexp[which(harm.df$propdmgexp %in% c("B","b"))] <- as.character(9)
-harm.df$propdmgexp <- as.numeric(harm.df$propdmgexp)
+
+        harm.df$begin.date.time <- arruma.data(harm.df$begin.date.time)
+        harm.df$end.date.time <- arruma.data(harm.df$end.date.time)
+
+        harm.df <- harm.df %>% 
+                transmute(
+                        event = tolower(as.character(event.type)),
+                        magnitude,
+                        day = as.Date(dmy_hms(harm.df$begin.date.time, 
+                                        locale = "en_US.utf8"), 
+                                "%m/%d/%Y"), 
+                        duration = as.period(interval(
+                                        dmy_hms(harm.df$end.date.time, 
+                                                locale = "en_US.utf8"),
+                                        dmy_hms(harm.df$begin.date.time, 
+                                                locale = "en_US.utf8")
+                                                )
+                                        ),
+                        state, countyname = cz.name,
+                        fatalities = as.numeric(deaths.direct) + 
+                                as.numeric(deaths.indirect),
+                        injuries = as.numeric(injuries.direct) + 
+                                as.numeric(injuries.indirect),
+                        damage.property,
+                        damage.crops
+                )
+                
+
+# fix exp data
+# check for unique exp chars
+        exp <- str_extract(str_trim(harm.df$damage.crops), "[aA-zZ]+")
+        exp.unicos <- unique(exp)
+        exp <- str_extract(str_trim(harm.df$damage.property), "[aA-zZ]+")
+        exp.unicos <- unique(exp)                
 
 
-unique(harm.df$cropdmgexp) # this shows what we need to look for
 
-harm.df$cropdmgexp[is.na(harm.df$cropdmgexp)] <- as.character(0)
-harm.df$cropdmgexp[which(harm.df$cropdmgexp == "?")] <- as.character(0)
+eval.dmg <- function(dmg) {
+# prepare exp, for 10^exp        
+# remove white space and extract chars
+        exp <- str_extract(str_trim(dmg), "[aA-zZ]+")
+        exp[is.na(exp)] <- as.character(0) # NAs get 0
+        exp[which(exp %in% c("+","?", "-"))] <- as.character(0)
+        exp[which(exp %in% c("H","h"))] <- as.character(2)
+        exp[which(exp %in% c("K","k"))] <- as.character(3)
+        exp[which(exp %in% c("M","m"))] <- as.character(6)
+        exp[which(exp %in% c("B","b"))] <- as.character(9)
+        exp[which(exp %in% c("T","t"))] <- as.character(12)
+        exp <- as.numeric(exp)
 
-harm.df$cropdmgexp[which(harm.df$cropdmgexp %in% c("K","k"))] <- as.character(3)
-harm.df$cropdmgexp[which(harm.df$cropdmgexp %in% c("M","m"))] <- as.character(6)
-harm.df$cropdmgexp[which(harm.df$cropdmgexp %in% c("B","b"))] <- as.character(9)
-harm.df$cropdmgexp <- as.numeric(harm.df$cropdmgexp)
+# prepare numbers for number*10^exp
+        number <- strsplit(dmg, split="[aA-zZ]", fixed=FALSE)
+        number <- sapply(number, function(x) (x[1]))
+        number <- as.numeric(number)
+        
+        # now evaluate them all
+        dmg <- number*10^exp
+        dmg
+}
 
-harm.df <- mutate(harm.df, prop.ev = propdmg*10^propdmgexp,
-                crop.ev = cropdmg*10^cropdmgexp)
+
+        harm.df <- mutate(harm.df, 
+                        prop.ev = eval.dmg(damage.property),
+                        crop.ev = eval.dmg(damage.crops)
+                        ) 
+
+        harm.df <- select(harm.df, 1:8, 11:12)
+
+
 
 
 # treating event types
 
-eventos <- harm.df$event
+        eventos <- harm.df$event
 # first, need to see what are the event types
-contagem <- sort(table(eventos))
+        # unique(eventos)
+        # contagem <- sort(table(eventos))
 
 # them we create this list of terms
  
-lista.search <- c(
-"dry",        
-"fog",        
-"wind",
-"winter",
-"slide",
-"snow",
-"flood",
-"fld",
-"cold|freez",
-"hurricane",
-"tornado",
-"rain|precip",
-"hail",
-"heat|warm",
-"tide",
-"storm",
-"record",
-"blizzard",
-"fire",
-"funnel",
-"surf")
-
-lista.replace <- c(
-"drought",
-"fog",        
-"wind",
-"winter",
-"slide",
-"snow",
-"flood",
-"flood",
-"cold",
-"hurricane",
-"tornado",
-"rain",
-"hail",
-"heat",
-"tide",
-"storm",
-"record temperature",
-"blizzard",
-"fire",
-"funnel",
-"surf")
-
-
-for (i in 1:length(lista.search)) {
-        eventos[grepl(lista.search[i], eventos)] <- lista.replace[i]
+        lista.search <- c(
+                "dry",        
+                "fog",        
+                "wind",
+                "winter",
+                "slide",
+                "snow",
+                "flood",
+                "fld",
+                "cold|freez",
+                "hurricane",
+                "tornado",
+                "rain|precip",
+                "hail",
+                "heat|warm",
+                "tide",
+                "storm",
+                "record",
+                "blizzard",
+                "fire",
+                "funnel",
+                "surf")
         
-}
+        lista.replace <- c(
+                "drought",
+                "fog",        
+                "wind",
+                "winter",
+                "slide",
+                "snow",
+                "flood",
+                "flood",
+                "cold",
+                "hurricane",
+                "tornado",
+                "rain",
+                "hail",
+                "heat",
+                "tide",
+                "storm",
+                "record temperature",
+                "blizzard",
+                "fire",
+                "funnel",
+                "surf")
+        
+        
+        for (i in 1:length(lista.search)) {
+                eventos[grepl(lista.search[i], eventos)] <- lista.replace[i]
+                
+        }
+        
+        # lets group the events whose count is < 5 and call it "other"
+        contagem <- sort(table(eventos))
+        outros <- names(contagem[contagem<5])
+        eventos[eventos %in% outros] <- "other"
+        # sort(table(eventos))
+        
+        # returning treated events
+        harm.df$event <- toupper(eventos)
 
-# lets group the events whose count is < 5 and call it "other"
-contagem <- sort(table(eventos))
-outros <- names(contagem[contagem<5])
-eventos[eventos %in% outros] <- "other"
-# sort(table(eventos))
+        
+        # Treating County Names
+        cidades <- toupper(harm.df$countyname)
+        cidades <- str_trim(cidades)
+        
+        cidades <- gsub("_| |-", ".", cidades)
+        
+        # remove ".."
+        cidades[grep("\\.\\.$", cidades)] <- 
+                gsub("\\.\\.", "", cidades[grep("\\.\\.$", cidades)])
+        
+        # remove "> ( ,"
+        cidades <- sapply(strsplit(cidades, split=">", fixed=TRUE),
+                          function(x) (x[1]))
+        cidades <- sapply(strsplit(cidades, split="(", fixed=TRUE),
+                          function(x) (x[1]))
+        cidades <- sapply(strsplit(cidades, split=",", fixed=TRUE),
+                          function(x) (x[1]))
+        
+        harm.df$countyname <- cidades
+        
+        rm(dados, cidades, eventos, contagem) # house cleanning
+        saveRDS(harm.df, "data/harm.rds")
 
-# returning treated events
-harm.df$event <- toupper(eventos)
-
-
-# Treating County Names
-cidades <- toupper(harm.df$countyname)
-cidades <- str_trim(cidades)
-
-cidades <- gsub("_| |-", ".", cidades)
-
-cidades[grep("\\.\\.$", cidades)] <- gsub("\\.\\.", "",
-                                cidades[grep("\\.\\.$", cidades)]
-                                        )
-
-cidades <- sapply(strsplit(cidades, split=">", fixed=TRUE), function(x) (x[1]))
-cidades <- sapply(strsplit(cidades, split="(", fixed=TRUE), function(x) (x[1]))
-cidades <- sapply(strsplit(cidades, split=",", fixed=TRUE), function(x) (x[1]))
-
-harm.df$countyname <- cidades
-
-rm(dados, cidades) # house cleanning
-saveRDS(harm.df, "harm.rds")
-
-} else {
-        harm.df <- readRDS("harm.rds")
+} else { # just loads processed data
+        harm.df <- readRDS("data/harm.rds")
 }
 
 
 
 ```
+
+<!-- ### New files to download and process data again: -->
+<!--         `r baixa.arquivos` -->
 
 The necessary transformations were:
 

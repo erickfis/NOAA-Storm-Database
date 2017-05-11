@@ -1,0 +1,1403 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Bad caption behavior},
+            pdfauthor={erickfis},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{Bad caption behavior}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{erickfis}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{2017 maio, 08}
+
+\usepackage{lipsum}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\section{All Cars}\label{all-cars}
+
+Table 1 should be here:
+
+\begin{longtable}[]{@{}lrrrrrrrrrrr@{}}
+\caption{All cars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt & qsec & vs & am & gear &
+carb\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt & qsec & vs & am & gear &
+carb\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620 & 16.46 & 0 & 1 & 4 &
+4\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875 & 17.02 & 0 & 1 &
+4 & 4\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320 & 18.61 & 1 & 1 & 4 &
+1\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215 & 19.44 & 1 & 0 &
+3 & 1\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440 & 17.02 & 0 &
+0 & 3 & 2\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460 & 20.22 & 1 & 0 & 3 &
+1\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570 & 15.84 & 0 & 0 & 3 &
+4\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190 & 20.00 & 1 & 0 & 4 &
+2\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150 & 22.90 & 1 & 0 & 4 &
+2\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440 & 18.30 & 1 & 0 & 4 &
+4\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440 & 18.90 & 1 & 0 & 4 &
+4\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070 & 17.40 & 0 & 0 & 3 &
+3\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730 & 17.60 & 0 & 0 & 3 &
+3\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780 & 18.00 & 0 & 0 & 3
+& 3\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 & 5.250 & 17.98 & 0 &
+0 & 3 & 4\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 & 5.424 & 17.82 & 0
+& 0 & 3 & 4\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345 & 17.42 & 0 &
+0 & 3 & 4\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200 & 19.47 & 1 & 1 & 4 &
+1\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615 & 18.52 & 1 & 1 & 4 &
+2\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835 & 19.90 & 1 & 1 & 4
+& 1\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465 & 20.01 & 1 & 0 & 3
+& 1\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520 & 16.87 & 0 & 0
+& 3 & 2\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435 & 17.30 & 0 & 0 & 3
+& 2\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840 & 15.41 & 0 & 0 & 3 &
+4\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845 & 17.05 & 0 & 0
+& 3 & 2\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935 & 18.90 & 1 & 1 & 4 &
+1\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140 & 16.70 & 0 & 1 & 5
+& 2\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513 & 16.90 & 1 & 1 & 5
+& 2\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170 & 14.50 & 0 & 1 &
+5 & 4\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770 & 15.50 & 0 & 1 & 5
+& 6\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570 & 14.60 & 0 & 1 &
+5 & 8\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780 & 18.60 & 1 & 1 & 4 &
+2\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{randow text}\label{randow-text}
+
+\lipsum
+
+\section{Now a plot}\label{now-a-plot}
+
+Plot 1 should be here
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/plot1-1.pdf}
+\caption{HP vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-1}
+
+\lipsum
+
+\subsection{Now a table}\label{now-a-table}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{All cars, 3 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0\tabularnewline
+Valiant & 18.1 & 6 & 225.0\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Now another plot}\label{now-another-plot}
+
+Plot should be here
+
+\includegraphics{trial_files/figure-latex/plot2-1.pdf} \#\# randow text
+
+\lipsum
+
+\section{A grid}\label{a-grid}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-1-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-2}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{Now a table}\label{now-a-table-1}
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\caption{10 first cars}\tabularnewline
+\toprule
+& cyl & disp & hp & drat\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& cyl & disp & hp & drat\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 6 & 160.0 & 110 & 3.90\tabularnewline
+Mazda RX4 Wag & 6 & 160.0 & 110 & 3.90\tabularnewline
+Datsun 710 & 4 & 108.0 & 93 & 3.85\tabularnewline
+Hornet 4 Drive & 6 & 258.0 & 110 & 3.08\tabularnewline
+Hornet Sportabout & 8 & 360.0 & 175 & 3.15\tabularnewline
+Valiant & 6 & 225.0 & 105 & 2.76\tabularnewline
+Duster 360 & 8 & 360.0 & 245 & 3.21\tabularnewline
+Merc 240D & 4 & 146.7 & 62 & 3.69\tabularnewline
+Merc 230 & 4 & 140.8 & 95 & 3.92\tabularnewline
+Merc 280 & 6 & 167.6 & 123 & 3.92\tabularnewline
+\bottomrule
+\end{longtable}
+
+\lipsum
+
+\section{Now a table}\label{now-a-table-2}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{another one cars}\tabularnewline
+\toprule
+& disp & hp & drat & wt & qsec & vs\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& disp & hp & drat & wt & qsec & vs\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 160.0 & 110 & 3.90 & 2.620 & 16.46 & 0\tabularnewline
+Mazda RX4 Wag & 160.0 & 110 & 3.90 & 2.875 & 17.02 & 0\tabularnewline
+Datsun 710 & 108.0 & 93 & 3.85 & 2.320 & 18.61 & 1\tabularnewline
+Hornet 4 Drive & 258.0 & 110 & 3.08 & 3.215 & 19.44 & 1\tabularnewline
+Hornet Sportabout & 360.0 & 175 & 3.15 & 3.440 & 17.02 &
+0\tabularnewline
+Valiant & 225.0 & 105 & 2.76 & 3.460 & 20.22 & 1\tabularnewline
+Duster 360 & 360.0 & 245 & 3.21 & 3.570 & 15.84 & 0\tabularnewline
+Merc 240D & 146.7 & 62 & 3.69 & 3.190 & 20.00 & 1\tabularnewline
+Merc 230 & 140.8 & 95 & 3.92 & 3.150 & 22.90 & 1\tabularnewline
+Merc 280 & 167.6 & 123 & 3.92 & 3.440 & 18.30 & 1\tabularnewline
+Merc 280C & 167.6 & 123 & 3.92 & 3.440 & 18.90 & 1\tabularnewline
+Merc 450SE & 275.8 & 180 & 3.07 & 4.070 & 17.40 & 0\tabularnewline
+Merc 450SL & 275.8 & 180 & 3.07 & 3.730 & 17.60 & 0\tabularnewline
+Merc 450SLC & 275.8 & 180 & 3.07 & 3.780 & 18.00 & 0\tabularnewline
+Cadillac Fleetwood & 472.0 & 205 & 2.93 & 5.250 & 17.98 &
+0\tabularnewline
+Lincoln Continental & 460.0 & 215 & 3.00 & 5.424 & 17.82 &
+0\tabularnewline
+Chrysler Imperial & 440.0 & 230 & 3.23 & 5.345 & 17.42 &
+0\tabularnewline
+Fiat 128 & 78.7 & 66 & 4.08 & 2.200 & 19.47 & 1\tabularnewline
+Honda Civic & 75.7 & 52 & 4.93 & 1.615 & 18.52 & 1\tabularnewline
+Toyota Corolla & 71.1 & 65 & 4.22 & 1.835 & 19.90 & 1\tabularnewline
+Toyota Corona & 120.1 & 97 & 3.70 & 2.465 & 20.01 & 1\tabularnewline
+Dodge Challenger & 318.0 & 150 & 2.76 & 3.520 & 16.87 & 0\tabularnewline
+AMC Javelin & 304.0 & 150 & 3.15 & 3.435 & 17.30 & 0\tabularnewline
+Camaro Z28 & 350.0 & 245 & 3.73 & 3.840 & 15.41 & 0\tabularnewline
+Pontiac Firebird & 400.0 & 175 & 3.08 & 3.845 & 17.05 & 0\tabularnewline
+Fiat X1-9 & 79.0 & 66 & 4.08 & 1.935 & 18.90 & 1\tabularnewline
+Porsche 914-2 & 120.3 & 91 & 4.43 & 2.140 & 16.70 & 0\tabularnewline
+Lotus Europa & 95.1 & 113 & 3.77 & 1.513 & 16.90 & 1\tabularnewline
+Ford Pantera L & 351.0 & 264 & 4.22 & 3.170 & 14.50 & 0\tabularnewline
+Ferrari Dino & 145.0 & 175 & 3.62 & 2.770 & 15.50 & 0\tabularnewline
+Maserati Bora & 301.0 & 335 & 3.54 & 3.570 & 14.60 & 0\tabularnewline
+Volvo 142E & 121.0 & 109 & 4.11 & 2.780 & 18.60 & 1\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Now a plot}\label{now-a-plot-1}
+
+\lipsum
+
+Plot should be here
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-5-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\section{Now a table}\label{now-a-table-3}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrr@{}}
+\caption{another one}\tabularnewline
+\toprule
+& hp & drat & wt & qsec & vs\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& hp & drat & wt & qsec & vs\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 110 & 3.90 & 2.620 & 16.46 & 0\tabularnewline
+Mazda RX4 Wag & 110 & 3.90 & 2.875 & 17.02 & 0\tabularnewline
+Datsun 710 & 93 & 3.85 & 2.320 & 18.61 & 1\tabularnewline
+Hornet 4 Drive & 110 & 3.08 & 3.215 & 19.44 & 1\tabularnewline
+Hornet Sportabout & 175 & 3.15 & 3.440 & 17.02 & 0\tabularnewline
+Valiant & 105 & 2.76 & 3.460 & 20.22 & 1\tabularnewline
+Duster 360 & 245 & 3.21 & 3.570 & 15.84 & 0\tabularnewline
+Merc 240D & 62 & 3.69 & 3.190 & 20.00 & 1\tabularnewline
+Merc 230 & 95 & 3.92 & 3.150 & 22.90 & 1\tabularnewline
+Merc 280 & 123 & 3.92 & 3.440 & 18.30 & 1\tabularnewline
+Merc 280C & 123 & 3.92 & 3.440 & 18.90 & 1\tabularnewline
+Merc 450SE & 180 & 3.07 & 4.070 & 17.40 & 0\tabularnewline
+Merc 450SL & 180 & 3.07 & 3.730 & 17.60 & 0\tabularnewline
+Merc 450SLC & 180 & 3.07 & 3.780 & 18.00 & 0\tabularnewline
+Cadillac Fleetwood & 205 & 2.93 & 5.250 & 17.98 & 0\tabularnewline
+Lincoln Continental & 215 & 3.00 & 5.424 & 17.82 & 0\tabularnewline
+Chrysler Imperial & 230 & 3.23 & 5.345 & 17.42 & 0\tabularnewline
+Fiat 128 & 66 & 4.08 & 2.200 & 19.47 & 1\tabularnewline
+Honda Civic & 52 & 4.93 & 1.615 & 18.52 & 1\tabularnewline
+Toyota Corolla & 65 & 4.22 & 1.835 & 19.90 & 1\tabularnewline
+Toyota Corona & 97 & 3.70 & 2.465 & 20.01 & 1\tabularnewline
+Dodge Challenger & 150 & 2.76 & 3.520 & 16.87 & 0\tabularnewline
+AMC Javelin & 150 & 3.15 & 3.435 & 17.30 & 0\tabularnewline
+Camaro Z28 & 245 & 3.73 & 3.840 & 15.41 & 0\tabularnewline
+Pontiac Firebird & 175 & 3.08 & 3.845 & 17.05 & 0\tabularnewline
+Fiat X1-9 & 66 & 4.08 & 1.935 & 18.90 & 1\tabularnewline
+Porsche 914-2 & 91 & 4.43 & 2.140 & 16.70 & 0\tabularnewline
+Lotus Europa & 113 & 3.77 & 1.513 & 16.90 & 1\tabularnewline
+Ford Pantera L & 264 & 4.22 & 3.170 & 14.50 & 0\tabularnewline
+Ferrari Dino & 175 & 3.62 & 2.770 & 15.50 & 0\tabularnewline
+Maserati Bora & 335 & 3.54 & 3.570 & 14.60 & 0\tabularnewline
+Volvo 142E & 109 & 4.11 & 2.780 & 18.60 & 1\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Now a grid}\label{now-a-grid}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-7-1.pdf}
+\caption{grid 2}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-3}
+
+\lipsum
+
+\section{A grid}\label{a-grid-1}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-8-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-4}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-10-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-5}
+
+\lipsum
+
+\section{A grid}\label{a-grid-2}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-11-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-6}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-13-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-7}
+
+\lipsum
+
+\section{A grid}\label{a-grid-3}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-14-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-8}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-16-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-9}
+
+\lipsum
+
+\section{A grid}\label{a-grid-4}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-17-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-10}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-19-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-11}
+
+\lipsum
+
+\section{A grid}\label{a-grid-5}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-20-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-12}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-22-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-13}
+
+\lipsum
+
+\section{A grid}\label{a-grid-6}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-23-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-14}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{Now a table}\label{now-a-table-4}
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\caption{10 first cars}\tabularnewline
+\toprule
+& cyl & disp & hp & drat\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& cyl & disp & hp & drat\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 6 & 160.0 & 110 & 3.90\tabularnewline
+Mazda RX4 Wag & 6 & 160.0 & 110 & 3.90\tabularnewline
+Datsun 710 & 4 & 108.0 & 93 & 3.85\tabularnewline
+Hornet 4 Drive & 6 & 258.0 & 110 & 3.08\tabularnewline
+Hornet Sportabout & 8 & 360.0 & 175 & 3.15\tabularnewline
+Valiant & 6 & 225.0 & 105 & 2.76\tabularnewline
+Duster 360 & 8 & 360.0 & 245 & 3.21\tabularnewline
+Merc 240D & 4 & 146.7 & 62 & 3.69\tabularnewline
+Merc 230 & 4 & 140.8 & 95 & 3.92\tabularnewline
+Merc 280 & 6 & 167.6 & 123 & 3.92\tabularnewline
+\bottomrule
+\end{longtable}
+
+\lipsum
+
+\section{Now a table}\label{now-a-table-5}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{another one cars}\tabularnewline
+\toprule
+& disp & hp & drat & wt & qsec & vs\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& disp & hp & drat & wt & qsec & vs\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 160.0 & 110 & 3.90 & 2.620 & 16.46 & 0\tabularnewline
+Mazda RX4 Wag & 160.0 & 110 & 3.90 & 2.875 & 17.02 & 0\tabularnewline
+Datsun 710 & 108.0 & 93 & 3.85 & 2.320 & 18.61 & 1\tabularnewline
+Hornet 4 Drive & 258.0 & 110 & 3.08 & 3.215 & 19.44 & 1\tabularnewline
+Hornet Sportabout & 360.0 & 175 & 3.15 & 3.440 & 17.02 &
+0\tabularnewline
+Valiant & 225.0 & 105 & 2.76 & 3.460 & 20.22 & 1\tabularnewline
+Duster 360 & 360.0 & 245 & 3.21 & 3.570 & 15.84 & 0\tabularnewline
+Merc 240D & 146.7 & 62 & 3.69 & 3.190 & 20.00 & 1\tabularnewline
+Merc 230 & 140.8 & 95 & 3.92 & 3.150 & 22.90 & 1\tabularnewline
+Merc 280 & 167.6 & 123 & 3.92 & 3.440 & 18.30 & 1\tabularnewline
+Merc 280C & 167.6 & 123 & 3.92 & 3.440 & 18.90 & 1\tabularnewline
+Merc 450SE & 275.8 & 180 & 3.07 & 4.070 & 17.40 & 0\tabularnewline
+Merc 450SL & 275.8 & 180 & 3.07 & 3.730 & 17.60 & 0\tabularnewline
+Merc 450SLC & 275.8 & 180 & 3.07 & 3.780 & 18.00 & 0\tabularnewline
+Cadillac Fleetwood & 472.0 & 205 & 2.93 & 5.250 & 17.98 &
+0\tabularnewline
+Lincoln Continental & 460.0 & 215 & 3.00 & 5.424 & 17.82 &
+0\tabularnewline
+Chrysler Imperial & 440.0 & 230 & 3.23 & 5.345 & 17.42 &
+0\tabularnewline
+Fiat 128 & 78.7 & 66 & 4.08 & 2.200 & 19.47 & 1\tabularnewline
+Honda Civic & 75.7 & 52 & 4.93 & 1.615 & 18.52 & 1\tabularnewline
+Toyota Corolla & 71.1 & 65 & 4.22 & 1.835 & 19.90 & 1\tabularnewline
+Toyota Corona & 120.1 & 97 & 3.70 & 2.465 & 20.01 & 1\tabularnewline
+Dodge Challenger & 318.0 & 150 & 2.76 & 3.520 & 16.87 & 0\tabularnewline
+AMC Javelin & 304.0 & 150 & 3.15 & 3.435 & 17.30 & 0\tabularnewline
+Camaro Z28 & 350.0 & 245 & 3.73 & 3.840 & 15.41 & 0\tabularnewline
+Pontiac Firebird & 400.0 & 175 & 3.08 & 3.845 & 17.05 & 0\tabularnewline
+Fiat X1-9 & 79.0 & 66 & 4.08 & 1.935 & 18.90 & 1\tabularnewline
+Porsche 914-2 & 120.3 & 91 & 4.43 & 2.140 & 16.70 & 0\tabularnewline
+Lotus Europa & 95.1 & 113 & 3.77 & 1.513 & 16.90 & 1\tabularnewline
+Ford Pantera L & 351.0 & 264 & 4.22 & 3.170 & 14.50 & 0\tabularnewline
+Ferrari Dino & 145.0 & 175 & 3.62 & 2.770 & 15.50 & 0\tabularnewline
+Maserati Bora & 301.0 & 335 & 3.54 & 3.570 & 14.60 & 0\tabularnewline
+Volvo 142E & 121.0 & 109 & 4.11 & 2.780 & 18.60 & 1\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Now a plot}\label{now-a-plot-2}
+
+\lipsum
+
+Plot should be here
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-27-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\section{Now a table}\label{now-a-table-6}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrr@{}}
+\caption{another one}\tabularnewline
+\toprule
+& hp & drat & wt & qsec & vs\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& hp & drat & wt & qsec & vs\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 110 & 3.90 & 2.620 & 16.46 & 0\tabularnewline
+Mazda RX4 Wag & 110 & 3.90 & 2.875 & 17.02 & 0\tabularnewline
+Datsun 710 & 93 & 3.85 & 2.320 & 18.61 & 1\tabularnewline
+Hornet 4 Drive & 110 & 3.08 & 3.215 & 19.44 & 1\tabularnewline
+Hornet Sportabout & 175 & 3.15 & 3.440 & 17.02 & 0\tabularnewline
+Valiant & 105 & 2.76 & 3.460 & 20.22 & 1\tabularnewline
+Duster 360 & 245 & 3.21 & 3.570 & 15.84 & 0\tabularnewline
+Merc 240D & 62 & 3.69 & 3.190 & 20.00 & 1\tabularnewline
+Merc 230 & 95 & 3.92 & 3.150 & 22.90 & 1\tabularnewline
+Merc 280 & 123 & 3.92 & 3.440 & 18.30 & 1\tabularnewline
+Merc 280C & 123 & 3.92 & 3.440 & 18.90 & 1\tabularnewline
+Merc 450SE & 180 & 3.07 & 4.070 & 17.40 & 0\tabularnewline
+Merc 450SL & 180 & 3.07 & 3.730 & 17.60 & 0\tabularnewline
+Merc 450SLC & 180 & 3.07 & 3.780 & 18.00 & 0\tabularnewline
+Cadillac Fleetwood & 205 & 2.93 & 5.250 & 17.98 & 0\tabularnewline
+Lincoln Continental & 215 & 3.00 & 5.424 & 17.82 & 0\tabularnewline
+Chrysler Imperial & 230 & 3.23 & 5.345 & 17.42 & 0\tabularnewline
+Fiat 128 & 66 & 4.08 & 2.200 & 19.47 & 1\tabularnewline
+Honda Civic & 52 & 4.93 & 1.615 & 18.52 & 1\tabularnewline
+Toyota Corolla & 65 & 4.22 & 1.835 & 19.90 & 1\tabularnewline
+Toyota Corona & 97 & 3.70 & 2.465 & 20.01 & 1\tabularnewline
+Dodge Challenger & 150 & 2.76 & 3.520 & 16.87 & 0\tabularnewline
+AMC Javelin & 150 & 3.15 & 3.435 & 17.30 & 0\tabularnewline
+Camaro Z28 & 245 & 3.73 & 3.840 & 15.41 & 0\tabularnewline
+Pontiac Firebird & 175 & 3.08 & 3.845 & 17.05 & 0\tabularnewline
+Fiat X1-9 & 66 & 4.08 & 1.935 & 18.90 & 1\tabularnewline
+Porsche 914-2 & 91 & 4.43 & 2.140 & 16.70 & 0\tabularnewline
+Lotus Europa & 113 & 3.77 & 1.513 & 16.90 & 1\tabularnewline
+Ford Pantera L & 264 & 4.22 & 3.170 & 14.50 & 0\tabularnewline
+Ferrari Dino & 175 & 3.62 & 2.770 & 15.50 & 0\tabularnewline
+Maserati Bora & 335 & 3.54 & 3.570 & 14.60 & 0\tabularnewline
+Volvo 142E & 109 & 4.11 & 2.780 & 18.60 & 1\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Now a grid}\label{now-a-grid-1}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-29-1.pdf}
+\caption{grid 2}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-15}
+
+\lipsum
+
+\section{A grid}\label{a-grid-7}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-30-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-16}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-32-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-17}
+
+\lipsum
+
+\section{A grid}\label{a-grid-8}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-33-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-18}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-35-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-19}
+
+\lipsum
+
+\section{A grid}\label{a-grid-9}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-36-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-20}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-38-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-21}
+
+\lipsum
+
+\section{A grid}\label{a-grid-10}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-39-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-22}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-41-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-23}
+
+\lipsum
+
+\section{A grid}\label{a-grid-11}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-42-1.pdf}
+\caption{grid 1}
+\end{figure}
+
+\subsection{randow text}\label{randow-text-24}
+
+\lipsum
+
+Table should come here
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\caption{All cars, 6 vars}\tabularnewline
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& mpg & cyl & disp & hp & drat & wt\tabularnewline
+\midrule
+\endhead
+Mazda RX4 & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.620\tabularnewline
+Mazda RX4 Wag & 21.0 & 6 & 160.0 & 110 & 3.90 & 2.875\tabularnewline
+Datsun 710 & 22.8 & 4 & 108.0 & 93 & 3.85 & 2.320\tabularnewline
+Hornet 4 Drive & 21.4 & 6 & 258.0 & 110 & 3.08 & 3.215\tabularnewline
+Hornet Sportabout & 18.7 & 8 & 360.0 & 175 & 3.15 & 3.440\tabularnewline
+Valiant & 18.1 & 6 & 225.0 & 105 & 2.76 & 3.460\tabularnewline
+Duster 360 & 14.3 & 8 & 360.0 & 245 & 3.21 & 3.570\tabularnewline
+Merc 240D & 24.4 & 4 & 146.7 & 62 & 3.69 & 3.190\tabularnewline
+Merc 230 & 22.8 & 4 & 140.8 & 95 & 3.92 & 3.150\tabularnewline
+Merc 280 & 19.2 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 280C & 17.8 & 6 & 167.6 & 123 & 3.92 & 3.440\tabularnewline
+Merc 450SE & 16.4 & 8 & 275.8 & 180 & 3.07 & 4.070\tabularnewline
+Merc 450SL & 17.3 & 8 & 275.8 & 180 & 3.07 & 3.730\tabularnewline
+Merc 450SLC & 15.2 & 8 & 275.8 & 180 & 3.07 & 3.780\tabularnewline
+Cadillac Fleetwood & 10.4 & 8 & 472.0 & 205 & 2.93 &
+5.250\tabularnewline
+Lincoln Continental & 10.4 & 8 & 460.0 & 215 & 3.00 &
+5.424\tabularnewline
+Chrysler Imperial & 14.7 & 8 & 440.0 & 230 & 3.23 & 5.345\tabularnewline
+Fiat 128 & 32.4 & 4 & 78.7 & 66 & 4.08 & 2.200\tabularnewline
+Honda Civic & 30.4 & 4 & 75.7 & 52 & 4.93 & 1.615\tabularnewline
+Toyota Corolla & 33.9 & 4 & 71.1 & 65 & 4.22 & 1.835\tabularnewline
+Toyota Corona & 21.5 & 4 & 120.1 & 97 & 3.70 & 2.465\tabularnewline
+Dodge Challenger & 15.5 & 8 & 318.0 & 150 & 2.76 & 3.520\tabularnewline
+AMC Javelin & 15.2 & 8 & 304.0 & 150 & 3.15 & 3.435\tabularnewline
+Camaro Z28 & 13.3 & 8 & 350.0 & 245 & 3.73 & 3.840\tabularnewline
+Pontiac Firebird & 19.2 & 8 & 400.0 & 175 & 3.08 & 3.845\tabularnewline
+Fiat X1-9 & 27.3 & 4 & 79.0 & 66 & 4.08 & 1.935\tabularnewline
+Porsche 914-2 & 26.0 & 4 & 120.3 & 91 & 4.43 & 2.140\tabularnewline
+Lotus Europa & 30.4 & 4 & 95.1 & 113 & 3.77 & 1.513\tabularnewline
+Ford Pantera L & 15.8 & 8 & 351.0 & 264 & 4.22 & 3.170\tabularnewline
+Ferrari Dino & 19.7 & 6 & 145.0 & 175 & 3.62 & 2.770\tabularnewline
+Maserati Bora & 15.0 & 8 & 301.0 & 335 & 3.54 & 3.570\tabularnewline
+Volvo 142E & 21.4 & 4 & 121.0 & 109 & 4.11 & 2.780\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{trial_files/figure-latex/unnamed-chunk-44-1.pdf}
+\caption{disp vs mpg - plot}
+\end{figure}
+
+
+\end{document}

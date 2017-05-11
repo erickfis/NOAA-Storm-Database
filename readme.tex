@@ -82,7 +82,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2017 maio, 07}
+  \date{2017 maio, 10}
 
 
 \begin{document}
@@ -150,6 +150,13 @@ total sum of fatalities, injuries and economic losses.
 In order to answer our questions, the original database needed to be
 treated from its raw form to a more useful format.
 
+\subsubsection{New files to download and process data
+again:}\label{new-files-to-download-and-process-data-again}
+
+\begin{verbatim}
+    StormEvents_details-ftp_v1.0_d2006_c20170405.csv.gz, StormEvents_details-ftp_v1.0_d2015_c20170216.csv.gz, StormEvents_details-ftp_v1.0_d1951_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1952_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1955_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1960_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1961_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1962_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1963_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1964_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1970_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1975_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1979_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1981_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1982_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1984_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1991_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1992_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1993_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1994_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1997_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1999_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2000_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2002_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2004_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2007_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2009_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2010_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2011_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2013_c20170419.csv.gz, StormEvents_details-ftp_v1.0_d2017_c20170419.csv.gz, StormEvents_details-ftp_v1.0_d1953_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1954_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1956_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1957_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1958_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1959_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1965_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1966_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1967_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1968_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1969_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1971_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1972_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1973_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1974_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1976_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1977_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1978_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1980_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1983_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1985_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1986_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1987_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1988_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1989_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1990_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1995_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1996_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1998_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2003_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2008_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2012_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2016_c20170419.csv.gz, StormEvents_details-ftp_v1.0_d2005_c20170405.csv.gz, StormEvents_details-ftp_v1.0_d2014_c20161118.csv.gz, StormEvents_details-ftp_v1.0_d1950_c20170120.csv.gz
+\end{verbatim}
+
 The necessary transformations were:
 
 \begin{itemize}
@@ -167,7 +174,7 @@ The necessary transformations were:
   sanitized county names
 \end{itemize}
 
-This database has 902297 observations. Each observation corresponds to
+This database has 1419673 observations. Each observation corresponds to
 an event occurrence.
 
 To determine the most harmful events to human health, we checked the
@@ -212,11 +219,6 @@ In order to determine what were the most fatal events in a single
 occurrence, we need to see how fatalities are distributed along the
 occurrences.
 
-\begin{verbatim}
-##  99.1%  99.2%  99.3%  99.4%  99.5%  99.6%  99.7%  99.8%  99.9% 100.0% 
-##      0      0      1      1      1      1      1      2      3    583
-\end{verbatim}
-
 Looking at this distribution, we can infer that the vast majority of
 those occurrences were not fatal at all: \textbf{99.2\% occurrences
 didn't caused any fatalities.}
@@ -227,13 +229,8 @@ Now, among the fatal occurrences, we are interested in the ones whose
 fatalities are beyond the confidence interval, ie. above 99\% of the
 most common values.
 
-\begin{verbatim}
-##  99.9% 
-## 74.027
-\end{verbatim}
-
 Looking at this distribution, we can infer that \textbf{99.8\% of the
-fatal occurrences caused up to 74.027 fattalities}.
+fatal occurrences caused up to 57.04 fattalities}.
 
 Distribution plots
 
@@ -245,26 +242,38 @@ Distribution plots
 
 In this study, we looked on the 1\% deadliest occurrences.
 
-\begin{longtable}[]{@{}rlrlrllrrr@{}}
+\begin{longtable}[]{@{}rlllrllrrr@{}}
+\caption{Worst fatal occurrences}\tabularnewline
 \toprule
-rank & event & mag & day & duration & state & countyname & fatalities &
-mean & median\tabularnewline
+rank & event & magnitude & day & duration & state & countyname &
+fatalities & mean & median\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+rank & event & magnitude & day & duration & state & countyname &
+fatalities & mean & median\tabularnewline
 \midrule
 \endhead
-1 & HEAT & 0 & 1995-07-12 & 0S & IL & ILZ003 & 583 & 2.171638 &
+1 & HURRICANE & & 2005-08-28 & 0S & LOUISIANA & ORLEANS & 638 & 1.904628
+& 1\tabularnewline
+2 & TORNADO & & 2011-05-22 & 0S & MISSOURI & JASPER & 161 & 1.904628 &
 1\tabularnewline
-2 & TORNADO & 0 & 2011-05-22 & 0S & MO & JASPER & 158 & 2.171638 &
+3 & HURRICANE & & 2005-08-28 & 0S & LOUISIANA & LOWER.ST..BERNARD & 140
+& 1.904628 & 1\tabularnewline
+4 & TORNADO & 0 & 1953-06-08 & 0S & MICHIGAN & GENESEE & 116 & 1.904628
+& 1\tabularnewline
+5 & TORNADO & 0 & 1953-05-11 & 0S & TEXAS & MCLENNAN & 114 & 1.904628 &
 1\tabularnewline
-3 & TORNADO & 0 & 1953-06-08 & NA & MI & GENESEE & 116 & 2.171638 &
+6 & HURRICANE & & 2005-08-28 & 0S & MISSISSIPPI & HARRISON & 97 &
+1.904628 & 1\tabularnewline
+7 & HEAT & & 1999-07-28 & 0S & ILLINOIS & COOK & 93 & 1.904628 &
 1\tabularnewline
-4 & TORNADO & 0 & 1953-05-11 & NA & TX & MCLENNAN & 114 & 2.171638 &
+8 & TORNADO & 0 & 1953-06-09 & 0S & MASSACHUSETTS & WORCESTER & 90 &
+1.904628 & 1\tabularnewline
+9 & TORNADO & 0 & 1955-05-25 & 0S & KANSAS & COWLEY & 75 & 1.904628 &
 1\tabularnewline
-5 & HEAT & 0 & 1999-07-28 & 0S & IL & ILZ005 & 99 & 2.171638 &
-1\tabularnewline
-6 & TORNADO & 0 & 1953-06-09 & NA & MA & WORCESTER & 90 & 2.171638 &
-1\tabularnewline
-7 & TORNADO & 0 & 1955-05-25 & NA & KS & COWLEY & 75 & 2.171638 &
-1\tabularnewline
+10 & HEAT & & 1999-07-04 & 0S & PENNSYLVANIA & PHILADELPHIA & 58 &
+1.904628 & 1\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -274,8 +283,8 @@ mean & median\tabularnewline
 \caption{Worst fatal occurrences}
 \end{figure}
 
-The single most fatal event was a \textbf{HEAT, that occurred in IL,
-ILZ003, on 1995-07-12, killing 583 people.}
+The single most fatal event was a \textbf{HURRICANE, that occurred in
+LOUISIANA, ORLEANS, on 2005-08-28, killing 638 people.}
 
 However, if we compare this single awful event to the mean of fatalities
 caused, we see that this is very unlikely to happen.
@@ -295,15 +304,23 @@ Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
 
 \begin{longtable}[]{@{}rlrrr@{}}
+\caption{Total fatalities by event}\tabularnewline
+\toprule
+rank & event & total & mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total & mean & median\tabularnewline
 \midrule
 \endhead
-1 & TORNADO & 5636 & 398.5526 & 38.5\tabularnewline
-2 & HEAT & 3149 & 398.5526 & 38.5\tabularnewline
-3 & FLOOD & 1553 & 398.5526 & 38.5\tabularnewline
-4 & WIND & 1451 & 398.5526 & 38.5\tabularnewline
-5 & LIGHTNING & 816 & 398.5526 & 38.5\tabularnewline
+1 & TORNADO & 5873 & 677.5714 & 184\tabularnewline
+2 & HEAT & 2854 & 677.5714 & 184\tabularnewline
+3 & WIND & 2304 & 677.5714 & 184\tabularnewline
+4 & FLOOD & 1944 & 677.5714 & 184\tabularnewline
+5 & WINTER & 1196 & 677.5714 & 184\tabularnewline
+6 & HURRICANE & 1128 & 677.5714 & 184\tabularnewline
+7 & LIGHTNING & 833 & 677.5714 & 184\tabularnewline
+8 & RIP CURRENT & 798 & 677.5714 & 184\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -314,27 +331,32 @@ rank & event & total & mean & median\tabularnewline
 \end{figure}
 
 The most fatal event along the time is the \textbf{TORNADO. It has
-killed 5636 people until now.}
+killed 5873 people until now.}
 
 \subsubsection{Least fatal events}\label{least-fatal-events}
 
 Just for curiosity, these are the less fatal among the fatal events:
 
 \begin{longtable}[]{@{}rlr@{}}
+\caption{Least fatal events}\tabularnewline
+\toprule
+rank & event & total\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total\tabularnewline
 \midrule
 \endhead
-38 & BLACK ICE & 1\tabularnewline
-37 & FROST & 1\tabularnewline
-36 & HIGH SWELLS & 1\tabularnewline
-35 & WINTRY MIX & 1\tabularnewline
-34 & DUST DEVIL & 2\tabularnewline
-33 & SLEET & 2\tabularnewline
-32 & HIGH WATER & 3\tabularnewline
-31 & WATERSPOUT & 3\tabularnewline
-30 & HIGH SEAS & 5\tabularnewline
-29 & ICY ROADS & 5\tabularnewline
+28 & TROPICAL DEPRESSION & 1\tabularnewline
+27 & DENSE SMOKE & 2\tabularnewline
+26 & SLEET & 2\tabularnewline
+25 & WATERSPOUT & 2\tabularnewline
+24 & COLD & 4\tabularnewline
+23 & DUST DEVIL & 4\tabularnewline
+22 & SLIDE & 4\tabularnewline
+21 & SNEAKERWAVE & 14\tabularnewline
+20 & HAIL & 20\tabularnewline
+19 & TIDE & 22\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -349,13 +371,8 @@ In order to determine what were the most injuring events in a single
 occurrence, we need to see how injuries are distributed along the
 occurrences.
 
-\begin{verbatim}
-## 97.7% 97.9% 98.1% 98.3% 98.5% 98.7% 98.9% 99.1% 99.3% 99.5% 99.7% 99.9% 
-##     0     0     1     1     1     1     1     2     3     4     8    25
-\end{verbatim}
-
 Looking at this distribution, we can infer that the vast majority of
-those occurrences were not injuring at all: \textbf{97.9\% occurrences
+those occurrences were not injuring at all: \textbf{98.5\% occurrences
 didn't caused any injuries}
 
 On the other hand, injuring occurrences had to have at least 1 injury.
@@ -363,11 +380,6 @@ On the other hand, injuring occurrences had to have at least 1 injury.
 Now, among the injuring occurrences, we are interested in the ones whose
 harm is beyond the confidence interval, ie. above 99\% of the most
 common values.
-
-\begin{verbatim}
-## 99.9% 
-##   500
-\end{verbatim}
 
 Looking at this distribution, we can infer that \textbf{99.8\% of the
 injuring occurrences caused up to 500 injuries}.
@@ -382,46 +394,48 @@ Distribution plots
 
 In this study, we looked on the 1\% most injuring occurrences.
 
-\begin{longtable}[]{@{}rlrlrllrrr@{}}
+\begin{longtable}[]{@{}rlllrllrrr@{}}
+\caption{Worst injuring occurrences}\tabularnewline
 \toprule
-rank & event & mag & day & duration & state & countyname & injuries &
-mean & median\tabularnewline
+rank & event & magnitude & day & duration & state & countyname &
+injuries & mean & median\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+rank & event & magnitude & day & duration & state & countyname &
+injuries & mean & median\tabularnewline
 \midrule
 \endhead
-1 & TORNADO & 0 & 1979-04-10 & NA & TX & WICHITA & 1700 & 7.982731 &
+1 & HURRICANE & & 2008-09-12 & 0S & TEXAS & HARRIS & 2400 & 7.570462 &
 2\tabularnewline
-2 & STORM & 0 & 1994-02-08 & 0S & OH & OHZ42 & 1568 & 7.982731 &
+2 & TORNADO & 0 & 1979-04-10 & 0S & TEXAS & WICHITA & 1700 & 7.570462 &
 2\tabularnewline
-3 & TORNADO & 0 & 1953-06-09 & NA & MA & WORCESTER & 1228 & 7.982731 &
+3 & TORNADO & 0 & 1953-06-09 & 0S & MASSACHUSETTS & WORCESTER & 1228 &
+7.570462 & 2\tabularnewline
+4 & TORNADO & 0 & 1974-04-03 & 0S & OHIO & GREENE & 1150 & 7.570462 &
 2\tabularnewline
-4 & TORNADO & 0 & 1974-04-03 & NA & OH & GREENE & 1150 & 7.982731 &
+5 & TORNADO & & 2011-05-22 & 0S & MISSOURI & JASPER & 1150 & 7.570462 &
 2\tabularnewline
-5 & TORNADO & 0 & 2011-05-22 & 0S & MO & JASPER & 1150 & 7.982731 &
+6 & FLOOD & & 1998-10-17 & 0S & TEXAS & COMAL & 800 & 7.570462 &
 2\tabularnewline
-6 & FLOOD & 0 & 1998-10-17 & 0S & TX & COMAL & 800 & 7.982731 &
+7 & TORNADO & & 2011-04-27 & 0S & ALABAMA & TUSCALOOSA & 800 & 7.570462
+& 2\tabularnewline
+8 & TORNADO & 0 & 1953-06-08 & 0S & MICHIGAN & GENESEE & 785 & 7.570462
+& 2\tabularnewline
+9 & HURRICANE & & 2004-08-13 & 0S & FLORIDA & CHARLOTTE & 700 & 7.570462
+& 2\tabularnewline
+10 & TORNADO & & 2011-04-27 & 0S & ALABAMA & JEFFERSON & 700 & 7.570462
+& 2\tabularnewline
+11 & FLOOD & & 1998-10-17 & 0S & TEXAS & BEXAR & 600 & 7.570462 &
 2\tabularnewline
-7 & TORNADO & 0 & 2011-04-27 & 0S & AL & TUSCALOOS & 800 & 7.982731 &
+12 & TORNADO & 0 & 1953-05-11 & 0S & TEXAS & MCLENNAN & 597 & 7.570462 &
 2\tabularnewline
-8 & TORNADO & 0 & 1953-06-08 & NA & MI & GENESEE & 785 & 7.982731 &
+13 & TORNADO & 0 & 1965-04-11 & 0S & INDIANA & HOWARD & 560 & 7.570462 &
 2\tabularnewline
-9 & HURRICANE & 0 & 2004-08-13 & 0S & FL & FLZ055 & 780 & 7.982731 &
+14 & HEAT & & 2007-08-04 & 0S & MISSOURI & ST..LOUIS & 519 & 7.570462 &
 2\tabularnewline
-10 & FLOOD & 0 & 1998-10-17 & 0S & TX & TXZ206 & 750 & 7.982731 &
-2\tabularnewline
-11 & TORNADO & 0 & 2011-04-27 & 0S & AL & JEFFERSON & 700 & 7.982731 &
-2\tabularnewline
-12 & FLOOD & 0 & 1998-10-17 & 0S & TX & BEXAR & 600 & 7.982731 &
-2\tabularnewline
-13 & TORNADO & 0 & 1953-05-11 & NA & TX & MCLENNAN & 597 & 7.982731 &
-2\tabularnewline
-14 & TORNADO & 0 & 1965-04-11 & NA & IN & HOWARD & 560 & 7.982731 &
-2\tabularnewline
-15 & FLOOD & 0 & 1998-10-17 & 0S & TX & TXZ205 & 550 & 7.982731 &
-2\tabularnewline
-16 & HEAT & 0 & 2007-08-04 & 0S & MO & MOZ061 & 519 & 7.982731 &
-2\tabularnewline
-17 & TORNADO & 0 & 1966-03-03 & NA & MS & HINDS & 504 & 7.982731 &
-2\tabularnewline
+15 & TORNADO & 0 & 1966-03-03 & 0S & MISSISSIPPI & HINDS & 504 &
+7.570462 & 2\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -431,8 +445,8 @@ mean & median\tabularnewline
 \caption{Worst injuring occurrences}
 \end{figure}
 
-The single most injuring event was a \textbf{TORNADO, that occurred in
-TX, WICHITA, on 1979-04-10, injuring 1700 people.}
+The single most injuring event was a \textbf{HURRICANE, that occurred in
+TEXAS, HARRIS, on 2008-09-12, injuring 2400 people.}
 
 However, if we compare this single awful event to the mean of injuries
 caused, we see that this is very unlikely to happen.
@@ -453,20 +467,25 @@ Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
 
 \begin{longtable}[]{@{}rlrrr@{}}
+\caption{Total injuries by event}\tabularnewline
+\toprule
+rank & event & total & mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total & mean & median\tabularnewline
 \midrule
 \endhead
-1 & TORNADO & 91407 & 4015.086 & 232\tabularnewline
-2 & WIND & 11497 & 4015.086 & 232\tabularnewline
-3 & HEAT & 9243 & 4015.086 & 232\tabularnewline
-4 & FLOOD & 8683 & 4015.086 & 232\tabularnewline
-5 & LIGHTNING & 5230 & 4015.086 & 232\tabularnewline
+1 & TORNADO & 94614 & 5200.419 & 316\tabularnewline
+2 & HEAT & 15436 & 5200.419 & 316\tabularnewline
+3 & WIND & 13439 & 5200.419 & 316\tabularnewline
+4 & FLOOD & 8806 & 5200.419 & 316\tabularnewline
+5 & WINTER & 8224 & 5200.419 & 316\tabularnewline
 \bottomrule
 \end{longtable}
 
 The most injuring event along the time is the \textbf{TORNADO. It has
-injuried 91407 people until now.}
+injuried 94614 people until now.}
 
 \begin{figure}[htbp]
 \centering
@@ -480,20 +499,25 @@ Just for curiosity, lets show now what are the less injuring among the
 injuring events:
 
 \begin{longtable}[]{@{}rlr@{}}
+\caption{Least injuring events}\tabularnewline
+\toprule
+rank & event & total\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total\tabularnewline
 \midrule
 \endhead
-35 & FROST & 3\tabularnewline
-34 & FUNNEL & 3\tabularnewline
-33 & TIDE & 5\tabularnewline
-32 & TYPHOON & 5\tabularnewline
-31 & HIGH SEAS & 8\tabularnewline
-30 & OTHER & 21\tabularnewline
-29 & BLACK ICE & 24\tabularnewline
-28 & WATERSPOUT & 29\tabularnewline
-27 & ICY ROADS & 31\tabularnewline
-26 & DROUGHT & 33\tabularnewline
+31 & FUNNEL & 3\tabularnewline
+30 & TROPICAL DEPRESSION & 3\tabularnewline
+29 & WATERSPOUT & 3\tabularnewline
+28 & OTHER & 4\tabularnewline
+27 & DROUGHT & 8\tabularnewline
+26 & SLEET & 10\tabularnewline
+25 & SNEAKERWAVE & 11\tabularnewline
+24 & SLIDE & 13\tabularnewline
+23 & COLD & 15\tabularnewline
+22 & DENSE SMOKE & 17\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -516,26 +540,16 @@ In order to determine what were the most property damaging events in a
 single occurrence, we need to see how damages are distributed along the
 occurrences.
 
-\begin{verbatim}
-##    99.9% 
-## 25000000
-\end{verbatim}
-
 Looking at this distribution, we can infer that 99.8\% of the
-occurrences caused less than \textbf{\$25,000,000 in losses}.
+occurrences caused less than \textbf{\$40,000,000 in losses}.
 
 On the other hand, damaging occurrences had to have damages above zero.
 
 Now, among the damaging occurrences, we are interested in the ones whose
 damages are above 99.8\% of the most common values.
 
-\begin{verbatim}
-##     99.9% 
-## 120000000
-\end{verbatim}
-
 Looking at this distribution, we can infer that \textbf{99.8\% of the
-damaging occurrences caused up to \$120,000,000 in losses}.
+damaging occurrences caused up to \$128,960,700 in losses}.
 
 Distribution plots
 
@@ -547,52 +561,59 @@ Distribution plots
 
 In this study, we looked on the 1\% most harmful occurrences.
 
-\begin{longtable}[]{@{}rlrlrlll@{}}
+\begin{longtable}[]{@{}rlllrlll@{}}
+\caption{Worst property damaging occurrences, mean = \$1,137,697 and
+median = \$10,000}\tabularnewline
 \toprule
-rank & event & mag & day & duration & state & countyname &
+rank & event & magnitude & day & duration & state & countyname &
+value\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+rank & event & magnitude & day & duration & state & countyname &
 value\tabularnewline
 \midrule
 \endhead
-1 & FLOOD & 0 & 2006-01-01 & 0S & CA & NAPA &
-\$115,000,000,000\tabularnewline
-2 & STORM & 0 & 2005-08-29 & 0S & LA & LAZ040 &
-\$31,300,000,000\tabularnewline
-3 & HURRICANE & 0 & 2005-08-28 & 0S & LA & LAZ034 &
-\$16,930,000,000\tabularnewline
-4 & STORM & 0 & 2005-08-29 & 0S & MS & MSZ080 &
-\$11,260,000,000\tabularnewline
-5 & HURRICANE & 0 & 2005-10-24 & 0S & FL & FLZ068 &
+1 & TIDE & & 2005-08-29 & 0S & LOUISIANA & ORLEANS &
+\$17,900,000,000\tabularnewline
+2 & HURRICANE & & 2005-10-24 & 0S & FLORIDA & COASTAL.PALM.BEACH &
 \$10,000,000,000\tabularnewline
-6 & HURRICANE & 0 & 2005-08-28 & 0S & MS & MSZ068 &
-\$7,350,000,000\tabularnewline
-7 & HURRICANE & 0 & 2005-08-29 & 0S & MS & MSZ018 &
-\$5,880,000,000\tabularnewline
-8 & HURRICANE & 0 & 2004-08-13 & 0S & FL & FLZ055 &
-\$5,420,000,000\tabularnewline
-9 & STORM & 0 & 2001-06-05 & 0S & TX & TXZ163 &
-\$5,150,000,000\tabularnewline
-10 & WINTER & 0 & 1993-03-12 & 0S & AL & ALZ001 &
+3 & FLOOD & & 2012-10-29 & 0S & NEW JERSEY & EASTERN.OCEAN &
+\$7,500,000,000\tabularnewline
+4 & TIDE & & 2005-08-29 & 0S & MISSISSIPPI & HARRISON &
+\$5,630,000,000\tabularnewline
+5 & STORM & & 2001-06-05 & 0S & TEXAS & HARRIS &
+\$5,030,000,000\tabularnewline
+6 & FLOOD & & 2012-10-28 & 0S & NEW JERSEY & EASTERN.MONMOUTH &
 \$5,000,000,000\tabularnewline
-11 & FLOOD & 0 & 1993-08-31 & NA & IL & ADAMS &
+7 & FLOOD & & 2012-10-28 & 0S & NEW JERSEY & WESTERN.MONMOUTH &
 \$5,000,000,000\tabularnewline
-12 & HURRICANE & 0 & 2004-09-04 & 0S & FL & FLZ041 &
-\$4,830,000,000\tabularnewline
-13 & HURRICANE & 0 & 2004-09-13 & 0S & FL & FLZ001 &
+8 & HURRICANE & & 2004-09-13 & 0S & FLORIDA & COASTAL.ESCAMBIA &
 \$4,000,000,000\tabularnewline
-14 & HURRICANE & 0 & 2005-09-23 & 0S & LA & LAZ027 &
+9 & TIDE & & 2008-09-12 & 0S & TEXAS & GALVESTON &
 \$4,000,000,000\tabularnewline
-15 & TIDE & 0 & 2008-09-12 & 0S & TX & TXZ213 &
-\$4,000,000,000\tabularnewline
-16 & FLOOD & 0 & 1997-04-18 & 0S & ND & NDZ027 &
+10 & HURRICANE & & 2005-08-28 & 0S & LOUISIANA & ORLEANS &
+\$3,560,000,000\tabularnewline
+11 & TIDE & & 2005-08-29 & 0S & MISSISSIPPI & HANCOCK &
+\$3,380,000,000\tabularnewline
+12 & TIDE & & 2005-08-29 & 0S & LOUISIANA & ST..TAMMANY &
+\$3,030,000,000\tabularnewline
+13 & TIDE & & 2005-08-29 & 0S & LOUISIANA & LOWER.PLAQUEMINES &
+\$3,030,000,000\tabularnewline
+14 & TIDE & & 2005-08-29 & 0S & LOUISIANA & LOWER.ST..BERNARD &
+\$3,020,000,000\tabularnewline
+15 & TIDE & & 2005-08-29 & 0S & LOUISIANA & UPPER.ST..BERNARD &
+\$3,020,000,000\tabularnewline
+16 & FLOOD & & 1997-04-18 & 0S & NORTH DAKOTA & GRAND.FORKS &
 \$3,000,000,000\tabularnewline
-17 & HURRICANE & 0 & 1999-09-15 & 0S & NC & NCZ007 &
+17 & HURRICANE & & 1999-09-15 & 0S & NORTH CAROLINA & ALAMANCE &
 \$3,000,000,000\tabularnewline
-18 & TORNADO & 0 & 2011-05-22 & 0S & MO & JASPER &
-\$2,800,000,000\tabularnewline
-19 & RAIN & 0 & 1995-05-08 & 0S & LA & LAFOURCHE &
-\$2,500,000,000\tabularnewline
-20 & HURRICANE & 0 & 2004-09-13 & 0S & AL & ALZ051 &
-\$2,500,000,000\tabularnewline
+18 & HURRICANE & & 2004-08-13 & 0S & FLORIDA & CHARLOTTE &
+\$3,000,000,000\tabularnewline
+19 & TIDE & & 2008-09-12 & 0S & TEXAS & HARRIS &
+\$3,000,000,000\tabularnewline
+20 & HURRICANE & & 2005-08-28 & 0S & MISSISSIPPI & HARRISON &
+\$2,940,000,000\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -603,13 +624,11 @@ value\tabularnewline
 \end{figure}
 
 The single most economic damaging event to properties was a
-\textbf{FLOOD, that occurred in CA, NAPA, on 2006-01-01, causing U\$
-\$115,000,000,000 in losses}.
+\textbf{TIDE, that occurred in LOUISIANA, ORLEANS, on 2005-08-29,
+causing U\$ \$17,900,000,000 in losses}.
 
 \subsubsection{Most Property Damaging event in all
 time}\label{most-property-damaging-event-in-all-time}
-
-Most Property Damaging event in all time
 
 Notice that are several occurrences of the same type of event along the
 time.
@@ -622,22 +641,29 @@ Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
 
 \begin{longtable}[]{@{}rllll@{}}
+\caption{Total losses by event}\tabularnewline
+\toprule
+rank & event & total & mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total & mean & median\tabularnewline
 \midrule
 \endhead
-1 & FLOOD & \$168,258,894,484 & \$9,309,236,278 &
-\$6,537,750\tabularnewline
-2 & HURRICANE & \$84,656,180,010 & \$9,309,236,278 &
-\$6,537,750\tabularnewline
-3 & TORNADO & \$57,003,317,876 & \$9,309,236,278 &
-\$6,537,750\tabularnewline
-4 & STORM & \$56,197,366,960 & \$9,309,236,278 &
-\$6,537,750\tabularnewline
-5 & WIND & \$17,951,214,274 & \$9,309,236,278 &
-\$6,537,750\tabularnewline
-6 & HAIL & \$15,977,048,513 & \$9,309,236,278 &
-\$6,537,750\tabularnewline
+1 & HURRICANE & \$87,005,170,310 & \$11,737,195,233 &
+\$229,971,300\tabularnewline
+2 & FLOOD & \$82,920,597,380 & \$11,737,195,233 &
+\$229,971,300\tabularnewline
+3 & TORNADO & \$63,648,478,192 & \$11,737,195,233 &
+\$229,971,300\tabularnewline
+4 & TIDE & \$54,155,102,600 & \$11,737,195,233 &
+\$229,971,300\tabularnewline
+5 & HAIL & \$25,360,544,274 & \$11,737,195,233 &
+\$229,971,300\tabularnewline
+6 & WIND & \$24,868,014,778 & \$11,737,195,233 &
+\$229,971,300\tabularnewline
+7 & STORM & \$16,753,590,360 & \$11,737,195,233 &
+\$229,971,300\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -647,8 +673,8 @@ rank & event & total & mean & median\tabularnewline
 \caption{Total Property Damages by event}
 \end{figure}
 
-The most property damaging event along the time is the \textbf{FLOOD. It
-has caused \$168,258,894,484 in losses.}
+The most property damaging event along the time is the
+\textbf{HURRICANE. It has caused \$87,005,170,310 in losses.}
 
 \subsubsection{Least property damaging
 events}\label{least-property-damaging-events}
@@ -656,20 +682,25 @@ events}\label{least-property-damaging-events}
 Just for curiosity, these are the less damaging events:
 
 \begin{longtable}[]{@{}rll@{}}
+\caption{Least property damaging events}\tabularnewline
+\toprule
+rank & event & total\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total\tabularnewline
 \midrule
 \endhead
-46 & RIP CURRENT & \$1,000\tabularnewline
-45 & HIGH SWELLS & \$5,000\tabularnewline
-44 & URBAN/SMALL STREAM & \$5,000\tabularnewline
-43 & WINTRY MIX & \$12,500\tabularnewline
-42 & FROST & \$15,000\tabularnewline
-41 & HIGH SEAS & \$15,500\tabularnewline
-40 & WET MICROBURST & \$35,000\tabularnewline
-39 & MICROBURST & \$80,000\tabularnewline
-38 & DENSE SMOKE & \$100,000\tabularnewline
-37 & GUSTNADO & \$102,050\tabularnewline
+32 & OTHER & \$1,000\tabularnewline
+31 & FUNNEL & \$123,100\tabularnewline
+30 & DENSE SMOKE & \$130,000\tabularnewline
+29 & RIP CURRENT & \$163,000\tabularnewline
+28 & VOLCANIC ASH & \$500,000\tabularnewline
+27 & DUST DEVIL & \$1,147,430\tabularnewline
+26 & SEICHE & \$1,402,000\tabularnewline
+25 & SLEET & \$3,084,000\tabularnewline
+24 & AVALANCHE & \$4,058,050\tabularnewline
+23 & WATERSPOUT & \$5,748,200\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -682,28 +713,13 @@ In order to determine what were the most crop damaging events in a
 single occurrence, we need to see how damages are distributed along the
 occurrences.
 
-\begin{verbatim}
-##      99.8%       100% 
-##    1000000 5000000000
-\end{verbatim}
-
-Looking at this distribution, we can infer that 99\% of the occurrences
-caused less than \textbf{\$1,000,000 in losses}.
-
 On the other hand, damaging occurrences had to have damages above zero.
 
 Now, among the damaging occurrences, we are interested in the ones whose
 damages are above 99\% of the most common values.
 
-\begin{verbatim}
-##     99.9% 
-## 335499040
-\end{verbatim}
-
 Looking at this distribution, we can infer that \textbf{99.8\% of the
-damaging occurrences caused up to \$335,499,040 in losses.}
-
-Distribution plots
+damaging occurrences caused up to \$197,450,000 in losses.}
 
 \begin{figure}[htbp]
 \centering
@@ -713,52 +729,59 @@ Distribution plots
 
 In this study, we looked on the 1\% most harmful occurrences.
 
-\begin{longtable}[]{@{}rlrlrlll@{}}
+\begin{longtable}[]{@{}rlllrlll@{}}
+\caption{Worst crops damaging occurrences, mean = \$1,783,319 and median
+= \$20,000}\tabularnewline
 \toprule
-rank & event & mag & day & duration & state & countyname &
+rank & event & magnitude & day & duration & state & countyname &
+value\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+rank & event & magnitude & day & duration & state & countyname &
 value\tabularnewline
 \midrule
 \endhead
-1 & FLOOD & 0 & 1993-08-31 & NA & IL & ADAMS &
-\$5,000,000,000\tabularnewline
-2 & STORM & 0 & 1994-02-09 & 0S & MS & MSZ001 &
-\$5,000,000,000\tabularnewline
-3 & HURRICANE & 0 & 2005-08-29 & 0S & MS & MSZ018 &
-\$1,510,000,000\tabularnewline
-4 & DROUGHT & 0 & 2006-01-01 & 0S & TX & TXZ091 &
+1 & DROUGHT & & 2014-12-01 & 0S & CALIFORNIA &
+NORTHERN.SAN.JOAQUIN.VALLEY & \$1,500,000,000\tabularnewline
+2 & DROUGHT & & 2011-06-01 & 0S & TEXAS & LUBBOCK &
+\$1,050,000,000\tabularnewline
+3 & DROUGHT & & 2006-01-01 & 0S & TEXAS & MONTAGUE &
 \$1,000,000,000\tabularnewline
-5 & COLD & 0 & 1998-12-20 & 0S & CA & CAZ020 &
-\$596,000,000\tabularnewline
-6 & DROUGHT & 0 & 2001-08-01 & 0S & IA & IAZ004 &
-\$578,850,000\tabularnewline
-7 & DROUGHT & 0 & 2000-11-01 & 0S & TX & TXZ021 &
+4 & DROUGHT & & 2007-06-01 & 0S & MISSISSIPPI & WARREN &
+\$700,000,000\tabularnewline
+5 & COLD & & 2007-01-11 & 0S & CALIFORNIA & SE.S.J..VALLEY &
+\$568,600,000\tabularnewline
+6 & DROUGHT & & 2000-11-01 & 0S & TEXAS & PARMER &
 \$515,000,000\tabularnewline
-8 & DROUGHT & 0 & 1995-08-01 & 0S & IA & IAZ004 &
+7 & DROUGHT & & 1998-07-06 & 0S & OKLAHOMA & CHOCTAW &
 \$500,000,000\tabularnewline
-9 & DROUGHT & 0 & 1998-07-06 & 0S & OK & OKZ049 &
+8 & DROUGHT & & 1999-07-01 & 0S & PENNSYLVANIA & POTTER &
 \$500,000,000\tabularnewline
-10 & HURRICANE & 0 & 1999-09-15 & 0S & NC & NCZ007 &
+9 & HURRICANE & & 1999-09-15 & 0S & NORTH CAROLINA & ALAMANCE &
 \$500,000,000\tabularnewline
-11 & DROUGHT & 0 & 1999-07-01 & 0S & PA & PAZ006 &
+10 & FLOOD & & 2000-10-03 & 0S & FLORIDA & COASTAL.DADE &
 \$500,000,000\tabularnewline
-12 & FLOOD & 0 & 2000-10-03 & 0S & FL & FLZ072 &
+11 & FLOOD & & 2007-07-01 & 0S & MISSOURI & HENRY &
 \$500,000,000\tabularnewline
-13 & FLOOD & 0 & 2007-07-01 & 0S & MO & HENRY &
-\$500,000,000\tabularnewline
-14 & HEAT & 0 & 2006-07-16 & 0S & CA & CAZ089 &
-\$492,400,000\tabularnewline
-15 & DROUGHT & 0 & 2002-12-01 & 0S & NE & NEZ039 &
-\$480,000,000\tabularnewline
-16 & DROUGHT & 0 & 1998-12-01 & 0S & TX & TXZ021 &
+12 & WIND & & 1998-12-20 & 0S & CALIFORNIA & SOUTHERN.SAN.JOAQUIN.VALLEY
+& \$490,500,000\tabularnewline
+13 & DROUGHT & & 1998-12-01 & 0S & TEXAS & YOAKUM &
 \$450,000,000\tabularnewline
-17 & HURRICANE & 0 & 2005-08-25 & 0S & FL & FLZ068 &
+14 & HURRICANE & & 2005-08-25 & 0S & FLORIDA & COASTAL.DADE &
 \$423,000,000\tabularnewline
-18 & DROUGHT & 0 & 2001-12-01 & 0S & TX & TXZ021 &
+15 & DROUGHT & & 2001-12-01 & 0S & TEXAS & PARMER &
 \$420,000,000\tabularnewline
-19 & HURRICANE & 0 & 1999-09-14 & 0S & NC & NCZ029 &
-\$413,600,000\tabularnewline
-20 & HEAT & 0 & 1995-08-20 & NA & AL & TALLADEGA &
-\$400,000,000\tabularnewline
+16 & DROUGHT & & 2007-09-01 & 0S & GEORGIA & BALDWIN &
+\$344,000,000\tabularnewline
+17 & DROUGHT & & 2006-02-01 & 0S & TEXAS & FANNIN &
+\$300,000,000\tabularnewline
+18 & COLD & & 2010-01-10 & 0S & FLORIDA & INLAND.COLLIER.COUNTY &
+\$300,000,000\tabularnewline
+19 & COLD & & 2010-01-10 & 0S & FLORIDA & INLAND.MIAMI.DADE &
+\$286,000,000\tabularnewline
+20 & DROUGHT & & 1998-12-01 & 0S & TEXAS & ANDREWS &
+\$250,000,000\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -768,14 +791,12 @@ value\tabularnewline
 \caption{Worst crops damaging occurrences}
 \end{figure}
 
-The single most economic damaging event to crops was a \textbf{FLOOD,
-that occurred in IL, ADAMS, on 1993-08-31, causing U\$ \$5,000,000,000
-in losses.}
+The single most economic damaging event to crops was a \textbf{DROUGHT,
+that occurred in CALIFORNIA, NORTHERN.SAN.JOAQUIN.VALLEY, on 2014-12-01,
+causing U\$ \$1,500,000,000 in losses.}
 
 \subsubsection{Most Crop Damaging event in all
 time}\label{most-crop-damaging-event-in-all-time}
-
-Most Crop Damaging event in all time
 
 Notice that are several occurrences of the same type of event along the
 time.
@@ -788,22 +809,27 @@ Notice that we are interested only in the worst of them, ie, the ones
 which are above the mean.
 
 \begin{longtable}[]{@{}rllll@{}}
+\caption{Total losses by event}\tabularnewline
+\toprule
+rank & event & total & mean & median\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total & mean & median\tabularnewline
 \midrule
 \endhead
-1 & DROUGHT & \$13,972,581,000 & \$2,232,008,736 &
-\$296,658,415\tabularnewline
-2 & FLOOD & \$12,275,747,200 & \$2,232,008,736 &
-\$296,658,415\tabularnewline
-3 & STORM & \$5,738,319,500 & \$2,232,008,736 &
-\$296,658,415\tabularnewline
-4 & HURRICANE & \$5,505,292,800 & \$2,232,008,736 &
-\$296,658,415\tabularnewline
-5 & COLD & \$3,298,176,550 & \$2,232,008,736 &
-\$296,658,415\tabularnewline
-6 & HAIL & \$3,046,887,473 & \$2,232,008,736 &
-\$296,658,415\tabularnewline
+1 & DROUGHT & \$27,454,862,620 & \$2,957,587,920 &
+\$450,448,110\tabularnewline
+2 & FLOOD & \$7,750,252,370 & \$2,957,587,920 &
+\$450,448,110\tabularnewline
+3 & HURRICANE & \$5,341,874,800 & \$2,957,587,920 &
+\$450,448,110\tabularnewline
+4 & COLD & \$4,919,893,200 & \$2,957,587,920 &
+\$450,448,110\tabularnewline
+5 & WIND & \$3,679,520,230 & \$2,957,587,920 &
+\$450,448,110\tabularnewline
+6 & HAIL & \$3,657,650,043 & \$2,957,587,920 &
+\$450,448,110\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -814,7 +840,7 @@ rank & event & total & mean & median\tabularnewline
 \end{figure}
 
 The most crop damaging event along the time is the \textbf{DROUGHT. It
-has caused \$13,972,581,000 in losses.}
+has caused \$27,454,862,620 in losses.}
 
 \subsubsection{Least crops damaging
 events}\label{least-crops-damaging-events}
@@ -823,20 +849,25 @@ Just for curiosity, lets show now what are the less damaging among the
 events:
 
 \begin{longtable}[]{@{}rll@{}}
+\caption{Least crops damaging events}\tabularnewline
+\toprule
+rank & event & total\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & event & total\tabularnewline
 \midrule
 \endhead
-22 & GUSTNADO & \$1,550\tabularnewline
-21 & TSUNAMI & \$20,000\tabularnewline
-20 & TYPHOON & \$825,000\tabularnewline
-19 & TIDE & \$850,000\tabularnewline
-18 & LIGHTNING & \$12,092,090\tabularnewline
-17 & SLIDE & \$20,017,000\tabularnewline
-16 & WINTER & \$42,444,000\tabularnewline
-15 & FROST & \$66,000,000\tabularnewline
-14 & BLIZZARD & \$112,060,000\tabularnewline
-13 & SNOW & \$134,663,100\tabularnewline
+19 & SLIDE & \$17,000\tabularnewline
+18 & TSUNAMI & \$20,000\tabularnewline
+17 & TIDE & \$955,000\tabularnewline
+16 & BLIZZARD & \$7,060,000\tabularnewline
+15 & LIGHTNING & \$7,422,640\tabularnewline
+14 & DEBRIS FLOW & \$20,001,500\tabularnewline
+13 & WINTER & \$46,924,000\tabularnewline
+12 & SNOW & \$91,145,900\tabularnewline
+11 & FIRE & \$447,668,860\tabularnewline
+10 & TORNADO & \$450,448,110\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -847,122 +878,162 @@ events, both in terms of human health and economic losses.
 
 Unfortunatelly, these has been the worst counties for living in:
 
-\newpage
-
 \subsection{Worst fatality count}\label{worst-fatality-count}
 
 \begin{longtable}[]{@{}rllrrll@{}}
+\caption{Total fatalities by county}\tabularnewline
+\toprule
+rank & state & countyname & fatalities & injuries & prop.dmg &
+crop.dmg\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & state & countyname & fatalities & injuries & prop.dmg &
 crop.dmg\tabularnewline
 \midrule
 \endhead
-1 & IL & ILZ003 & 605 & 14 & \$429,000 & \$0\tabularnewline
-2 & IL & ILZ014 & 300 & 22 & \$2,321,000 & \$0\tabularnewline
-3 & PA & PAZ054 & 174 & 295 & \$124,701,980 &
-\$25,000,000\tabularnewline
-4 & MO & JASPER & 165 & 1271 & \$2,858,007,330 & \$5,500\tabularnewline
-5 & MI & GENESEE & 121 & 925 & \$87,108,750 & \$5,000,000\tabularnewline
-6 & TX & MCLENNAN & 117 & 635 & \$63,071,100 & \$4,000\tabularnewline
-7 & TX & TXZ163 & 116 & 3 & \$6,131,681,000 &
-\$270,200,000\tabularnewline
-8 & IL & ILZ005 & 114 & 0 & \$277,000 & \$0\tabularnewline
-9 & AL & JEFFERSON & 110 & 1576 & \$2,024,930,600 &
-\$2,254,000\tabularnewline
-10 & PA & PAZ037 & 107 & 0 & \$0 & \$0\tabularnewline
+1 & LOUISIANA & ORLEANS & 649 & 99 & \$21,614,049,550 &
+\$0\tabularnewline
+2 & ILLINOIS & COOK & 565 & 912 & \$670,237,350 & \$0\tabularnewline
+3 & PENNSYLVANIA & PHILADELPHIA & 387 & 455 & \$52,680,980 &
+\$0\tabularnewline
+4 & NEVADA & LAS.VEGAS.VALLEY & 263 & 601 & \$13,162,000 &
+\$0\tabularnewline
+5 & TEXAS & HARRIS & 216 & 2825 & \$10,890,439,870 &
+\$7,442,000\tabularnewline
+6 & MISSOURI & JASPER & 178 & 1273 & \$2,864,021,330 &
+\$46,475,500\tabularnewline
+7 & TEXAS & DALLAS & 149 & 1757 & \$1,946,192,730 &
+\$1,405,000\tabularnewline
+8 & LOUISIANA & LOWER.ST..BERNARD & 140 & 0 & \$4,845,022,000 &
+\$0\tabularnewline
+9 & TEXAS & MCLENNAN & 127 & 657 & \$65,138,600 &
+\$1,710,500\tabularnewline
+10 & MICHIGAN & GENESEE & 123 & 962 & \$107,151,750 &
+\$6,300,000\tabularnewline
 \bottomrule
 \end{longtable}
 
-The county with the biggest fatality count is \textbf{ILZ003, in IL,
-with 605 people killed.}
+The county with the biggest fatality count is \textbf{ORLEANS, in
+LOUISIANA, with 649 people killed.}
 
 \subsection{Worst injuries count}\label{worst-injuries-count}
 
 \begin{longtable}[]{@{}rllrrll@{}}
+\caption{Total injuries by county}\tabularnewline
+\toprule
+rank & state & countyname & fatalities & injuries & prop.dmg &
+crop.dmg\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & state & countyname & fatalities & injuries & prop.dmg &
 crop.dmg\tabularnewline
 \midrule
 \endhead
-1 & TX & WICHITA & 51 & 1852 & \$310,139,880 & \$0\tabularnewline
-2 & AL & JEFFERSON & 110 & 1576 & \$2,024,930,600 &
-\$2,254,000\tabularnewline
-3 & OH & OHZ42 & 1 & 1568 & \$50,000,000 & \$5,000,000\tabularnewline
-4 & MA & WORCESTER & 96 & 1289 & \$284,569,630 & \$0\tabularnewline
-5 & OH & GREENE & 37 & 1275 & \$269,935,257 & \$0\tabularnewline
-6 & MO & JASPER & 165 & 1271 & \$2,858,007,330 & \$5,500\tabularnewline
-7 & MO & MOZ061 & 9 & 1133 & \$1,000 & \$0\tabularnewline
-8 & AL & TUSCALOOS & 60 & 1103 & \$1,604,059,750 &
-\$725,000\tabularnewline
-9 & MO & MOZ009 & 73 & 978 & \$3,225,050 & \$23,649,200\tabularnewline
-10 & MI & GENESEE & 121 & 925 & \$87,108,750 &
-\$5,000,000\tabularnewline
+1 & MISSOURI & ST..LOUIS & 65 & 3144 & \$1,461,882,880 &
+\$10,500\tabularnewline
+2 & TEXAS & HARRIS & 216 & 2825 & \$10,890,439,870 &
+\$7,442,000\tabularnewline
+3 & MISSOURI & ST..LOUIS. & 118 & 2701 & \$79,552,000 &
+\$5,000\tabularnewline
+4 & TEXAS & WICHITA & 55 & 1853 & \$310,822,880 & \$0\tabularnewline
+5 & TEXAS & DALLAS & 149 & 1757 & \$1,946,192,730 &
+\$1,405,000\tabularnewline
+6 & ALABAMA & JEFFERSON & 117 & 1699 & \$2,037,082,100 &
+\$3,355,000\tabularnewline
+7 & MASSACHUSETTS & WORCESTER & 96 & 1292 & \$286,072,530 &
+\$0\tabularnewline
+8 & OHIO & GREENE & 40 & 1278 & \$289,967,757 & \$540,000\tabularnewline
+9 & MISSOURI & JASPER & 178 & 1273 & \$2,864,021,330 &
+\$46,475,500\tabularnewline
+10 & OKLAHOMA & OKLAHOMA & 79 & 1253 & \$1,356,088,290 &
+\$8,330,000\tabularnewline
 \bottomrule
 \end{longtable}
 
-The county with the biggest injuries count is \textbf{WICHITA, in TX,
-with 1852 people injuried.}
-
-\newpage
+The county with the biggest injuries count is \textbf{ST..LOUIS, in
+MISSOURI, with 3144 people injuried.}
 
 \subsection{Worst property losses}\label{worst-property-losses}
 
 \begin{longtable}[]{@{}rllrrll@{}}
+\caption{Total property losses by county}\tabularnewline
+\toprule
+rank & state & countyname & fatalities & injuries & prop.dmg &
+crop.dmg\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & state & countyname & fatalities & injuries & prop.dmg &
 crop.dmg\tabularnewline
 \midrule
 \endhead
-1 & CA & NAPA & 1 & 0 & \$115,116,385,000 & \$66,900,000\tabularnewline
-2 & LA & LAZ040 & 0 & 0 & \$31,316,850,000 & \$0\tabularnewline
-3 & LA & LAZ034 & 1 & 0 & \$17,152,118,400 &
-\$178,330,000\tabularnewline
-4 & MS & MSZ080 & 0 & 1 & \$11,264,195,000 & \$0\tabularnewline
-5 & FL & FLZ068 & 19 & 16 & \$10,367,010,000 &
-\$1,047,000,000\tabularnewline
-6 & FL & FLZ001 & 33 & 0 & \$9,686,320,000 & \$87,800,000\tabularnewline
-7 & MS & MSZ068 & 1 & 0 & \$7,375,405,000 & \$0\tabularnewline
-8 & TX & TXZ163 & 116 & 3 & \$6,131,681,000 &
-\$270,200,000\tabularnewline
-9 & MS & MSZ018 & 17 & 104 & \$5,908,768,000 &
-\$1,514,706,500\tabularnewline
-10 & FL & FLZ055 & 9 & 786 & \$5,424,027,000 &
-\$292,000,000\tabularnewline
+1 & LOUISIANA & ORLEANS & 649 & 99 & \$21,614,049,550 &
+\$0\tabularnewline
+2 & TEXAS & HARRIS & 216 & 2825 & \$10,890,439,870 &
+\$7,442,000\tabularnewline
+3 & FLORIDA & COASTAL.PALM.BEACH & 5 & 7 & \$10,828,630,000 &
+\$75,000,000\tabularnewline
+4 & MISSISSIPPI & HARRISON & 110 & 90 & \$8,870,659,460 &
+\$0\tabularnewline
+5 & NEW JERSEY & EASTERN.OCEAN & 16 & 112 & \$8,116,441,690 &
+\$10\tabularnewline
+6 & NEW JERSEY & EASTERN.MONMOUTH & 13 & 397 & \$6,527,278,550 &
+\$0\tabularnewline
+7 & LOUISIANA & ST..TAMMANY & 8 & 89 & \$5,677,622,950 &
+\$0\tabularnewline
+8 & FLORIDA & COASTAL.ESCAMBIA & 14 & 0 & \$5,632,695,000 &
+\$25,300,000\tabularnewline
+9 & TEXAS & GALVESTON & 43 & 259 & \$5,358,909,770 &
+\$109,602,000\tabularnewline
+10 & NEW JERSEY & WESTERN.MONMOUTH & 6 & 84 & \$5,267,488,450 &
+\$0\tabularnewline
 \bottomrule
 \end{longtable}
 
-The county with the biggest property losses is \textbf{NAPA, in CA, with
-\$115,116,385,000 in losses.}
+The county with the biggest property losses is \textbf{ORLEANS, in
+LOUISIANA, with \$21,614,049,550 in losses.}
 
 \subsection{Worst crops losses}\label{worst-crops-losses}
 
 \begin{longtable}[]{@{}rllrrll@{}}
+\caption{Total crops losses by county}\tabularnewline
+\toprule
+rank & state & countyname & fatalities & injuries & prop.dmg &
+crop.dmg\tabularnewline
+\midrule
+\endfirsthead
 \toprule
 rank & state & countyname & fatalities & injuries & prop.dmg &
 crop.dmg\tabularnewline
 \midrule
 \endhead
-1 & IL & ADAMS & 0 & 23 & \$5,009,087,550 &
-\$5,000,084,000\tabularnewline
-2 & MS & MSZ001 & 4 & 5 & \$2,643,000 & \$5,000,000,000\tabularnewline
-3 & TX & TXZ091 & 69 & 224 & \$182,509,000 &
-\$2,422,471,000\tabularnewline
-4 & TX & TXZ021 & 2 & 4 & \$12,450,000 & \$1,845,050,000\tabularnewline
-5 & IA & IAZ004 & 10 & 9 & \$737,543,460 &
-\$1,579,805,100\tabularnewline
-6 & MS & MSZ018 & 17 & 104 & \$5,908,768,000 &
-\$1,514,706,500\tabularnewline
-7 & FL & FLZ068 & 19 & 16 & \$10,367,010,000 &
-\$1,047,000,000\tabularnewline
-8 & GA & GAZ001 & 20 & 29 & \$158,011,850 & \$926,260,000\tabularnewline
-9 & NE & NEZ039 & 4 & 14 & \$22,057,020 & \$771,550,000\tabularnewline
-10 & NC & NCZ029 & 29 & 201 & \$1,940,635,500 &
-\$768,600,000\tabularnewline
+1 & TEXAS & LUBBOCK & 37 & 679 & \$2,007,426,360 &
+\$2,439,945,000\tabularnewline
+2 & TEXAS & MONTAGUE & 5 & 42 & \$118,971,700 &
+\$1,963,106,500\tabularnewline
+3 & CALIFORNIA & NORTHERN.SAN.JOAQUIN.VALLEY & 14 & 25 & \$5,948,500 &
+\$1,520,000,000\tabularnewline
+4 & TEXAS & PARMER & 1 & 23 & \$44,654,090 &
+\$1,181,360,000\tabularnewline
+5 & FLORIDA & COASTAL.DADE & 10 & 1 & \$693,020,000 &
+\$1,168,000,000\tabularnewline
+6 & CALIFORNIA & SE.S.J..VALLEY & 25 & 64 & \$5,742,300 &
+\$992,123,000\tabularnewline
+7 & MISSISSIPPI & WARREN & 43 & 341 & \$312,674,880 &
+\$728,657,000\tabularnewline
+8 & CALIFORNIA & E.CENTRAL.S.J..VALLEY & 43 & 73 & \$6,936,800 &
+\$547,162,000\tabularnewline
+9 & CALIFORNIA & SOUTHERN.SAN.JOAQUIN.VALLEY & 1 & 22 & \$18,657,000 &
+\$517,800,000\tabularnewline
+10 & NORTH CAROLINA & ALAMANCE & 2 & 8 & \$3,005,157,200 &
+\$503,166,000\tabularnewline
 \bottomrule
 \end{longtable}
 
-The county with the biggest croperty losses is \textbf{ADAMS, in IL,
-with \$5,000,084,000 in losses.}
+The county with the biggest croperty losses is \textbf{LUBBOCK, in
+TEXAS, with \$2,439,945,000 in losses.}
 
 \section{Results}\label{results}
 
@@ -974,17 +1045,17 @@ with \$5,000,084,000 in losses.}
 \caption{Population Health: fatalities and injuries}
 \end{figure}
 
-The single most fatal event was a \textbf{HEAT, that occurred in IL,
-ILZ003, on 1995-07-12, killing 583 people.}
+The single most fatal event was a \textbf{HURRICANE, that occurred in
+LOUISIANA, ORLEANS, on 2005-08-28, killing 638 people.}
 
 The most fatal event along the time is the \textbf{TORNADO. It has
-killed 5636 people until now.}
+killed 5873 people until now.}
 
-The single most injuring event was a \textbf{TORNADO, that occurred in
-TX, WICHITA, on 1979-04-10, injuring 1700 people.}
+The single most injuring event was a \textbf{HURRICANE, that occurred in
+TEXAS, HARRIS, on 2008-09-12, injuring 2400 people.}
 
 The most injuring event along the time is the \textbf{TORNADO. It has
-injuried 91407 people until now.}
+injuried 94614 people until now.}
 
 \subsection{Economic Damages}\label{economic-damages}
 
@@ -995,32 +1066,32 @@ injuried 91407 people until now.}
 \end{figure}
 
 The single most economic damaging event to properties was a
-\textbf{FLOOD, that occurred in CA, NAPA, on 2006-01-01, causing U\$
-\$115,000,000,000 in losses}.
+\textbf{TIDE, that occurred in LOUISIANA, ORLEANS, on 2005-08-29,
+causing U\$ \$17,900,000,000 in losses}.
 
-The most property damaging event along the time is the \textbf{FLOOD. It
-has caused \$168,258,894,484 in losses.}
+The most property damaging event along the time is the
+\textbf{HURRICANE. It has caused \$87,005,170,310 in losses.}
 
-The single most economic damaging event to crops was a \textbf{FLOOD,
-that occurred in IL, ADAMS, on 1993-08-31, causing U\$ \$5,000,000,000
-in losses}.
+The single most economic damaging event to crops was a \textbf{DROUGHT,
+that occurred in CALIFORNIA, NORTHERN.SAN.JOAQUIN.VALLEY, on 2014-12-01,
+causing U\$ \$1,500,000,000 in losses}.
 
 The most crop damaging event along the time is the \textbf{DROUGHT. It
-has caused \$13,972,581,000 in losses.}
+has caused \$27,454,862,620 in losses.}
 
 \subsection{Most aflicted locations}\label{most-aflicted-locations-1}
 
-The county with the biggest fatality count is \textbf{ILZ003, in IL,
-with 605 people killed.}
+The county with the biggest fatality count is \textbf{ORLEANS, in
+LOUISIANA, with 649 people killed.}
 
-The county with the biggest injuries count is \textbf{WICHITA, in TX,
-with 1852 people injuried.}
+The county with the biggest injuries count is \textbf{ST..LOUIS, in
+MISSOURI, with 3144 people injuried.}
 
-The county with the biggest property losses is \textbf{NAPA, in CA, with
-\$115,116,385,000 in losses.}
+The county with the biggest property losses is \textbf{ORLEANS, in
+LOUISIANA, with \$21,614,049,550 in losses.}
 
-The county with the biggest croperty losses is \textbf{ADAMS, in IL,
-with \$5,000,084,000 in losses.}
+The county with the biggest croperty losses is \textbf{LUBBOCK, in
+TEXAS, with \$2,439,945,000 in losses.}
 
 \subsection{Distribution of data}\label{distribution-of-data}
 

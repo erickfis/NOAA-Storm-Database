@@ -3,28 +3,26 @@ title: "NOAA Storm Database - worst cases"
 author: "erickfis"
 date: "`r format(Sys.time(), '%Y %B, %d')`"
 
-# to do
-## baixar dados novos e adaptar
 
 
 output:
         # md_document:
         #         toc: true
         
-        # html_document:
-        #         toc: true
-        #         toc_depth: 3
-        #         number_sections: true
-        #         self_contained: yes
-        #         keep_md: false
-        #         fig_crop: false
-        #         classoption: landscape
-
-        pdf_document:
+        html_document:
                 toc: true
                 toc_depth: 3
                 number_sections: true
-                keep_tex: yes
+                self_contained: yes
+                keep_md: false
+                fig_crop: false
+                classoption: landscape
+
+        # pdf_document:
+        #         toc: true
+        #         toc_depth: 3
+        #         number_sections: true
+        #         keep_tex: yes
 
 
 
@@ -40,9 +38,10 @@ output:
 library(knitr)
 
 opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
-               warning = FALSE, autodep = TRUE, options(scipen=999))
-               # fig.pos = "H")
+               warning = FALSE, autodep = TRUE, options(scipen=999),
+               fig.pos = "H")
 
+# opts_knit$set(kable.force.latex = TRUE)
 ```
 
 
