@@ -46,28 +46,28 @@ opts_chunk$set(echo = TRUE, message = FALSE, include = TRUE,
 
 
 
-```{r child = 'intros.Rmd'}
+```{r child = 'engine/intros.Rmd'}
 ```
 
-```{r child = 'processamento.Rmd'}
+```{r child = 'engine/processamento.Rmd'}
 ```
 
-```{r child = 'fatal.Rmd'}
+```{r child = 'engine/fatal.Rmd'}
 ```
 
-```{r child = 'injuring.Rmd'}
+```{r child = 'engine/injuring.Rmd'}
 ```
 
-```{r child = 'prop.Rmd'}
+```{r child = 'engine/prop.Rmd'}
 ```
 
-```{r child = 'crop.Rmd'}
+```{r child = 'engine/crop.Rmd'}
 ```
 
-```{r child = 'locations.Rmd'}
+```{r child = 'engine/locations.Rmd'}
 ```
 
-```{r child = 'resultados.Rmd'}
+```{r child = 'engine/resultados.Rmd'}
 ```
 
 
