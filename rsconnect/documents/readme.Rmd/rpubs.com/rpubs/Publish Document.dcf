@@ -4,5 +4,5 @@ account: rpubs
 server: rpubs.com
 appId: https://api.rpubs.com/api/v1/document/275184/1c009c9dbb274375ac54ce432da01f6e
 bundleId: https://api.rpubs.com/api/v1/document/275184/1c009c9dbb274375ac54ce432da01f6e
-url: http://rpubs.com/erickfis/275184/edit
-when: 1494461382.62357
+url: http://rpubs.com/erickfis/275184
+when: 1494595240.57824

@@ -21,6 +21,7 @@ library(grid)
 ```
 
 
+
 ```{r processamento, cache=TRUE}
 
 # looks at ftp repository listing files
@@ -37,7 +38,7 @@ arquivos.faltando <- arquivos.ftp[which(!(arquivos.ftp %in% arquivos.local))]
 
 baixa.arquivos <- arquivos.faltando # for in line R, so when I see this print on report I will let the triggers do their job.
 
-arquivos.faltando <- NULL # I'm deleting those files now to save space and don't wanna do this check automaticaly so soon
+# arquivos.faltando <- NULL # I'm deleting those files now to save space and don't wanna do this check automaticaly so soon
 
 tem.novidade <- 0 # start the trigger
 
@@ -55,8 +56,11 @@ if(length(arquivos.faltando)>0) {
                 }
 }        
 
+# check if processed data is present:
+
+tem.rds <- grep("rds", arquivos.local)
 # if trigger is set, raw process again
-if(tem.novidade==1) { # them process the data
+if(tem.novidade==1|length(tem.rds)==0) { # them process the data
         arquivos.local <- dir("data/")
 
         dados <- fread(sprintf("gzip -dc %s | tr -d '\\000'",

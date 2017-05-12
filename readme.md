@@ -1,9 +1,7 @@
 # NOAA Storm Database - worst cases
 
 
-*erickfis, 2017, May, 10th*
-
-
+*erickfis, 2017, May, 12th*
 
 In this study we have analysed the NOAA Storm Database in order to
 determine what are the worst natural catastrophic events, both in terms
@@ -21,19 +19,17 @@ The database can be found on:
 
 <https://www.ncdc.noaa.gov/stormevents/ftp.jsp>
 
-RPubs version, with fewer plots, for Coursera:
-<http://rpubs.com/erickfis/noaa>
+RPubs version: <http://rpubs.com/erickfis/noaa>
+
+GitHub version, with code included and pdf version:
+<https://github.com/erickfis/NOAA-Storm-Database>
 
 # Summary
-
-
 
 -   [Introduction](#introduction)
 -   [Objective](#objective)
 -   [Methods](#methods)
 -   [Data Processing](#data-processing)
-    -   [New files to download and process data
-        again:](#new-files-to-download-and-process-data-again)
 -   [Human health: the most harmfull
     events](#human-health-the-most-harmfull-events)
     -   [Fatal Occurrences](#fatal-occurrences)
@@ -137,7 +133,7 @@ treated from its raw form to a more useful format.
 
     baixa.arquivos <- arquivos.faltando # for in line R, so when I see this print on report I will let the triggers do their job.
 
-    arquivos.faltando <- NULL # I'm deleting those files now to save space and don't wanna do this check automaticaly so soon
+    # arquivos.faltando <- NULL # I'm deleting those files now to save space and don't wanna do this check automaticaly so soon
 
     tem.novidade <- 0 # start the trigger
 
@@ -155,8 +151,11 @@ treated from its raw form to a more useful format.
                     }
     }        
 
+    # check if processed data is present:
+
+    tem.rds <- grep("rds", arquivos.local)
     # if trigger is set, raw process again
-    if(tem.novidade==1) { # them process the data
+    if(tem.novidade==1|length(tem.rds)==0) { # them process the data
             arquivos.local <- dir("data/")
 
             dados <- fread(sprintf("gzip -dc %s | tr -d '\\000'",
@@ -173,18 +172,80 @@ treated from its raw form to a more useful format.
                             )
             }
             
-      
     # treating var names
             names(dados) <- gsub("_", ".", tolower(names(dados)))
 
 
-    # select desired vars
-            harm.df <- dados %>% select(18, 20, event.type, magnitude, 
-                                        state, cz.name, 21:26)
-            rm(dados) # house cleanning
-
     # treat vars
+    # treating event types
+            trata.eventos <- function(eventos) {
+                    eventos <- tolower(as.character(eventos))
+                    # first, need to see what are the event types
+                    # unique(eventos)
+                    # contagem <- sort(table(eventos))
+                    
+                    # them we create this list of terms
+                    
+                    lista.search <- c(
+                            "dry",        
+                            "fog",        
+                            "wind",
+                            "winter",
+                            "slide",
+                            "snow",
+                            "flood",
+                            "fld",
+                            "cold|freez",
+                            "hurricane",
+                            "tornado",
+                            "rain|precip",
+                            "hail",
+                            "heat|warm",
+                            "tide",
+                            "storm",
+                            "record",
+                            "blizzard",
+                            "fire",
+                            "funnel",
+                            "surf")
+                    
+                    lista.replace <- c(
+                            "drought",
+                            "fog",        
+                            "wind",
+                            "winter",
+                            "slide",
+                            "snow",
+                            "flood",
+                            "flood",
+                            "cold",
+                            "hurricane",
+                            "tornado",
+                            "rain",
+                            "hail",
+                            "heat",
+                            "tide",
+                            "storm",
+                            "record temperature",
+                            "blizzard",
+                            "fire",
+                            "funnel",
+                            "surf")
+                    
+                    
+                    for (i in 1:length(lista.search)) {
+                            eventos[grepl(lista.search[i], eventos)] <- lista.replace[i]
+                            
+                    }
+                    
+                    # lets group the events whose count is < 5 and call it "other"
+                    contagem <- sort(table(eventos))
+                    outros <- names(contagem[contagem<5])
+                    eventos[eventos %in% outros] <- "other"
+                    eventos
+            }
 
+    # treating dates types
             arruma.data <- function(dia) {
             #adicionar prefixo 19 se menor que 99, 20 se > 99
             # 20## if year < 50, 19 if not
@@ -212,181 +273,106 @@ treated from its raw form to a more useful format.
                     dia
             }
 
-            harm.df$begin.date.time <- arruma.data(harm.df$begin.date.time)
-            harm.df$end.date.time <- arruma.data(harm.df$end.date.time)
+    # Treating County Names
+            treat.local <- function(cidades) {
+                    cidades <- tolower(str_trim(cidades))
+                    cidades <- gsub("_| |-", ".", cidades)
+                    
+                    # remove valley, coastal
+                    cidades <-
+                    gsub("valley|coastal|county", "", cidades)
+                    
+                    # remove ".."
+                    # cidades[grep("\\.\\.$", cidades)] <-
+                    #         gsub("\\.\\.", "", cidades[grep("\\.\\.$", cidades)])
+                    cidades[grep("\\.+", cidades)] <-
+                            gsub("\\.+", ".", cidades[grep("\\.+", cidades)])
+                    cidades[grep("\\.$+", cidades)] <-
+                            gsub("\\.+", "", cidades[grep("\\.$+", cidades)])
+                    
+                    # remove "> ( ,"
+                    cidades <-
+                            sapply(strsplit(cidades, split = ">", fixed = TRUE),
+                                    function(x) (x[1]))
+                    cidades <-
+                            sapply(strsplit(cidades, split = "(", fixed = TRUE),
+                                    function(x) (x[1]))
+                    cidades <-
+                            sapply(strsplit(cidades, split = ",", fixed = TRUE),
+                                    function(x) (x[1]))
+                    cidades
+            }
 
-            harm.df <- harm.df %>% 
+    # fix exp data
+            eval.dmg <- function(dmg) {
+            # check for unique exp chars
+            # exp <- str_extract(str_trim(harm.df$damage.crops), "[aA-zZ]+")
+            # exp.unicos <- unique(exp)
+            # exp <- str_extract(str_trim(harm.df$damage.property), "[aA-zZ]+")
+            # exp.unicos <- unique(exp)  
+                    # prepare exp, for 10^exp        
+                    # remove white space and extract chars
+                    exp <- str_extract(str_trim(dmg), "[aA-zZ]+")
+                    exp[is.na(exp)] <- as.character(0) # NAs get 0
+                    exp[which(exp %in% c("+","?", "-"))] <- as.character(0)
+                    exp[which(exp %in% c("H","h"))] <- as.character(2)
+                    exp[which(exp %in% c("K","k"))] <- as.character(3)
+                    exp[which(exp %in% c("M","m"))] <- as.character(6)
+                    exp[which(exp %in% c("B","b"))] <- as.character(9)
+                    exp[which(exp %in% c("T","t"))] <- as.character(12)
+                    exp <- as.numeric(exp)
+                    
+                    # prepare numbers for number*10^exp
+                    number <- strsplit(dmg, split="[aA-zZ]", fixed=FALSE)
+                    number <- sapply(number, function(x) (x[1]))
+                    number <- as.numeric(number)
+                    
+                    # now evaluate them all
+                    dmg <- number*10^exp
+                    dmg
+            }
+            
+            dados$begin.date.time <- arruma.data(dados$begin.date.time)
+            dados$end.date.time <- arruma.data(dados$end.date.time)
+
+            harm.df <- dados %>% 
                     transmute(
-                            event = tolower(as.character(event.type)),
+                            event = trata.eventos(event.type),
                             magnitude,
-                            day = as.Date(dmy_hms(harm.df$begin.date.time, 
-                                            locale = "en_US.utf8"), 
-                                    "%m/%d/%Y"), 
+                            day = as.Date(dmy_hms(begin.date.time,
+                                            locale = "en_US.utf8"),
+                                    "%m/%d/%Y"),
                             duration = as.period(interval(
-                                            dmy_hms(harm.df$end.date.time, 
+                                            dmy_hms(end.date.time, 
                                                     locale = "en_US.utf8"),
-                                            dmy_hms(harm.df$begin.date.time, 
+                                            dmy_hms(begin.date.time, 
                                                     locale = "en_US.utf8")
                                                     )
                                             ),
-                            state, countyname = cz.name,
+                            state = treat.local(state), county = treat.local(cz.name),
                             fatalities = as.numeric(deaths.direct) + 
                                     as.numeric(deaths.indirect),
                             injuries = as.numeric(injuries.direct) + 
                                     as.numeric(injuries.indirect),
-                            damage.property,
-                            damage.crops
-                    )
-                    
-
-    # fix exp data
-    # check for unique exp chars
-            exp <- str_extract(str_trim(harm.df$damage.crops), "[aA-zZ]+")
-            exp.unicos <- unique(exp)
-            exp <- str_extract(str_trim(harm.df$damage.property), "[aA-zZ]+")
-            exp.unicos <- unique(exp)                
-
-
-
-    eval.dmg <- function(dmg) {
-    # prepare exp, for 10^exp        
-    # remove white space and extract chars
-            exp <- str_extract(str_trim(dmg), "[aA-zZ]+")
-            exp[is.na(exp)] <- as.character(0) # NAs get 0
-            exp[which(exp %in% c("+","?", "-"))] <- as.character(0)
-            exp[which(exp %in% c("H","h"))] <- as.character(2)
-            exp[which(exp %in% c("K","k"))] <- as.character(3)
-            exp[which(exp %in% c("M","m"))] <- as.character(6)
-            exp[which(exp %in% c("B","b"))] <- as.character(9)
-            exp[which(exp %in% c("T","t"))] <- as.character(12)
-            exp <- as.numeric(exp)
-
-    # prepare numbers for number*10^exp
-            number <- strsplit(dmg, split="[aA-zZ]", fixed=FALSE)
-            number <- sapply(number, function(x) (x[1]))
-            number <- as.numeric(number)
-            
-            # now evaluate them all
-            dmg <- number*10^exp
-            dmg
-    }
-
-            harm.df <- mutate(harm.df, 
                             prop.ev = eval.dmg(damage.property),
                             crop.ev = eval.dmg(damage.crops)
-                            ) 
+                    ) 
 
-            harm.df <- select(harm.df, 1:8, 11:12)
-
-
-
-
-    # treating event types
-
-            eventos <- harm.df$event
-    # first, need to see what are the event types
-            # unique(eventos)
-            # contagem <- sort(table(eventos))
-
-    # them we create this list of terms
-     
-            lista.search <- c(
-                    "dry",        
-                    "fog",        
-                    "wind",
-                    "winter",
-                    "slide",
-                    "snow",
-                    "flood",
-                    "fld",
-                    "cold|freez",
-                    "hurricane",
-                    "tornado",
-                    "rain|precip",
-                    "hail",
-                    "heat|warm",
-                    "tide",
-                    "storm",
-                    "record",
-                    "blizzard",
-                    "fire",
-                    "funnel",
-                    "surf")
+            rm(dados) # house cleanning
             
-            lista.replace <- c(
-                    "drought",
-                    "fog",        
-                    "wind",
-                    "winter",
-                    "slide",
-                    "snow",
-                    "flood",
-                    "flood",
-                    "cold",
-                    "hurricane",
-                    "tornado",
-                    "rain",
-                    "hail",
-                    "heat",
-                    "tide",
-                    "storm",
-                    "record temperature",
-                    "blizzard",
-                    "fire",
-                    "funnel",
-                    "surf")
-            
-            
-            for (i in 1:length(lista.search)) {
-                    eventos[grepl(lista.search[i], eventos)] <- lista.replace[i]
-                    
-            }
-            
-            # lets group the events whose count is < 5 and call it "other"
-            contagem <- sort(table(eventos))
-            outros <- names(contagem[contagem<5])
-            eventos[eventos %in% outros] <- "other"
-            # sort(table(eventos))
-            
-            # returning treated events
-            harm.df$event <- toupper(eventos)
-
-            
-            # Treating County Names
-            cidades <- toupper(harm.df$countyname)
-            cidades <- str_trim(cidades)
-            
-            cidades <- gsub("_| |-", ".", cidades)
-            
-            # remove ".."
-            cidades[grep("\\.\\.$", cidades)] <- 
-                    gsub("\\.\\.", "", cidades[grep("\\.\\.$", cidades)])
-            
-            # remove "> ( ,"
-            cidades <- sapply(strsplit(cidades, split=">", fixed=TRUE),
-                              function(x) (x[1]))
-            cidades <- sapply(strsplit(cidades, split="(", fixed=TRUE),
-                              function(x) (x[1]))
-            cidades <- sapply(strsplit(cidades, split=",", fixed=TRUE),
-                              function(x) (x[1]))
-            
-            harm.df$countyname <- cidades
-            
-            rm(dados, cidades, eventos, contagem) # house cleanning
+            # end of processing - save the data
             saveRDS(harm.df, "data/harm.rds")
 
     } else { # just loads processed data
             harm.df <- readRDS("data/harm.rds")
     }
 
-### New files to download and process data again:
-
-        StormEvents_details-ftp_v1.0_d2006_c20170405.csv.gz, StormEvents_details-ftp_v1.0_d2015_c20170216.csv.gz, StormEvents_details-ftp_v1.0_d1951_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1952_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1955_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1960_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1961_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1962_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1963_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1964_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1970_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1975_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1979_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1981_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1982_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1984_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1991_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1992_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1993_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1994_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1997_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1999_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2000_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2002_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2004_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2007_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2009_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2010_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2011_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2013_c20170419.csv.gz, StormEvents_details-ftp_v1.0_d2017_c20170419.csv.gz, StormEvents_details-ftp_v1.0_d1953_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1954_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1956_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1957_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1958_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1959_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1965_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1966_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1967_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1968_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1969_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1971_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1972_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1973_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1974_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1976_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1977_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1978_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1980_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1983_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1985_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1986_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1987_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1988_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1989_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1990_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1995_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1996_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d1998_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2003_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2008_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2012_c20160223.csv.gz, StormEvents_details-ftp_v1.0_d2016_c20170419.csv.gz, StormEvents_details-ftp_v1.0_d2005_c20170405.csv.gz, StormEvents_details-ftp_v1.0_d2014_c20161118.csv.gz, StormEvents_details-ftp_v1.0_d1950_c20170120.csv.gz
-
+<!-- ### New files to download and process data again: -->
+<!--          -->
 The necessary transformations were:
 
 -   sanitized var names
--   evaluated duration of events
+-   evaluated duration of events, however they are not useful
 -   evaluated damages values according to multipliers provided
 -   sanitized and grouped similar events: strong snow, heavy snow and
     light snow all became just "snow"
@@ -484,8 +470,6 @@ common values.
 Looking at this distribution, we can infer that **99.8% of the fatal
 occurrences caused up to 57.04 fattalities**.
 
-Distribution plots
-
     # distribution plot
      
     plt.distr.fatal1 <- ggplot(fatal.df, aes(fatalities))
@@ -510,158 +494,118 @@ In this study, we looked on the 1% deadliest occurrences.
     colourCount.fatal.single = length(unique(fatal95.df$event))
     getPalette = colorRampPalette(brewer.pal(colourCount.fatal.single, "Set1"))
 
+
+    # prepare text for inline R
+    worst.fatal.single.ev <- fatal95.df$event[1]
+    worst.fatal.single.st <- fatal95.df$state[1]
+    worst.fatal.single.ct <- fatal95.df$county[1]
+    worst.fatal.single.dt <- fatal95.df$day[1]
+    worst.fatal.single.kill <- fatal95.df$fatalities[1]
+    worst.fatal.single.mean <- round(fatal95.df$mean[1],2)
+    worst.fatal.single.median <- round(fatal95.df$median[1],2)
+
     # print a table
-    kable(fatal95.df[, c(10,1:9)], caption="Worst fatal occurrences")
+
+    kable(fatal95.df[, c(10,1,3,5:7)], 
+          caption=paste("Worst fatal occurrences, mean = ",
+                        worst.fatal.single.mean, " and median = ",
+                        worst.fatal.single.median))
 
 <table>
-<caption>Worst fatal occurrences</caption>
+<caption>Worst fatal occurrences, mean = 1.9 and median = 1</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
-<th align="left">magnitude</th>
 <th align="left">day</th>
-<th align="right">duration</th>
 <th align="left">state</th>
-<th align="left">countyname</th>
+<th align="left">county</th>
 <th align="right">fatalities</th>
-<th align="right">mean</th>
-<th align="right">median</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2005-08-28</td>
-<td align="right">0S</td>
-<td align="left">LOUISIANA</td>
-<td align="left">ORLEANS</td>
+<td align="left">louisiana</td>
+<td align="left">orleans</td>
 <td align="right">638</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">TORNADO</td>
-<td align="left"></td>
+<td align="left">tornado</td>
 <td align="left">2011-05-22</td>
-<td align="right">0S</td>
-<td align="left">MISSOURI</td>
-<td align="left">JASPER</td>
+<td align="left">missouri</td>
+<td align="left">jasper</td>
 <td align="right">161</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2005-08-28</td>
-<td align="right">0S</td>
-<td align="left">LOUISIANA</td>
-<td align="left">LOWER.ST..BERNARD</td>
+<td align="left">louisiana</td>
+<td align="left">lower.st.bernard</td>
 <td align="right">140</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1953-06-08</td>
-<td align="right">0S</td>
-<td align="left">MICHIGAN</td>
-<td align="left">GENESEE</td>
+<td align="left">michigan</td>
+<td align="left">genesee</td>
 <td align="right">116</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1953-05-11</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">MCLENNAN</td>
+<td align="left">texas</td>
+<td align="left">mclennan</td>
 <td align="right">114</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2005-08-28</td>
-<td align="right">0S</td>
-<td align="left">MISSISSIPPI</td>
-<td align="left">HARRISON</td>
+<td align="left">mississippi</td>
+<td align="left">harrison</td>
 <td align="right">97</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">HEAT</td>
-<td align="left"></td>
+<td align="left">heat</td>
 <td align="left">1999-07-28</td>
-<td align="right">0S</td>
-<td align="left">ILLINOIS</td>
-<td align="left">COOK</td>
+<td align="left">illinois</td>
+<td align="left">cook</td>
 <td align="right">93</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1953-06-09</td>
-<td align="right">0S</td>
-<td align="left">MASSACHUSETTS</td>
-<td align="left">WORCESTER</td>
+<td align="left">massachusetts</td>
+<td align="left">worcester</td>
 <td align="right">90</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1955-05-25</td>
-<td align="right">0S</td>
-<td align="left">KANSAS</td>
-<td align="left">COWLEY</td>
+<td align="left">kansas</td>
+<td align="left">cowley</td>
 <td align="right">75</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">HEAT</td>
-<td align="left"></td>
+<td align="left">heat</td>
 <td align="left">1999-07-04</td>
-<td align="right">0S</td>
-<td align="left">PENNSYLVANIA</td>
-<td align="left">PHILADELPHIA</td>
+<td align="left">pennsylvania</td>
+<td align="left">philadelphia</td>
 <td align="right">58</td>
-<td align="right">1.904628</td>
-<td align="right">1</td>
 </tr>
 </tbody>
 </table>
-
-    #kable(fatal95.df[, c(10,1:9)])
-
-
-    # prepare text for inline R
-    worst.fatal.single.ev <- fatal95.df$event[1]
-    worst.fatal.single.st <- fatal95.df$state[1]
-    worst.fatal.single.ct <- fatal95.df$countyname[1]
-    worst.fatal.single.dt <- fatal95.df$day[1]
-    worst.fatal.single.kill <- fatal95.df$fatalities[1]
 
     # the plot
     plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=event))
@@ -690,8 +634,8 @@ In this study, we looked on the 1% deadliest occurrences.
 ![Worst fatal
 occurrences](readme_files/figure-markdown_strict/fatal-plot-single-1.png)
 
-The single most fatal event was a **HURRICANE, that occurred in
-LOUISIANA, ORLEANS, on 2005-08-28, killing 638 people.**
+The single most fatal event was a **hurricane, that occurred in
+louisiana, orleans, on 2005-08-28, killing 638 people.**
 
 However, if we compare this single awful event to the mean of fatalities
 caused, we see that this is very unlikely to happen.
@@ -729,82 +673,67 @@ which are above the mean.
     # prepare text for inline R
     worst.fatal.all.ev <- fatal.all.df$event[1]
     worst.fatal.all.kill <- fatal.all.df$total[1]
+    worst.fatal.all.mean <- round(fatal.all.df$mean[1],2)
+    worst.fatal.all.median <- round(fatal.all.df$median[1],2)
 
     # a table
-    kable(fatal.all.df[,c(5,1:4)], caption="Total fatalities by event")
+    kable(fatal.all.df[,c(5,1:2)],
+          caption=paste("Total fatalities by event, mean = ",
+                        worst.fatal.all.mean, " and median = ",
+                        worst.fatal.all.median))
 
 <table>
-<caption>Total fatalities by event</caption>
+<caption>Total fatalities by event, mean = 677.57 and median = 184</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
 <th align="right">total</th>
-<th align="right">mean</th>
-<th align="right">median</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">TORNADO</td>
+<td align="left">tornado</td>
 <td align="right">5873</td>
-<td align="right">677.5714</td>
-<td align="right">184</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">HEAT</td>
+<td align="left">heat</td>
 <td align="right">2854</td>
-<td align="right">677.5714</td>
-<td align="right">184</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">WIND</td>
+<td align="left">wind</td>
 <td align="right">2304</td>
-<td align="right">677.5714</td>
-<td align="right">184</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">FLOOD</td>
+<td align="left">flood</td>
 <td align="right">1944</td>
-<td align="right">677.5714</td>
-<td align="right">184</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">WINTER</td>
+<td align="left">winter</td>
 <td align="right">1196</td>
-<td align="right">677.5714</td>
-<td align="right">184</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">HURRICANE</td>
+<td align="left">hurricane</td>
 <td align="right">1128</td>
-<td align="right">677.5714</td>
-<td align="right">184</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">LIGHTNING</td>
+<td align="left">lightning</td>
 <td align="right">833</td>
-<td align="right">677.5714</td>
-<td align="right">184</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">RIP CURRENT</td>
+<td align="left">rip current</td>
 <td align="right">798</td>
-<td align="right">677.5714</td>
-<td align="right">184</td>
 </tr>
 </tbody>
 </table>
-
-    #kable(fatal.all.df[,c(5,1:4)])
 
     # the plot
     plt.fatal.all <- ggplot(data=fatal.all.df, aes(event, total, fill=event))
@@ -831,7 +760,7 @@ which are above the mean.
 ![Total fatalities by
 event](readme_files/figure-markdown_strict/fatal-plot-alltime-1.png)
 
-The most fatal event along the time is the **TORNADO. It has killed 5873
+The most fatal event along the time is the **tornado. It has killed 5873
 people until now.**
 
 ### Least fatal events
@@ -859,52 +788,52 @@ Just for curiosity, these are the less fatal among the fatal events:
 <tbody>
 <tr class="odd">
 <td align="right">28</td>
-<td align="left">TROPICAL DEPRESSION</td>
+<td align="left">tropical depression</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">27</td>
-<td align="left">DENSE SMOKE</td>
+<td align="left">dense smoke</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">26</td>
-<td align="left">SLEET</td>
+<td align="left">sleet</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="right">25</td>
-<td align="left">WATERSPOUT</td>
+<td align="left">waterspout</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">24</td>
-<td align="left">COLD</td>
+<td align="left">cold</td>
 <td align="right">4</td>
 </tr>
 <tr class="even">
 <td align="right">23</td>
-<td align="left">DUST DEVIL</td>
+<td align="left">dust devil</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="right">22</td>
-<td align="left">SLIDE</td>
+<td align="left">slide</td>
 <td align="right">4</td>
 </tr>
 <tr class="even">
 <td align="right">21</td>
-<td align="left">SNEAKERWAVE</td>
+<td align="left">sneakerwave</td>
 <td align="right">14</td>
 </tr>
 <tr class="odd">
 <td align="right">20</td>
-<td align="left">HAIL</td>
+<td align="left">hail</td>
 <td align="right">20</td>
 </tr>
 <tr class="even">
 <td align="right">19</td>
-<td align="left">TIDE</td>
+<td align="left">tide</td>
 <td align="right">22</td>
 </tr>
 </tbody>
@@ -969,8 +898,6 @@ values.
 Looking at this distribution, we can infer that **99.8% of the injuring
 occurrences caused up to 500 injuries**.
 
-Distribution plots
-
     # distribution plot
     plt.distr.inj1 <- ggplot(injuring.df, aes(injuries))
 
@@ -994,217 +921,158 @@ In this study, we looked on the 1% most injuring occurrences.
     colourCount.inj.single = length(unique(injuring95.df$event))
     getPalette = colorRampPalette(brewer.pal(colourCount.inj.single, "Set1"))
 
+
+    # prepare text for inline R
+    worst.injuring.single.ev <- injuring95.df$event[1]
+    worst.injuring.single.st <- injuring95.df$state[1]
+    worst.injuring.single.ct <- injuring95.df$county[1]
+    worst.injuring.single.dt <- injuring95.df$day[1]
+    worst.injuring.single.inj <- injuring95.df$injuries[1]
+    worst.injuring.single.mean <- round(injuring95.df$mean[1],2)
+    worst.injuring.single.median <- round(injuring95.df$median[1],2)
+
     # print a table
-    kable(injuring95.df[,c(10,1:9)], caption="Worst injuring occurrences")
+
+    kable(injuring95.df[, c(10,1,3,5:7)], 
+          caption=paste("Worst injuring occurrences, mean = ",
+                        worst.injuring.single.mean, " and median = ",
+                        worst.injuring.single.median))
 
 <table>
-<caption>Worst injuring occurrences</caption>
+<caption>Worst injuring occurrences, mean = 7.57 and median = 2</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
-<th align="left">magnitude</th>
 <th align="left">day</th>
-<th align="right">duration</th>
 <th align="left">state</th>
-<th align="left">countyname</th>
+<th align="left">county</th>
 <th align="right">injuries</th>
-<th align="right">mean</th>
-<th align="right">median</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2008-09-12</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">HARRIS</td>
+<td align="left">texas</td>
+<td align="left">harris</td>
 <td align="right">2400</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1979-04-10</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">WICHITA</td>
+<td align="left">texas</td>
+<td align="left">wichita</td>
 <td align="right">1700</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1953-06-09</td>
-<td align="right">0S</td>
-<td align="left">MASSACHUSETTS</td>
-<td align="left">WORCESTER</td>
+<td align="left">massachusetts</td>
+<td align="left">worcester</td>
 <td align="right">1228</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1974-04-03</td>
-<td align="right">0S</td>
-<td align="left">OHIO</td>
-<td align="left">GREENE</td>
+<td align="left">ohio</td>
+<td align="left">greene</td>
 <td align="right">1150</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">TORNADO</td>
-<td align="left"></td>
+<td align="left">tornado</td>
 <td align="left">2011-05-22</td>
-<td align="right">0S</td>
-<td align="left">MISSOURI</td>
-<td align="left">JASPER</td>
+<td align="left">missouri</td>
+<td align="left">jasper</td>
 <td align="right">1150</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">FLOOD</td>
-<td align="left"></td>
+<td align="left">flood</td>
 <td align="left">1998-10-17</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">COMAL</td>
+<td align="left">texas</td>
+<td align="left">comal</td>
 <td align="right">800</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">TORNADO</td>
-<td align="left"></td>
+<td align="left">tornado</td>
 <td align="left">2011-04-27</td>
-<td align="right">0S</td>
-<td align="left">ALABAMA</td>
-<td align="left">TUSCALOOSA</td>
+<td align="left">alabama</td>
+<td align="left">tuscaloosa</td>
 <td align="right">800</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1953-06-08</td>
-<td align="right">0S</td>
-<td align="left">MICHIGAN</td>
-<td align="left">GENESEE</td>
+<td align="left">michigan</td>
+<td align="left">genesee</td>
 <td align="right">785</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2004-08-13</td>
-<td align="right">0S</td>
-<td align="left">FLORIDA</td>
-<td align="left">CHARLOTTE</td>
+<td align="left">florida</td>
+<td align="left">charlotte</td>
 <td align="right">700</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">TORNADO</td>
-<td align="left"></td>
+<td align="left">tornado</td>
 <td align="left">2011-04-27</td>
-<td align="right">0S</td>
-<td align="left">ALABAMA</td>
-<td align="left">JEFFERSON</td>
+<td align="left">alabama</td>
+<td align="left">jefferson</td>
 <td align="right">700</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">11</td>
-<td align="left">FLOOD</td>
-<td align="left"></td>
+<td align="left">flood</td>
 <td align="left">1998-10-17</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">BEXAR</td>
+<td align="left">texas</td>
+<td align="left">bexar</td>
 <td align="right">600</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1953-05-11</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">MCLENNAN</td>
+<td align="left">texas</td>
+<td align="left">mclennan</td>
 <td align="right">597</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1965-04-11</td>
-<td align="right">0S</td>
-<td align="left">INDIANA</td>
-<td align="left">HOWARD</td>
+<td align="left">indiana</td>
+<td align="left">howard</td>
 <td align="right">560</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="right">14</td>
-<td align="left">HEAT</td>
-<td align="left"></td>
+<td align="left">heat</td>
 <td align="left">2007-08-04</td>
-<td align="right">0S</td>
-<td align="left">MISSOURI</td>
-<td align="left">ST..LOUIS</td>
+<td align="left">missouri</td>
+<td align="left">st.louis</td>
 <td align="right">519</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">15</td>
-<td align="left">TORNADO</td>
-<td align="left">0</td>
+<td align="left">tornado</td>
 <td align="left">1966-03-03</td>
-<td align="right">0S</td>
-<td align="left">MISSISSIPPI</td>
-<td align="left">HINDS</td>
+<td align="left">mississippi</td>
+<td align="left">hinds</td>
 <td align="right">504</td>
-<td align="right">7.570462</td>
-<td align="right">2</td>
 </tr>
 </tbody>
 </table>
-
-    #kable(injuring95.df[,c(10,1:9)])
-
-    # prepare text for inline R
-    worst.injuring.single.ev <- injuring95.df$event[1]
-    worst.injuring.single.st <- injuring95.df$state[1]
-    worst.injuring.single.ct <- injuring95.df$countyname[1]
-    worst.injuring.single.dt <- injuring95.df$day[1]
-    worst.injuring.single.inj <- injuring95.df$injuries[1]
 
     # the plot
     plt.inj.single <- ggplot(injuring95.df, aes(day, injuries, colour=event))
@@ -1236,15 +1104,13 @@ In this study, we looked on the 1% most injuring occurrences.
 ![Worst injuring
 occurrences](readme_files/figure-markdown_strict/injuring-single-plot-1.png)
 
-The single most injuring event was a **HURRICANE, that occurred in
-TEXAS, HARRIS, on 2008-09-12, injuring 2400 people.**
+The single most injuring event was a **hurricane, that occurred in
+texas, harris, on 2008-09-12, injuring 2400 people.**
 
 However, if we compare this single awful event to the mean of injuries
 caused, we see that this is very unlikely to happen.
 
 ### Most injuring in all time
-
-Most injuring in all time
 
 Notice that are several occurrences of the same type of event along the
 time.
@@ -1276,63 +1142,54 @@ which are above the mean.
     # prepare text for inline R
     worst.injuring.all.ev <- injuring.all.df$event[1]
     worst.injuring.all.inj <- injuring.all.df$total[1]
+    worst.injuring.all.mean <- round(injuring.all.df$mean[1],2)
+    worst.injuring.all.median <- round(injuring.all.df$median[1],2)
 
     # a table
-    kable(injuring.all.df[,c(5,1:4)], caption="Total injuries by event")
+    kable(injuring.all.df[,c(5,1:2)],
+          caption=paste("Total injuries by event, mean = ",
+                        worst.injuring.all.mean, " and median = ",
+                        worst.injuring.all.median))
 
 <table>
-<caption>Total injuries by event</caption>
+<caption>Total injuries by event, mean = 5200.42 and median = 316</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
 <th align="right">total</th>
-<th align="right">mean</th>
-<th align="right">median</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">TORNADO</td>
+<td align="left">tornado</td>
 <td align="right">94614</td>
-<td align="right">5200.419</td>
-<td align="right">316</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">HEAT</td>
+<td align="left">heat</td>
 <td align="right">15436</td>
-<td align="right">5200.419</td>
-<td align="right">316</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">WIND</td>
+<td align="left">wind</td>
 <td align="right">13439</td>
-<td align="right">5200.419</td>
-<td align="right">316</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">FLOOD</td>
+<td align="left">flood</td>
 <td align="right">8806</td>
-<td align="right">5200.419</td>
-<td align="right">316</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">WINTER</td>
+<td align="left">winter</td>
 <td align="right">8224</td>
-<td align="right">5200.419</td>
-<td align="right">316</td>
 </tr>
 </tbody>
 </table>
 
-    #kable(injuring.all.df[,c(5,1:4)])
-
-The most injuring event along the time is the **TORNADO. It has injuried
+The most injuring event along the time is the **tornado. It has injuried
 94614 people until now.**
 
     # the plot
@@ -1387,52 +1244,52 @@ injuring events:
 <tbody>
 <tr class="odd">
 <td align="right">31</td>
-<td align="left">FUNNEL</td>
+<td align="left">funnel</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">30</td>
-<td align="left">TROPICAL DEPRESSION</td>
+<td align="left">tropical depression</td>
 <td align="right">3</td>
 </tr>
 <tr class="odd">
 <td align="right">29</td>
-<td align="left">WATERSPOUT</td>
+<td align="left">waterspout</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">28</td>
-<td align="left">OTHER</td>
+<td align="left">other</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="right">27</td>
-<td align="left">DROUGHT</td>
+<td align="left">drought</td>
 <td align="right">8</td>
 </tr>
 <tr class="even">
 <td align="right">26</td>
-<td align="left">SLEET</td>
+<td align="left">sleet</td>
 <td align="right">10</td>
 </tr>
 <tr class="odd">
 <td align="right">25</td>
-<td align="left">SNEAKERWAVE</td>
+<td align="left">sneakerwave</td>
 <td align="right">11</td>
 </tr>
 <tr class="even">
 <td align="right">24</td>
-<td align="left">SLIDE</td>
+<td align="left">slide</td>
 <td align="right">13</td>
 </tr>
 <tr class="odd">
 <td align="right">23</td>
-<td align="left">COLD</td>
+<td align="left">cold</td>
 <td align="right">15</td>
 </tr>
 <tr class="even">
 <td align="right">22</td>
-<td align="left">DENSE SMOKE</td>
+<td align="left">dense smoke</td>
 <td align="right">17</td>
 </tr>
 </tbody>
@@ -1505,8 +1362,6 @@ damages are above 99.8% of the most common values.
 Looking at this distribution, we can infer that **99.8% of the damaging
 occurrences caused up to $128,960,700 in losses**.
 
-Distribution plots
-
     # distribution plot
     plt.distr.prop1 <- ggplot(prop.df, aes(log(prop.ev)))
 
@@ -1535,19 +1390,14 @@ In this study, we looked on the 1% most harmful occurrences.
     # prepare text for inline R
     worst.prop.single.ev <- prop95.df$event[1]
     worst.prop.single.st <- prop95.df$state[1]
-    worst.prop.single.ct <- prop95.df$countyname[1]
+    worst.prop.single.ct <- prop95.df$county[1]
     worst.prop.single.dt <- prop95.df$day[1]
     worst.prop.single.value <- prop95.df$value[1]
     worst.prop.single.mean <- prop95.df$mean[1]
     worst.prop.single.median <- prop95.df$median[1]
 
-    # print a table
-    # 
-    # pander(prop95.df[1:20,c(13,1:6,8)], caption="Worst property damaging occurrences - pander",  split.cells = 30, split.table = Inf)
-
-
-
-    kable(prop95.df[1:20,c(13,1:6,8)],
+    # print table
+    kable(prop95.df[1:20,c(13,1,3,5,6,8)],
           caption=paste("Worst property damaging occurrences, mean = ",
                         worst.prop.single.mean, " and median = ",
                         worst.prop.single.median))
@@ -1558,219 +1408,175 @@ In this study, we looked on the 1% most harmful occurrences.
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
-<th align="left">magnitude</th>
 <th align="left">day</th>
-<th align="right">duration</th>
 <th align="left">state</th>
-<th align="left">countyname</th>
+<th align="left">county</th>
 <th align="left">value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2005-08-29</td>
-<td align="right">0S</td>
-<td align="left">LOUISIANA</td>
-<td align="left">ORLEANS</td>
+<td align="left">louisiana</td>
+<td align="left">orleans</td>
 <td align="left">$17,900,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2005-10-24</td>
-<td align="right">0S</td>
-<td align="left">FLORIDA</td>
-<td align="left">COASTAL.PALM.BEACH</td>
+<td align="left">florida</td>
+<td align="left">.palm.beach</td>
 <td align="left">$10,000,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">FLOOD</td>
-<td align="left"></td>
+<td align="left">flood</td>
 <td align="left">2012-10-29</td>
-<td align="right">0S</td>
-<td align="left">NEW JERSEY</td>
-<td align="left">EASTERN.OCEAN</td>
+<td align="left">new.jersey</td>
+<td align="left">eastern.ocean</td>
 <td align="left">$7,500,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2005-08-29</td>
-<td align="right">0S</td>
-<td align="left">MISSISSIPPI</td>
-<td align="left">HARRISON</td>
+<td align="left">mississippi</td>
+<td align="left">harrison</td>
 <td align="left">$5,630,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">STORM</td>
-<td align="left"></td>
+<td align="left">storm</td>
 <td align="left">2001-06-05</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">HARRIS</td>
+<td align="left">texas</td>
+<td align="left">harris</td>
 <td align="left">$5,030,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">FLOOD</td>
-<td align="left"></td>
+<td align="left">flood</td>
 <td align="left">2012-10-28</td>
-<td align="right">0S</td>
-<td align="left">NEW JERSEY</td>
-<td align="left">EASTERN.MONMOUTH</td>
+<td align="left">new.jersey</td>
+<td align="left">eastern.monmouth</td>
 <td align="left">$5,000,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">FLOOD</td>
-<td align="left"></td>
+<td align="left">flood</td>
 <td align="left">2012-10-28</td>
-<td align="right">0S</td>
-<td align="left">NEW JERSEY</td>
-<td align="left">WESTERN.MONMOUTH</td>
+<td align="left">new.jersey</td>
+<td align="left">western.monmouth</td>
 <td align="left">$5,000,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2004-09-13</td>
-<td align="right">0S</td>
-<td align="left">FLORIDA</td>
-<td align="left">COASTAL.ESCAMBIA</td>
+<td align="left">florida</td>
+<td align="left">.escambia</td>
 <td align="left">$4,000,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2008-09-12</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">GALVESTON</td>
+<td align="left">texas</td>
+<td align="left">galveston</td>
 <td align="left">$4,000,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2005-08-28</td>
-<td align="right">0S</td>
-<td align="left">LOUISIANA</td>
-<td align="left">ORLEANS</td>
+<td align="left">louisiana</td>
+<td align="left">orleans</td>
 <td align="left">$3,560,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">11</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2005-08-29</td>
-<td align="right">0S</td>
-<td align="left">MISSISSIPPI</td>
-<td align="left">HANCOCK</td>
+<td align="left">mississippi</td>
+<td align="left">hancock</td>
 <td align="left">$3,380,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2005-08-29</td>
-<td align="right">0S</td>
-<td align="left">LOUISIANA</td>
-<td align="left">ST..TAMMANY</td>
+<td align="left">louisiana</td>
+<td align="left">st.tammany</td>
 <td align="left">$3,030,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2005-08-29</td>
-<td align="right">0S</td>
-<td align="left">LOUISIANA</td>
-<td align="left">LOWER.PLAQUEMINES</td>
+<td align="left">louisiana</td>
+<td align="left">lower.plaquemines</td>
 <td align="left">$3,030,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">14</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2005-08-29</td>
-<td align="right">0S</td>
-<td align="left">LOUISIANA</td>
-<td align="left">LOWER.ST..BERNARD</td>
+<td align="left">louisiana</td>
+<td align="left">lower.st.bernard</td>
 <td align="left">$3,020,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">15</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2005-08-29</td>
-<td align="right">0S</td>
-<td align="left">LOUISIANA</td>
-<td align="left">UPPER.ST..BERNARD</td>
+<td align="left">louisiana</td>
+<td align="left">upper.st.bernard</td>
 <td align="left">$3,020,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">16</td>
-<td align="left">FLOOD</td>
-<td align="left"></td>
+<td align="left">flood</td>
 <td align="left">1997-04-18</td>
-<td align="right">0S</td>
-<td align="left">NORTH DAKOTA</td>
-<td align="left">GRAND.FORKS</td>
+<td align="left">north.dakota</td>
+<td align="left">grand.forks</td>
 <td align="left">$3,000,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">17</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">1999-09-15</td>
-<td align="right">0S</td>
-<td align="left">NORTH CAROLINA</td>
-<td align="left">ALAMANCE</td>
+<td align="left">north.carolina</td>
+<td align="left">alamance</td>
 <td align="left">$3,000,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2004-08-13</td>
-<td align="right">0S</td>
-<td align="left">FLORIDA</td>
-<td align="left">CHARLOTTE</td>
+<td align="left">florida</td>
+<td align="left">charlotte</td>
 <td align="left">$3,000,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">19</td>
-<td align="left">TIDE</td>
-<td align="left"></td>
+<td align="left">tide</td>
 <td align="left">2008-09-12</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">HARRIS</td>
+<td align="left">texas</td>
+<td align="left">harris</td>
 <td align="left">$3,000,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">20</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2005-08-28</td>
-<td align="right">0S</td>
-<td align="left">MISSISSIPPI</td>
-<td align="left">HARRISON</td>
+<td align="left">mississippi</td>
+<td align="left">harrison</td>
 <td align="left">$2,940,000,000</td>
 </tr>
 </tbody>
 </table>
-
-    # kable(prop95.df[1:20,c(13,1:6,8)])
 
     plt.prop.single <- ggplot(prop95.df, aes(day, prop.ev, colour=event))
 
@@ -1799,8 +1605,8 @@ In this study, we looked on the 1% most harmful occurrences.
 ![Worst property damaging
 occurrences](readme_files/figure-markdown_strict/prop-single-plot-1.png)
 
-The single most economic damaging event to properties was a **TIDE, that
-occurred in LOUISIANA, ORLEANS, on 2005-08-29, causing U$
+The single most economic damaging event to properties was a **tide, that
+occurred in louisiana, orleans, on 2005-08-29, causing U$
 $17,900,000,000 in losses**.
 
 ### Most Property Damaging event in all time
@@ -1839,74 +1645,63 @@ which are above the mean.
     worst.prop.all.ev <- prop.all.df$event[1]
     worst.prop.total <- prop.all.df$total[1]
 
-    # a table
-    kable(prop.all.df[, c(8,1,5:7)], caption="Total losses by event")
+    worst.prop.all.mean <- prop.all.df$mean[1]
+    worst.prop.all.median <- prop.all.df$median[1]
+
+    # print table
+
+    kable(prop.all.df[, c(8,1,5)], 
+                caption=paste("Total property losses by event, mean = ",
+                        worst.prop.all.mean, " and median = ",
+                        worst.prop.all.median))
 
 <table>
-<caption>Total losses by event</caption>
+<caption>Total property losses by event, mean = $11,737,195,233 and median = $229,971,300</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
 <th align="left">total</th>
-<th align="left">mean</th>
-<th align="left">median</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">HURRICANE</td>
+<td align="left">hurricane</td>
 <td align="left">$87,005,170,310</td>
-<td align="left">$11,737,195,233</td>
-<td align="left">$229,971,300</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">FLOOD</td>
+<td align="left">flood</td>
 <td align="left">$82,920,597,380</td>
-<td align="left">$11,737,195,233</td>
-<td align="left">$229,971,300</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">TORNADO</td>
+<td align="left">tornado</td>
 <td align="left">$63,648,478,192</td>
-<td align="left">$11,737,195,233</td>
-<td align="left">$229,971,300</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">TIDE</td>
+<td align="left">tide</td>
 <td align="left">$54,155,102,600</td>
-<td align="left">$11,737,195,233</td>
-<td align="left">$229,971,300</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">HAIL</td>
+<td align="left">hail</td>
 <td align="left">$25,360,544,274</td>
-<td align="left">$11,737,195,233</td>
-<td align="left">$229,971,300</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">WIND</td>
+<td align="left">wind</td>
 <td align="left">$24,868,014,778</td>
-<td align="left">$11,737,195,233</td>
-<td align="left">$229,971,300</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">STORM</td>
+<td align="left">storm</td>
 <td align="left">$16,753,590,360</td>
-<td align="left">$11,737,195,233</td>
-<td align="left">$229,971,300</td>
 </tr>
 </tbody>
 </table>
-
-    # kable(prop.all.df[, c(8,1,5:7)])
 
     plt.prop.all <- ggplot(data=prop.all.df, aes(event, total.raw, fill=event))
 
@@ -1934,7 +1729,7 @@ which are above the mean.
 ![Total Property Damages by
 event](readme_files/figure-markdown_strict/prop-all-plot-1.png)
 
-The most property damaging event along the time is the **HURRICANE. It
+The most property damaging event along the time is the **hurricane. It
 has caused $87,005,170,310 in losses.**
 
 ### Least property damaging events
@@ -1967,52 +1762,52 @@ Just for curiosity, these are the less damaging events:
 <tbody>
 <tr class="odd">
 <td align="right">32</td>
-<td align="left">OTHER</td>
+<td align="left">other</td>
 <td align="left">$1,000</td>
 </tr>
 <tr class="even">
 <td align="right">31</td>
-<td align="left">FUNNEL</td>
+<td align="left">funnel</td>
 <td align="left">$123,100</td>
 </tr>
 <tr class="odd">
 <td align="right">30</td>
-<td align="left">DENSE SMOKE</td>
+<td align="left">dense smoke</td>
 <td align="left">$130,000</td>
 </tr>
 <tr class="even">
 <td align="right">29</td>
-<td align="left">RIP CURRENT</td>
+<td align="left">rip current</td>
 <td align="left">$163,000</td>
 </tr>
 <tr class="odd">
 <td align="right">28</td>
-<td align="left">VOLCANIC ASH</td>
+<td align="left">volcanic ash</td>
 <td align="left">$500,000</td>
 </tr>
 <tr class="even">
 <td align="right">27</td>
-<td align="left">DUST DEVIL</td>
+<td align="left">dust devil</td>
 <td align="left">$1,147,430</td>
 </tr>
 <tr class="odd">
 <td align="right">26</td>
-<td align="left">SEICHE</td>
+<td align="left">seiche</td>
 <td align="left">$1,402,000</td>
 </tr>
 <tr class="even">
 <td align="right">25</td>
-<td align="left">SLEET</td>
+<td align="left">sleet</td>
 <td align="left">$3,084,000</td>
 </tr>
 <tr class="odd">
 <td align="right">24</td>
-<td align="left">AVALANCHE</td>
+<td align="left">avalanche</td>
 <td align="left">$4,058,050</td>
 </tr>
 <tr class="even">
 <td align="right">23</td>
-<td align="left">WATERSPOUT</td>
+<td align="left">waterspout</td>
 <td align="left">$5,748,200</td>
 </tr>
 </tbody>
@@ -2102,7 +1897,7 @@ In this study, we looked on the 1% most harmful occurrences.
 
     worst.crop.single.ev <- crop95.df$event[1]
     worst.crop.single.st <- crop95.df$state[1]
-    worst.crop.single.ct <- crop95.df$countyname[1]
+    worst.crop.single.ct <- crop95.df$county[1]
     worst.crop.single.dt <- crop95.df$day[1]
     worst.crop.single.value <- crop95.df$value[1]
     worst.crop.single.mean <- crop95.df$mean[1]
@@ -2110,8 +1905,9 @@ In this study, we looked on the 1% most harmful occurrences.
 
 
     # print a table
-    kable(crop95.df[1:20,c(13,1:6,8)],
-           caption=paste("Worst crops damaging occurrences, mean = ",
+
+    kable(crop95.df[1:20,c(13,1,3,5,6,8)],
+          caption=paste("Worst crops damaging occurrences, mean = ",
                         worst.crop.single.mean, " and median = ",
                         worst.crop.single.median))
 
@@ -2121,213 +1917,171 @@ In this study, we looked on the 1% most harmful occurrences.
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
-<th align="left">magnitude</th>
 <th align="left">day</th>
-<th align="right">duration</th>
 <th align="left">state</th>
-<th align="left">countyname</th>
+<th align="left">county</th>
 <th align="left">value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">2014-12-01</td>
-<td align="right">0S</td>
-<td align="left">CALIFORNIA</td>
-<td align="left">NORTHERN.SAN.JOAQUIN.VALLEY</td>
+<td align="left">california</td>
+<td align="left">northernsanjoaquin</td>
 <td align="left">$1,500,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">2011-06-01</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">LUBBOCK</td>
+<td align="left">texas</td>
+<td align="left">lubbock</td>
 <td align="left">$1,050,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">2006-01-01</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">MONTAGUE</td>
+<td align="left">texas</td>
+<td align="left">montague</td>
 <td align="left">$1,000,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">2007-06-01</td>
-<td align="right">0S</td>
-<td align="left">MISSISSIPPI</td>
-<td align="left">WARREN</td>
+<td align="left">mississippi</td>
+<td align="left">warren</td>
 <td align="left">$700,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">COLD</td>
-<td align="left"></td>
+<td align="left">cold</td>
 <td align="left">2007-01-11</td>
-<td align="right">0S</td>
-<td align="left">CALIFORNIA</td>
-<td align="left">SE.S.J..VALLEY</td>
+<td align="left">california</td>
+<td align="left">sesj</td>
 <td align="left">$568,600,000</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">2000-11-01</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">PARMER</td>
+<td align="left">texas</td>
+<td align="left">parmer</td>
 <td align="left">$515,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">1998-07-06</td>
-<td align="right">0S</td>
-<td align="left">OKLAHOMA</td>
-<td align="left">CHOCTAW</td>
+<td align="left">oklahoma</td>
+<td align="left">choctaw</td>
 <td align="left">$500,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">1999-07-01</td>
-<td align="right">0S</td>
-<td align="left">PENNSYLVANIA</td>
-<td align="left">POTTER</td>
+<td align="left">pennsylvania</td>
+<td align="left">potter</td>
 <td align="left">$500,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">1999-09-15</td>
-<td align="right">0S</td>
-<td align="left">NORTH CAROLINA</td>
-<td align="left">ALAMANCE</td>
+<td align="left">north.carolina</td>
+<td align="left">alamance</td>
 <td align="left">$500,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">FLOOD</td>
-<td align="left"></td>
+<td align="left">flood</td>
 <td align="left">2000-10-03</td>
-<td align="right">0S</td>
-<td align="left">FLORIDA</td>
-<td align="left">COASTAL.DADE</td>
+<td align="left">florida</td>
+<td align="left">.dade</td>
 <td align="left">$500,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">11</td>
-<td align="left">FLOOD</td>
-<td align="left"></td>
+<td align="left">flood</td>
 <td align="left">2007-07-01</td>
-<td align="right">0S</td>
-<td align="left">MISSOURI</td>
-<td align="left">HENRY</td>
+<td align="left">missouri</td>
+<td align="left">henry</td>
 <td align="left">$500,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
-<td align="left">WIND</td>
-<td align="left"></td>
+<td align="left">wind</td>
 <td align="left">1998-12-20</td>
-<td align="right">0S</td>
-<td align="left">CALIFORNIA</td>
-<td align="left">SOUTHERN.SAN.JOAQUIN.VALLEY</td>
+<td align="left">california</td>
+<td align="left">southernsanjoaquin</td>
 <td align="left">$490,500,000</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">1998-12-01</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">YOAKUM</td>
+<td align="left">texas</td>
+<td align="left">yoakum</td>
 <td align="left">$450,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">14</td>
-<td align="left">HURRICANE</td>
-<td align="left"></td>
+<td align="left">hurricane</td>
 <td align="left">2005-08-25</td>
-<td align="right">0S</td>
-<td align="left">FLORIDA</td>
-<td align="left">COASTAL.DADE</td>
+<td align="left">florida</td>
+<td align="left">.dade</td>
 <td align="left">$423,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">15</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">2001-12-01</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">PARMER</td>
+<td align="left">texas</td>
+<td align="left">parmer</td>
 <td align="left">$420,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">16</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">2007-09-01</td>
-<td align="right">0S</td>
-<td align="left">GEORGIA</td>
-<td align="left">BALDWIN</td>
+<td align="left">georgia</td>
+<td align="left">baldwin</td>
 <td align="left">$344,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">17</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">2006-02-01</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">FANNIN</td>
+<td align="left">texas</td>
+<td align="left">fannin</td>
 <td align="left">$300,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
-<td align="left">COLD</td>
-<td align="left"></td>
+<td align="left">cold</td>
 <td align="left">2010-01-10</td>
-<td align="right">0S</td>
-<td align="left">FLORIDA</td>
-<td align="left">INLAND.COLLIER.COUNTY</td>
+<td align="left">florida</td>
+<td align="left">inlandcollier</td>
 <td align="left">$300,000,000</td>
 </tr>
 <tr class="odd">
 <td align="right">19</td>
-<td align="left">COLD</td>
-<td align="left"></td>
+<td align="left">cold</td>
 <td align="left">2010-01-10</td>
-<td align="right">0S</td>
-<td align="left">FLORIDA</td>
-<td align="left">INLAND.MIAMI.DADE</td>
+<td align="left">florida</td>
+<td align="left">inland.miami.dade</td>
 <td align="left">$286,000,000</td>
 </tr>
 <tr class="even">
 <td align="right">20</td>
-<td align="left">DROUGHT</td>
-<td align="left"></td>
+<td align="left">drought</td>
 <td align="left">1998-12-01</td>
-<td align="right">0S</td>
-<td align="left">TEXAS</td>
-<td align="left">ANDREWS</td>
+<td align="left">texas</td>
+<td align="left">andrews</td>
 <td align="left">$250,000,000</td>
 </tr>
 </tbody>
@@ -2360,9 +2114,9 @@ In this study, we looked on the 1% most harmful occurrences.
 ![Worst crops damaging
 occurrences](readme_files/figure-markdown_strict/crop-single-plot-1.png)
 
-The single most economic damaging event to crops was a **DROUGHT, that
-occurred in CALIFORNIA, NORTHERN.SAN.JOAQUIN.VALLEY, on 2014-12-01,
-causing U$ $1,500,000,000 in losses.**
+The single most economic damaging event to crops was a **drought, that
+occurred in california, northernsanjoaquin, on 2014-12-01, causing U$
+$1,500,000,000 in losses.**
 
 ### Most Crop Damaging event in all time
 
@@ -2400,63 +2154,55 @@ which are above the mean.
     # prepare text for inline R
     worst.crop.all.ev <- crop.all.df$event[1]
     worst.crop.total <- crop.all.df$total[1]
+    worst.crop.all.mean <- crop.all.df$mean[1]
+    worst.crop.all.median <- crop.all.df$median[1]
 
-    # a table
-    kable(crop.all.df[, c(8,1,5:7)], caption="Total losses by event")
+    # print table
+
+    kable(crop.all.df[, c(8,1,5)], 
+                caption=paste("Total crops losses by event, mean = ",
+                        worst.crop.all.mean, " and median = ",
+                        worst.crop.all.median))
 
 <table>
-<caption>Total losses by event</caption>
+<caption>Total crops losses by event, mean = $2,957,587,920 and median = $450,448,110</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">event</th>
 <th align="left">total</th>
-<th align="left">mean</th>
-<th align="left">median</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">DROUGHT</td>
+<td align="left">drought</td>
 <td align="left">$27,454,862,620</td>
-<td align="left">$2,957,587,920</td>
-<td align="left">$450,448,110</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">FLOOD</td>
+<td align="left">flood</td>
 <td align="left">$7,750,252,370</td>
-<td align="left">$2,957,587,920</td>
-<td align="left">$450,448,110</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">HURRICANE</td>
+<td align="left">hurricane</td>
 <td align="left">$5,341,874,800</td>
-<td align="left">$2,957,587,920</td>
-<td align="left">$450,448,110</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">COLD</td>
+<td align="left">cold</td>
 <td align="left">$4,919,893,200</td>
-<td align="left">$2,957,587,920</td>
-<td align="left">$450,448,110</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">WIND</td>
+<td align="left">wind</td>
 <td align="left">$3,679,520,230</td>
-<td align="left">$2,957,587,920</td>
-<td align="left">$450,448,110</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">HAIL</td>
+<td align="left">hail</td>
 <td align="left">$3,657,650,043</td>
-<td align="left">$2,957,587,920</td>
-<td align="left">$450,448,110</td>
 </tr>
 </tbody>
 </table>
@@ -2489,7 +2235,7 @@ which are above the mean.
 ![Total Crop Damages by
 event](readme_files/figure-markdown_strict/crop-all-plot-1.png)
 
-The most crop damaging event along the time is the **DROUGHT. It has
+The most crop damaging event along the time is the **drought. It has
 caused $27,454,862,620 in losses.**
 
 ### Least crops damaging events
@@ -2523,52 +2269,52 @@ events:
 <tbody>
 <tr class="odd">
 <td align="right">19</td>
-<td align="left">SLIDE</td>
+<td align="left">slide</td>
 <td align="left">$17,000</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
-<td align="left">TSUNAMI</td>
+<td align="left">tsunami</td>
 <td align="left">$20,000</td>
 </tr>
 <tr class="odd">
 <td align="right">17</td>
-<td align="left">TIDE</td>
+<td align="left">tide</td>
 <td align="left">$955,000</td>
 </tr>
 <tr class="even">
 <td align="right">16</td>
-<td align="left">BLIZZARD</td>
+<td align="left">blizzard</td>
 <td align="left">$7,060,000</td>
 </tr>
 <tr class="odd">
 <td align="right">15</td>
-<td align="left">LIGHTNING</td>
+<td align="left">lightning</td>
 <td align="left">$7,422,640</td>
 </tr>
 <tr class="even">
 <td align="right">14</td>
-<td align="left">DEBRIS FLOW</td>
+<td align="left">debris flow</td>
 <td align="left">$20,001,500</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
-<td align="left">WINTER</td>
+<td align="left">winter</td>
 <td align="left">$46,924,000</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
-<td align="left">SNOW</td>
+<td align="left">snow</td>
 <td align="left">$91,145,900</td>
 </tr>
 <tr class="odd">
 <td align="right">11</td>
-<td align="left">FIRE</td>
+<td align="left">fire</td>
 <td align="left">$447,668,860</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">TORNADO</td>
+<td align="left">tornado</td>
 <td align="left">$450,448,110</td>
 </tr>
 </tbody>
@@ -2586,9 +2332,9 @@ Unfortunatelly, these has been the worst counties for living in:
 
     # subset original data
     cities.df <- harm.df %>% 
-                    filter(!(is.na(countyname) | is.na(state))) %>%
+                    filter(!(is.na(county) | is.na(state))) %>%
                     select(6,5,7:10) %>%
-                    group_by(state, countyname) %>%
+                    group_by(state, county) %>%
                     summarise(fatalities = sum(fatalities, na.rm=TRUE),
                             injuries = sum(injuries, na.rm=TRUE),
                             prop.dmg = sum(prop.ev, na.rm=TRUE),
@@ -2598,7 +2344,7 @@ Unfortunatelly, these has been the worst counties for living in:
 Worst fatality count
 --------------------
 
-    cities.fatal.df <- arrange(cities.df, desc(fatalities)) %>% ungroup(state, countyname) %>%
+    cities.fatal.df <- arrange(cities.df, desc(fatalities)) %>% ungroup(state, county) %>%
           mutate(rank = seq_len(length(fatalities)),
                     prop.dmg = dollar(prop.dmg),
                     crop.dmg = dollar(crop.dmg)
@@ -2612,7 +2358,7 @@ Worst fatality count
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">state</th>
-<th align="left">countyname</th>
+<th align="left">county</th>
 <th align="right">fatalities</th>
 <th align="right">injuries</th>
 <th align="left">prop.dmg</th>
@@ -2622,8 +2368,8 @@ Worst fatality count
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">LOUISIANA</td>
-<td align="left">ORLEANS</td>
+<td align="left">louisiana</td>
+<td align="left">orleans</td>
 <td align="right">649</td>
 <td align="right">99</td>
 <td align="left">$21,614,049,550</td>
@@ -2631,8 +2377,8 @@ Worst fatality count
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">ILLINOIS</td>
-<td align="left">COOK</td>
+<td align="left">illinois</td>
+<td align="left">cook</td>
 <td align="right">565</td>
 <td align="right">912</td>
 <td align="left">$670,237,350</td>
@@ -2640,8 +2386,8 @@ Worst fatality count
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">PENNSYLVANIA</td>
-<td align="left">PHILADELPHIA</td>
+<td align="left">pennsylvania</td>
+<td align="left">philadelphia</td>
 <td align="right">387</td>
 <td align="right">455</td>
 <td align="left">$52,680,980</td>
@@ -2649,8 +2395,8 @@ Worst fatality count
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">NEVADA</td>
-<td align="left">LAS.VEGAS.VALLEY</td>
+<td align="left">nevada</td>
+<td align="left">lasvegas</td>
 <td align="right">263</td>
 <td align="right">601</td>
 <td align="left">$13,162,000</td>
@@ -2658,8 +2404,8 @@ Worst fatality count
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">TEXAS</td>
-<td align="left">HARRIS</td>
+<td align="left">texas</td>
+<td align="left">harris</td>
 <td align="right">216</td>
 <td align="right">2825</td>
 <td align="left">$10,890,439,870</td>
@@ -2667,8 +2413,8 @@ Worst fatality count
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">MISSOURI</td>
-<td align="left">JASPER</td>
+<td align="left">missouri</td>
+<td align="left">jasper</td>
 <td align="right">178</td>
 <td align="right">1273</td>
 <td align="left">$2,864,021,330</td>
@@ -2676,8 +2422,8 @@ Worst fatality count
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">TEXAS</td>
-<td align="left">DALLAS</td>
+<td align="left">texas</td>
+<td align="left">dallas</td>
 <td align="right">149</td>
 <td align="right">1757</td>
 <td align="left">$1,946,192,730</td>
@@ -2685,8 +2431,8 @@ Worst fatality count
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">LOUISIANA</td>
-<td align="left">LOWER.ST..BERNARD</td>
+<td align="left">louisiana</td>
+<td align="left">lower.st.bernard</td>
 <td align="right">140</td>
 <td align="right">0</td>
 <td align="left">$4,845,022,000</td>
@@ -2694,8 +2440,8 @@ Worst fatality count
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">TEXAS</td>
-<td align="left">MCLENNAN</td>
+<td align="left">texas</td>
+<td align="left">mclennan</td>
 <td align="right">127</td>
 <td align="right">657</td>
 <td align="left">$65,138,600</td>
@@ -2703,8 +2449,8 @@ Worst fatality count
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">MICHIGAN</td>
-<td align="left">GENESEE</td>
+<td align="left">michigan</td>
+<td align="left">genesee</td>
 <td align="right">123</td>
 <td align="right">962</td>
 <td align="left">$107,151,750</td>
@@ -2715,18 +2461,18 @@ Worst fatality count
 
     #kable(cities.fatal.df[1:10, c(7,1:6)])
 
-    worst.fatal.city.county <- cities.fatal.df$countyname[1]
+    worst.fatal.city.county <- cities.fatal.df$county[1]
     worst.fatal.city.st <- cities.fatal.df$state[1]
     worst.fatal.city.count <- cities.fatal.df$fatalities[1]
 
-The county with the biggest fatality count is **ORLEANS, in LOUISIANA,
+The county with the biggest fatality count is **orleans, in louisiana,
 with 649 people killed.**
 
 Worst injuries count
 --------------------
 
     rm(cities.fatal.df) # house cleanning
-    cities.inj.df <- arrange(cities.df, desc(injuries)) %>% ungroup(state, countyname) %>%
+    cities.inj.df <- arrange(cities.df, desc(injuries)) %>% ungroup(state, county) %>%
           mutate(rank = seq_len(length(injuries)),
                     prop.dmg = dollar(prop.dmg),
                     crop.dmg = dollar(crop.dmg)
@@ -2740,7 +2486,7 @@ Worst injuries count
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">state</th>
-<th align="left">countyname</th>
+<th align="left">county</th>
 <th align="right">fatalities</th>
 <th align="right">injuries</th>
 <th align="left">prop.dmg</th>
@@ -2750,8 +2496,8 @@ Worst injuries count
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">MISSOURI</td>
-<td align="left">ST..LOUIS</td>
+<td align="left">missouri</td>
+<td align="left">st.louis</td>
 <td align="right">65</td>
 <td align="right">3144</td>
 <td align="left">$1,461,882,880</td>
@@ -2759,8 +2505,8 @@ Worst injuries count
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">TEXAS</td>
-<td align="left">HARRIS</td>
+<td align="left">texas</td>
+<td align="left">harris</td>
 <td align="right">216</td>
 <td align="right">2825</td>
 <td align="left">$10,890,439,870</td>
@@ -2768,8 +2514,8 @@ Worst injuries count
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">MISSOURI</td>
-<td align="left">ST..LOUIS.</td>
+<td align="left">missouri</td>
+<td align="left">st.louis.</td>
 <td align="right">118</td>
 <td align="right">2701</td>
 <td align="left">$79,552,000</td>
@@ -2777,8 +2523,8 @@ Worst injuries count
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">TEXAS</td>
-<td align="left">WICHITA</td>
+<td align="left">texas</td>
+<td align="left">wichita</td>
 <td align="right">55</td>
 <td align="right">1853</td>
 <td align="left">$310,822,880</td>
@@ -2786,8 +2532,8 @@ Worst injuries count
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">TEXAS</td>
-<td align="left">DALLAS</td>
+<td align="left">texas</td>
+<td align="left">dallas</td>
 <td align="right">149</td>
 <td align="right">1757</td>
 <td align="left">$1,946,192,730</td>
@@ -2795,8 +2541,8 @@ Worst injuries count
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">ALABAMA</td>
-<td align="left">JEFFERSON</td>
+<td align="left">alabama</td>
+<td align="left">jefferson</td>
 <td align="right">117</td>
 <td align="right">1699</td>
 <td align="left">$2,037,082,100</td>
@@ -2804,8 +2550,8 @@ Worst injuries count
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">MASSACHUSETTS</td>
-<td align="left">WORCESTER</td>
+<td align="left">massachusetts</td>
+<td align="left">worcester</td>
 <td align="right">96</td>
 <td align="right">1292</td>
 <td align="left">$286,072,530</td>
@@ -2813,8 +2559,8 @@ Worst injuries count
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">OHIO</td>
-<td align="left">GREENE</td>
+<td align="left">ohio</td>
+<td align="left">greene</td>
 <td align="right">40</td>
 <td align="right">1278</td>
 <td align="left">$289,967,757</td>
@@ -2822,8 +2568,8 @@ Worst injuries count
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">MISSOURI</td>
-<td align="left">JASPER</td>
+<td align="left">missouri</td>
+<td align="left">jasper</td>
 <td align="right">178</td>
 <td align="right">1273</td>
 <td align="left">$2,864,021,330</td>
@@ -2831,8 +2577,8 @@ Worst injuries count
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">OKLAHOMA</td>
-<td align="left">OKLAHOMA</td>
+<td align="left">oklahoma</td>
+<td align="left">oklahoma</td>
 <td align="right">79</td>
 <td align="right">1253</td>
 <td align="left">$1,356,088,290</td>
@@ -2843,11 +2589,11 @@ Worst injuries count
 
     #kable(cities.inj.df[1:10, c(7,1:6)])
 
-    worst.inj.city.county <- cities.inj.df$countyname[1]
+    worst.inj.city.county <- cities.inj.df$county[1]
     worst.inj.city.st <- cities.inj.df$state[1]
     worst.inj.city.count <- cities.inj.df$injuries[1]
 
-The county with the biggest injuries count is **ST..LOUIS, in MISSOURI,
+The county with the biggest injuries count is **st.louis, in missouri,
 with 3144 people injuried.**
 
 <!-- \newpage -->
@@ -2856,7 +2602,7 @@ Worst property losses
 
     rm(cities.inj.df) # house cleanning
 
-    cities.prop.df <- arrange(cities.df, desc(prop.dmg)) %>% ungroup(state, countyname) %>%
+    cities.prop.df <- arrange(cities.df, desc(prop.dmg)) %>% ungroup(state, county) %>%
           mutate(rank = seq_len(length(prop.dmg)),
                     prop.dmg = dollar(prop.dmg),
                     crop.dmg = dollar(crop.dmg)
@@ -2870,7 +2616,7 @@ Worst property losses
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">state</th>
-<th align="left">countyname</th>
+<th align="left">county</th>
 <th align="right">fatalities</th>
 <th align="right">injuries</th>
 <th align="left">prop.dmg</th>
@@ -2880,8 +2626,8 @@ Worst property losses
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">LOUISIANA</td>
-<td align="left">ORLEANS</td>
+<td align="left">louisiana</td>
+<td align="left">orleans</td>
 <td align="right">649</td>
 <td align="right">99</td>
 <td align="left">$21,614,049,550</td>
@@ -2889,8 +2635,8 @@ Worst property losses
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">TEXAS</td>
-<td align="left">HARRIS</td>
+<td align="left">texas</td>
+<td align="left">harris</td>
 <td align="right">216</td>
 <td align="right">2825</td>
 <td align="left">$10,890,439,870</td>
@@ -2898,8 +2644,8 @@ Worst property losses
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">FLORIDA</td>
-<td align="left">COASTAL.PALM.BEACH</td>
+<td align="left">florida</td>
+<td align="left">.palm.beach</td>
 <td align="right">5</td>
 <td align="right">7</td>
 <td align="left">$10,828,630,000</td>
@@ -2907,8 +2653,8 @@ Worst property losses
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">MISSISSIPPI</td>
-<td align="left">HARRISON</td>
+<td align="left">mississippi</td>
+<td align="left">harrison</td>
 <td align="right">110</td>
 <td align="right">90</td>
 <td align="left">$8,870,659,460</td>
@@ -2916,8 +2662,8 @@ Worst property losses
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">NEW JERSEY</td>
-<td align="left">EASTERN.OCEAN</td>
+<td align="left">new.jersey</td>
+<td align="left">eastern.ocean</td>
 <td align="right">16</td>
 <td align="right">112</td>
 <td align="left">$8,116,441,690</td>
@@ -2925,8 +2671,8 @@ Worst property losses
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">NEW JERSEY</td>
-<td align="left">EASTERN.MONMOUTH</td>
+<td align="left">new.jersey</td>
+<td align="left">eastern.monmouth</td>
 <td align="right">13</td>
 <td align="right">397</td>
 <td align="left">$6,527,278,550</td>
@@ -2934,8 +2680,8 @@ Worst property losses
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">LOUISIANA</td>
-<td align="left">ST..TAMMANY</td>
+<td align="left">louisiana</td>
+<td align="left">st.tammany</td>
 <td align="right">8</td>
 <td align="right">89</td>
 <td align="left">$5,677,622,950</td>
@@ -2943,8 +2689,8 @@ Worst property losses
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">FLORIDA</td>
-<td align="left">COASTAL.ESCAMBIA</td>
+<td align="left">florida</td>
+<td align="left">.escambia</td>
 <td align="right">14</td>
 <td align="right">0</td>
 <td align="left">$5,632,695,000</td>
@@ -2952,8 +2698,8 @@ Worst property losses
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">TEXAS</td>
-<td align="left">GALVESTON</td>
+<td align="left">texas</td>
+<td align="left">galveston</td>
 <td align="right">43</td>
 <td align="right">259</td>
 <td align="left">$5,358,909,770</td>
@@ -2961,8 +2707,8 @@ Worst property losses
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">NEW JERSEY</td>
-<td align="left">WESTERN.MONMOUTH</td>
+<td align="left">new.jersey</td>
+<td align="left">western.monmouth</td>
 <td align="right">6</td>
 <td align="right">84</td>
 <td align="left">$5,267,488,450</td>
@@ -2973,11 +2719,11 @@ Worst property losses
 
     #kable(cities.prop.df[1:10, c(7,1:6)])
 
-    worst.prop.city.county <- cities.prop.df$countyname[1]
+    worst.prop.city.county <- cities.prop.df$county[1]
     worst.prop.city.st <- cities.prop.df$state[1]
     worst.prop.city.count <- cities.prop.df$prop.dmg[1]
 
-The county with the biggest property losses is **ORLEANS, in LOUISIANA,
+The county with the biggest property losses is **orleans, in louisiana,
 with $21,614,049,550 in losses.**
 
 Worst crops losses
@@ -2986,7 +2732,7 @@ Worst crops losses
     rm(cities.prop.df) # house cleanning
 
 
-    cities.crop.df <- arrange(cities.df, desc(crop.dmg)) %>% ungroup(state, countyname) %>%
+    cities.crop.df <- arrange(cities.df, desc(crop.dmg)) %>% ungroup(state, county) %>%
           mutate(rank = seq_len(length(crop.dmg)),
                     prop.dmg = dollar(prop.dmg),
                     crop.dmg = dollar(crop.dmg)
@@ -3000,7 +2746,7 @@ Worst crops losses
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">state</th>
-<th align="left">countyname</th>
+<th align="left">county</th>
 <th align="right">fatalities</th>
 <th align="right">injuries</th>
 <th align="left">prop.dmg</th>
@@ -3010,8 +2756,8 @@ Worst crops losses
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">TEXAS</td>
-<td align="left">LUBBOCK</td>
+<td align="left">texas</td>
+<td align="left">lubbock</td>
 <td align="right">37</td>
 <td align="right">679</td>
 <td align="left">$2,007,426,360</td>
@@ -3019,8 +2765,8 @@ Worst crops losses
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">TEXAS</td>
-<td align="left">MONTAGUE</td>
+<td align="left">texas</td>
+<td align="left">montague</td>
 <td align="right">5</td>
 <td align="right">42</td>
 <td align="left">$118,971,700</td>
@@ -3028,8 +2774,8 @@ Worst crops losses
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="left">CALIFORNIA</td>
-<td align="left">NORTHERN.SAN.JOAQUIN.VALLEY</td>
+<td align="left">california</td>
+<td align="left">northernsanjoaquin</td>
 <td align="right">14</td>
 <td align="right">25</td>
 <td align="left">$5,948,500</td>
@@ -3037,8 +2783,8 @@ Worst crops losses
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="left">TEXAS</td>
-<td align="left">PARMER</td>
+<td align="left">texas</td>
+<td align="left">parmer</td>
 <td align="right">1</td>
 <td align="right">23</td>
 <td align="left">$44,654,090</td>
@@ -3046,8 +2792,8 @@ Worst crops losses
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">FLORIDA</td>
-<td align="left">COASTAL.DADE</td>
+<td align="left">florida</td>
+<td align="left">.dade</td>
 <td align="right">10</td>
 <td align="right">1</td>
 <td align="left">$693,020,000</td>
@@ -3055,17 +2801,17 @@ Worst crops losses
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">CALIFORNIA</td>
-<td align="left">SE.S.J..VALLEY</td>
-<td align="right">25</td>
+<td align="left">california</td>
+<td align="left">sesj</td>
+<td align="right">28</td>
 <td align="right">64</td>
-<td align="left">$5,742,300</td>
-<td align="left">$992,123,000</td>
+<td align="left">$6,167,300</td>
+<td align="left">$992,223,000</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">MISSISSIPPI</td>
-<td align="left">WARREN</td>
+<td align="left">mississippi</td>
+<td align="left">warren</td>
 <td align="right">43</td>
 <td align="right">341</td>
 <td align="left">$312,674,880</td>
@@ -3073,17 +2819,17 @@ Worst crops losses
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">CALIFORNIA</td>
-<td align="left">E.CENTRAL.S.J..VALLEY</td>
+<td align="left">california</td>
+<td align="left">ecentralsj</td>
 <td align="right">43</td>
-<td align="right">73</td>
-<td align="left">$6,936,800</td>
-<td align="left">$547,162,000</td>
+<td align="right">123</td>
+<td align="left">$7,506,800</td>
+<td align="left">$578,212,000</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">CALIFORNIA</td>
-<td align="left">SOUTHERN.SAN.JOAQUIN.VALLEY</td>
+<td align="left">california</td>
+<td align="left">southernsanjoaquin</td>
 <td align="right">1</td>
 <td align="right">22</td>
 <td align="left">$18,657,000</td>
@@ -3091,8 +2837,8 @@ Worst crops losses
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">NORTH CAROLINA</td>
-<td align="left">ALAMANCE</td>
+<td align="left">north.carolina</td>
+<td align="left">alamance</td>
 <td align="right">2</td>
 <td align="right">8</td>
 <td align="left">$3,005,157,200</td>
@@ -3104,11 +2850,11 @@ Worst crops losses
     #kable(cities.crop.df[1:10, c(7,1:6)])
 
 
-    worst.crop.city.county <- cities.crop.df$countyname[1]
+    worst.crop.city.county <- cities.crop.df$county[1]
     worst.crop.city.st <- cities.crop.df$state[1]
     worst.crop.city.count <- cities.crop.df$crop.dmg[1]
 
-The county with the biggest croperty losses is **LUBBOCK, in TEXAS, with
+The county with the biggest croperty losses is **lubbock, in texas, with
 $2,439,945,000 in losses.**
 
 Results
@@ -3131,16 +2877,16 @@ Population Health
 ![Population Health: fatalities and
 injuries](readme_files/figure-markdown_strict/health-plot-1.png)
 
-The single most fatal event was a **HURRICANE, that occurred in
-LOUISIANA, ORLEANS, on 2005-08-28, killing 638 people.**
+The single most fatal event was a **hurricane, that occurred in
+louisiana, orleans, on 2005-08-28, killing 638 people.**
 
-The most fatal event along the time is the **TORNADO. It has killed 5873
+The most fatal event along the time is the **tornado. It has killed 5873
 people until now.**
 
-The single most injuring event was a **HURRICANE, that occurred in
-TEXAS, HARRIS, on 2008-09-12, injuring 2400 people.**
+The single most injuring event was a **hurricane, that occurred in
+texas, harris, on 2008-09-12, injuring 2400 people.**
 
-The most injuring event along the time is the **TORNADO. It has injuried
+The most injuring event along the time is the **tornado. It has injuried
 94614 people until now.**
 
 Economic Damages
@@ -3154,33 +2900,33 @@ Economic Damages
 ![Economic Damages: property and
 crops](readme_files/figure-markdown_strict/economic-plot-1.png)
 
-The single most economic damaging event to properties was a **TIDE, that
-occurred in LOUISIANA, ORLEANS, on 2005-08-29, causing U$
+The single most economic damaging event to properties was a **tide, that
+occurred in louisiana, orleans, on 2005-08-29, causing U$
 $17,900,000,000 in losses**.
 
-The most property damaging event along the time is the **HURRICANE. It
+The most property damaging event along the time is the **hurricane. It
 has caused $87,005,170,310 in losses.**
 
-The single most economic damaging event to crops was a **DROUGHT, that
-occurred in CALIFORNIA, NORTHERN.SAN.JOAQUIN.VALLEY, on 2014-12-01,
-causing U$ $1,500,000,000 in losses**.
+The single most economic damaging event to crops was a **drought, that
+occurred in california, northernsanjoaquin, on 2014-12-01, causing U$
+$1,500,000,000 in losses**.
 
-The most crop damaging event along the time is the **DROUGHT. It has
+The most crop damaging event along the time is the **drought. It has
 caused $27,454,862,620 in losses.**
 
 Most aflicted locations
 -----------------------
 
-The county with the biggest fatality count is **ORLEANS, in LOUISIANA,
+The county with the biggest fatality count is **orleans, in louisiana,
 with 649 people killed.**
 
-The county with the biggest injuries count is **ST..LOUIS, in MISSOURI,
+The county with the biggest injuries count is **st.louis, in missouri,
 with 3144 people injuried.**
 
-The county with the biggest property losses is **ORLEANS, in LOUISIANA,
+The county with the biggest property losses is **orleans, in louisiana,
 with $21,614,049,550 in losses.**
 
-The county with the biggest croperty losses is **LUBBOCK, in TEXAS, with
+The county with the biggest croperty losses is **lubbock, in texas, with
 $2,439,945,000 in losses.**
 
 Distribution of data
