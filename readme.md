@@ -1,7 +1,7 @@
-# NOAA Storm Database - worst cases
 
+# NOAA Storm Database - Worst Cases
+*erickfis, 2017 maio, 20*
 
-*erickfis, 2017, May, 12th*
 
 In this study we have analysed the NOAA Storm Database in order to
 determine what are the worst natural catastrophic events, both in terms
@@ -19,17 +19,22 @@ The database can be found on:
 
 <https://www.ncdc.noaa.gov/stormevents/ftp.jsp>
 
-RPubs version: <http://rpubs.com/erickfis/noaa>
+RPubs version: 
+
+<http://rpubs.com/erickfis/noaa>
 
 GitHub version, with code included and pdf version:
+
 <https://github.com/erickfis/NOAA-Storm-Database>
 
-# Summary
 
 -   [Introduction](#introduction)
 -   [Objective](#objective)
 -   [Methods](#methods)
 -   [Data Processing](#data-processing)
+    -   [Software and instructions for
+        reproducibility](#software-and-instructions-for-reproducibility)
+    -   [Raw data processing](#raw-data-processing)
 -   [Human health: the most harmfull
     events](#human-health-the-most-harmfull-events)
     -   [Fatal Occurrences](#fatal-occurrences)
@@ -70,6 +75,7 @@ GitHub version, with code included and pdf version:
 
 
 
+
 Objective
 =========
 
@@ -103,6 +109,32 @@ total sum of fatalities, injuries and economic losses.
 Data Processing
 ===============
 
+Software and instructions for reproducibility
+---------------------------------------------
+
+This study was conducted under the following software:
+
+-   R version 3.4.0 (2017-04-21)
+-   Platform x86\_64-pc-linux-gnu
+-   OS: Linux Mint 18.1 Serena
+
+Using the same versions under the same OS should guaranty
+reproducibility.
+
+This script downloads the relevant raw data from NOAA repository, under
+<ftp://ftp.ncdc.noaa.gov/pub/data/swdi/stormevents/csvfiles/>, and
+process it.
+
+It is not necessary to keep the files downloaded after running this
+script because it writes the processed data to the file "data/harm.rds"
+
+Then everytime it is runned, it checks for new data on the ftp server.
+If there is new data, it will download the files missing and raw process
+everything again.
+
+Raw data processing
+-------------------
+
 In order to answer our questions, the original database needed to be
 treated from its raw form to a more useful format.
 
@@ -119,54 +151,71 @@ treated from its raw form to a more useful format.
     library(gridExtra)
     library(grid)
 
-    # looks at ftp repository listing files
+    # looks at ftp repository and list files
     url <- "ftp://ftp.ncdc.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
     arquivos.ftp <- getURL(url, ftp.use.epsv = FALSE,dirlistonly = TRUE) 
-
     arquivos.ftp <- paste(strsplit(arquivos.ftp, "\n")[[1]], sep = "")
     arquivos.ftp <- arquivos.ftp[grep("details", arquivos.ftp)]
 
+    tem.novidade <- 0 # start the trigger        
+
+    # Verifies if the ftp data is the same that the data that has already been used before.
+    # If not, set the download trigger and raw process trigger
+
+    if (file.exists("../data/lista.ftp.txt")) {
+            data.previous <- readLines("../data/lista.ftp.txt")
+                    if (identical(data.previous,arquivos.ftp)) {
+                            tem.novidade <- 0
+                    } else {
+                            tem.novidade <- 1
+                            writeLines(arquivos.ftp, "../data/lista.ftp.txt")
+                    }
+            
+    } else {
+            tem.novidade <- 1
+            writeLines(arquivos.ftp, "../data/lista.ftp.txt")
+    }
+
+
+
 
     # compares ftp repo to files already downloaded
-    arquivos.local <- dir("data/")
+    arquivos.local <- dir("../data/")
     arquivos.faltando <- arquivos.ftp[which(!(arquivos.ftp %in% arquivos.local))]
 
-    baixa.arquivos <- arquivos.faltando # for in line R, so when I see this print on report I will let the triggers do their job.
-
-    # arquivos.faltando <- NULL # I'm deleting those files now to save space and don't wanna do this check automaticaly so soon
-
-    tem.novidade <- 0 # start the trigger
 
     # if the lists of files are different, download new ones 
-    # and set the trigger for new raw processing
 
-    if(length(arquivos.faltando)>0) {
-            tem.novidade <- 1 # set trigger
-            arquivo <- character()
+    if(length(arquivos.faltando)>0 & tem.novidade ==1) {
+
+                    arquivo <- character()
                     for (i in 1:length(arquivos.faltando)) {
                             arquivo <- paste0(url, arquivos.faltando[i])
                             download.file(arquivo, 
-                                    paste0("data/", arquivos.faltando[i]),
+                                    paste0("../data/", arquivos.faltando[i]),
                                     method = "curl")
                     }
     }        
 
     # check if processed data is present:
 
-    tem.rds <- grep("rds", arquivos.local)
+    tem.rds <- file.exists("../data/harm.rds")
+
     # if trigger is set, raw process again
-    if(tem.novidade==1|length(tem.rds)==0) { # them process the data
-            arquivos.local <- dir("data/")
+
+    if(tem.novidade==1|tem.rds==0) { # them process the data
+            arquivos.local <- dir("../data/")
+            arquivos.local <- arquivos.local[grep("details", arquivos.local)]
 
             dados <- fread(sprintf("gzip -dc %s | tr -d '\\000'",
-                                    paste0("data/", arquivos.local[1])),
+                                    paste0("../data/", arquivos.local[1])),
                             na.strings = "")
 
             for (i in 2:length(arquivos.local)) {
                     dados <- bind_rows(
                             dados, fread(sprintf(
                                     "gzip -dc %s | tr -d '\\000'",
-                                    paste0("data/", arquivos.local[i]),
+                                    paste0("../data/", arquivos.local[i]),
                                     na.strings = "")
                                     )
                             )
@@ -361,14 +410,12 @@ treated from its raw form to a more useful format.
             rm(dados) # house cleanning
             
             # end of processing - save the data
-            saveRDS(harm.df, "data/harm.rds")
+            saveRDS(harm.df, "../data/harm.rds")
 
     } else { # just loads processed data
-            harm.df <- readRDS("data/harm.rds")
+            harm.df <- readRDS("../data/harm.rds")
     }
 
-<!-- ### New files to download and process data again: -->
-<!--          -->
 The necessary transformations were:
 
 -   sanitized var names
@@ -378,7 +425,7 @@ The necessary transformations were:
     light snow all became just "snow"
 -   sanitized county names
 
-This database has 1419673 observations. Each observation corresponds to
+This database has 1423556 observations. Each observation corresponds to
 an event occurrence.
 
 To determine the most harmful events to human health, we checked the
@@ -461,14 +508,12 @@ common values.
                     rank = seq_len(length(event)))
 
 
-    # quantiles, same as 
-    # poisson.test(mean, conf.level = 0.95)
+
 
     qt <- quantile(fatal.df$fatalities, probs=seq(.999,1,0.005))
-    #qt
 
 Looking at this distribution, we can infer that **99.8% of the fatal
-occurrences caused up to 57.04 fattalities**.
+occurrences caused up to 57.023 fattalities**.
 
     # distribution plot
      
@@ -487,7 +532,7 @@ occurrences](readme_files/figure-markdown_strict/fatal-distr-4-1.png)
 
 In this study, we looked on the 1% deadliest occurrences.
 
-    # subset for 99% CI
+    # subset for 99% ocurrences
     fatal95.df <- fatal.df %>% filter(fatalities>qt[1])
                     
     # create color pallete for all events
@@ -611,9 +656,12 @@ In this study, we looked on the 1% deadliest occurrences.
     plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=event))
 
     plt.fatal.single <- plt.fatal.single + geom_point() +
-            geom_text(aes(label=ifelse(rank <= 3,
+            geom_text(aes(label=ifelse(rank %in% c(1,3),
                      paste0(as.character(day), ": ", fatalities, " killed") ,""),
-                    hjust=-.03,vjust=0.5)) +
+                    hjust=1.1,vjust=.5)) +
+            geom_text(aes(label=ifelse(rank == 2,
+                     paste0(as.character(day), ": ", fatalities, " killed") ,""),
+                    hjust=0.8,vjust=-1.0)) +
 
             # geom_hline(aes(yintercept = mean), linetype=2) +
             # geom_hline(aes(yintercept = median), linetype=3) +
@@ -683,7 +731,7 @@ which are above the mean.
                         worst.fatal.all.median))
 
 <table>
-<caption>Total fatalities by event, mean = 677.57 and median = 184</caption>
+<caption>Total fatalities by event, mean = 678.21 and median = 184</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -695,7 +743,7 @@ which are above the mean.
 <tr class="odd">
 <td align="right">1</td>
 <td align="left">tornado</td>
-<td align="right">5873</td>
+<td align="right">5878</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
@@ -705,17 +753,17 @@ which are above the mean.
 <tr class="odd">
 <td align="right">3</td>
 <td align="left">wind</td>
-<td align="right">2304</td>
+<td align="right">2308</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="left">flood</td>
-<td align="right">1944</td>
+<td align="right">1948</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="left">winter</td>
-<td align="right">1196</td>
+<td align="right">1200</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
@@ -725,7 +773,7 @@ which are above the mean.
 <tr class="odd">
 <td align="right">7</td>
 <td align="left">lightning</td>
-<td align="right">833</td>
+<td align="right">832</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
@@ -760,7 +808,7 @@ which are above the mean.
 ![Total fatalities by
 event](readme_files/figure-markdown_strict/fatal-plot-alltime-1.png)
 
-The most fatal event along the time is the **tornado. It has killed 5873
+The most fatal event along the time is the **tornado. It has killed 5878
 people until now.**
 
 ### Least fatal events
@@ -889,8 +937,6 @@ values.
                     median = median(injuries),
                     rank = seq_len(length(event)))
 
-    # quantiles, same as 
-    # poisson.test(mean, conf.level = 0.95)
 
     qt <- quantile(injuring.df$injuries, probs=seq(.999,1,0.005))
     #qt
@@ -914,7 +960,7 @@ occurrences](readme_files/figure-markdown_strict/inj-distribution-1.png)
 
 In this study, we looked on the 1% most injuring occurrences.
 
-    # subset for 99% CI
+    # subset for 99% ocurrences
     injuring95.df <- filter(injuring.df, injuries>qt[1])
 
     # create color pallete for all events
@@ -1078,10 +1124,12 @@ In this study, we looked on the 1% most injuring occurrences.
     plt.inj.single <- ggplot(injuring95.df, aes(day, injuries, colour=event))
 
     plt.inj.single <- plt.inj.single + geom_point() +
-            geom_text(aes(label=ifelse(rank <= 3,
+            geom_text(aes(label=ifelse(rank == 1,
+                     paste0(as.character(day), ": ", injuries, " injuried") ,""),
+                    hjust=.5,vjust=1.5)) +
+            geom_text(aes(label=ifelse(rank %in% c(2,3),
                      paste0(as.character(day), ": ", injuries, " injuried") ,""),
                     hjust=-.03,vjust=0.5)) +
-
             # geom_hline(aes(yintercept = mean), linetype=2) +
             # geom_hline(aes(yintercept = median), linetype=3) +
             labs(title="Most Injuring",
@@ -1152,7 +1200,7 @@ which are above the mean.
                         worst.injuring.all.median))
 
 <table>
-<caption>Total injuries by event, mean = 5200.42 and median = 316</caption>
+<caption>Total injuries by event, mean = 5204.68 and median = 317</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1164,7 +1212,7 @@ which are above the mean.
 <tr class="odd">
 <td align="right">1</td>
 <td align="left">tornado</td>
-<td align="right">94614</td>
+<td align="right">94704</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
@@ -1174,23 +1222,23 @@ which are above the mean.
 <tr class="odd">
 <td align="right">3</td>
 <td align="left">wind</td>
-<td align="right">13439</td>
+<td align="right">13445</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="left">flood</td>
-<td align="right">8806</td>
+<td align="right">8809</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="left">winter</td>
-<td align="right">8224</td>
+<td align="right">8240</td>
 </tr>
 </tbody>
 </table>
 
 The most injuring event along the time is the **tornado. It has injuried
-94614 people until now.**
+94704 people until now.**
 
     # the plot
     plt.inj.all <- ggplot(data=injuring.all.df, aes(event, total, fill=event))
@@ -1360,7 +1408,7 @@ damages are above 99.8% of the most common values.
     #qt
 
 Looking at this distribution, we can infer that **99.8% of the damaging
-occurrences caused up to $128,960,700 in losses**.
+occurrences caused up to $129,355,000 in losses**.
 
     # distribution plot
     plt.distr.prop1 <- ggplot(prop.df, aes(log(prop.ev)))
@@ -1377,7 +1425,7 @@ occurrences](readme_files/figure-markdown_strict/crop-distribution-1.png)
 
 In this study, we looked on the 1% most harmful occurrences.
 
-    # subset for 99% CI
+    # subset for 99%
     prop95.df <- filter(prop.df, prop.ev>qt[1])
 
     # create color pallete for all events
@@ -1403,7 +1451,7 @@ In this study, we looked on the 1% most harmful occurrences.
                         worst.prop.single.median))
 
 <table>
-<caption>Worst property damaging occurrences, mean = $1,137,697 and median = $10,000</caption>
+<caption>Worst property damaging occurrences, mean = $1,138,223 and median = $10,000</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1582,14 +1630,16 @@ In this study, we looked on the 1% most harmful occurrences.
 
     plt.prop.single <- plt.prop.single + geom_point() +
             geom_text(aes(label=ifelse(rank <= 3,
-                    as.character(day),""),
-                    hjust=-.03,vjust=0.5)) +
+                                    paste0(as.character(day), ": ", 
+                                           dollar(prop.ev))
+                            ,""),
+                    hjust=1.05,vjust=.5)) +
             # geom_hline(aes(yintercept = media.raw), linetype=2) +
              # geom_hline(aes(yintercept = mediana.raw), linetype=3) +
             labs(title="Property Dammaging",
                         y="", x="") + 
                     
-            expand_limits(x=as.Date('2017-01-01'))+ #ok
+            # expand_limits(x=as.Date('2017-01-01'))+ #ok
             scale_y_continuous(labels = dollar)+
             
             scale_colour_manual(values = getPalette(colourCount.prop.single))+                
@@ -1656,7 +1706,7 @@ which are above the mean.
                         worst.prop.all.median))
 
 <table>
-<caption>Total property losses by event, mean = $11,737,195,233 and median = $229,971,300</caption>
+<caption>Total property losses by event, mean = $11,760,898,222 and median = $233,483,800</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -1673,12 +1723,12 @@ which are above the mean.
 <tr class="even">
 <td align="right">2</td>
 <td align="left">flood</td>
-<td align="left">$82,920,597,380</td>
+<td align="left">$83,547,720,380</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
 <td align="left">tornado</td>
-<td align="left">$63,648,478,192</td>
+<td align="left">$63,677,320,192</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
@@ -1688,17 +1738,17 @@ which are above the mean.
 <tr class="odd">
 <td align="right">5</td>
 <td align="left">hail</td>
-<td align="left">$25,360,544,274</td>
+<td align="left">$25,381,536,404</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
 <td align="left">wind</td>
-<td align="left">$24,868,014,778</td>
+<td align="left">$24,890,912,278</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
 <td align="left">storm</td>
-<td align="left">$16,753,590,360</td>
+<td align="left">$16,754,390,360</td>
 </tr>
 </tbody>
 </table>
@@ -1803,7 +1853,7 @@ Just for curiosity, these are the less damaging events:
 <tr class="odd">
 <td align="right">24</td>
 <td align="left">avalanche</td>
-<td align="left">$4,058,050</td>
+<td align="left">$4,060,050</td>
 </tr>
 <tr class="even">
 <td align="right">23</td>
@@ -1815,6 +1865,7 @@ Just for curiosity, these are the less damaging events:
 
     # kable(prop.all.df[1:10, c(8,1,5)])
 
+\newpage
 Crop losses
 -----------
 
@@ -1837,15 +1888,13 @@ occurrences.
     # distribution plot
     plt.distr.crop0 <- ggplot(crop.df, aes(log(crop.ev)))
 
-    plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..scaled..)) + #xlim(0,.5) + 
+    plt.distr.crop0 <- plt.distr.crop0 + geom_density(aes(y=..scaled..)) + 
             labs(title="All events", x="log(amount $)") +
             theme(plot.title = element_text(hjust = 0.5))  
 
 
     # display only the qts next to harmfull events
-    #qt
 
-<!-- Looking at this distribution, we can infer that 99% of the occurrences caused less than **$5,030,000 in losses**. -->
 On the other hand, damaging occurrences had to have damages above zero.
 
 Now, among the damaging occurrences, we are interested in the ones whose
@@ -1865,18 +1914,15 @@ damages are above 99% of the most common values.
     # poisson.test(mean, conf.level = 0.95)
 
     qt <- quantile(crop.df$crop.ev, probs=seq(.999,1,0.005))
-    #qt
 
 Looking at this distribution, we can infer that **99.8% of the damaging
-occurrences caused up to $197,450,000 in losses.**
+occurrences caused up to $197,330,000 in losses.**
 
     # distribution plot
     plt.distr.crop1 <- ggplot(crop.df, aes(log(crop.ev)))
 
-    plt.distr.crop1 <- plt.distr.crop1 + geom_density(aes(y=..scaled..)) + #xlim(0,qt[1]) + 
+    plt.distr.crop1 <- plt.distr.crop1 + geom_density(aes(y=..scaled..)) + 
             labs(title="Damaging events", x="log(amount $)") +
-            # scale_x_continuous(labels = dollar)+
-            # theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
             theme(plot.title = element_text(hjust = 0.5))       
 
     grid.arrange(plt.distr.crop0, plt.distr.crop1,
@@ -1888,7 +1934,7 @@ occurrences](readme_files/figure-markdown_strict/crop-distr-4-1.png)
 
 In this study, we looked on the 1% most harmful occurrences.
 
-    # subset for 99% CI
+    # subset for 99%
     crop95.df <- filter(crop.df, crop.ev>qt[1])
 
     # create color pallete for all events
@@ -1912,7 +1958,7 @@ In this study, we looked on the 1% most harmful occurrences.
                         worst.crop.single.median))
 
 <table>
-<caption>Worst crops damaging occurrences, mean = $1,783,319 and median = $20,000</caption>
+<caption>Worst crops damaging occurrences, mean = $1,781,966 and median = $20,000</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -2090,15 +2136,22 @@ In this study, we looked on the 1% most harmful occurrences.
     plt.crop.single <- ggplot(crop95.df, aes(day, crop.ev, colour=event))
 
     plt.crop.single <- plt.crop.single + geom_point() +
-            geom_text(aes(label=ifelse(rank <= 3,
-                    as.character(day),""),
-                    hjust=-.03,vjust=0.5)) +
+            geom_text(aes(label=ifelse(rank %in% c(1,3),
+                                    paste0(as.character(day), ": ", 
+                                           dollar(crop.ev))
+                            ,""),
+                    hjust=1.03,vjust=0.5)) +
+            geom_text(aes(label=ifelse(rank == 2,
+                                    paste0(as.character(day), ": ", 
+                                           dollar(crop.ev))
+                            ,""),
+                    hjust=.5,vjust=-1.1)) +
             # geom_hline(aes(yintercept = media.raw), linetype=2) +
             # geom_hline(aes(yintercept = mediana.raw), linetype=3) +
             labs(title="Crop Dammaging",
                         y="", x="") + 
                     
-            expand_limits(x=as.Date('2017-01-01'))+ #ok
+            # expand_limits(x=as.Date('2017-01-01'))+ #ok
             scale_y_continuous(labels = dollar)+
             
             scale_colour_manual(values = getPalette(colourCount.crop.single))+                
@@ -2165,7 +2218,7 @@ which are above the mean.
                         worst.crop.all.median))
 
 <table>
-<caption>Total crops losses by event, mean = $2,957,587,920 and median = $450,448,110</caption>
+<caption>Total crops losses by event, mean = $2,957,594,612 and median = $450,448,110</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -2182,7 +2235,7 @@ which are above the mean.
 <tr class="even">
 <td align="right">2</td>
 <td align="left">flood</td>
-<td align="left">$7,750,252,370</td>
+<td align="left">$7,750,262,370</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
@@ -2197,12 +2250,12 @@ which are above the mean.
 <tr class="odd">
 <td align="right">5</td>
 <td align="left">wind</td>
-<td align="left">$3,679,520,230</td>
+<td align="left">$3,679,632,230</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
 <td align="left">hail</td>
-<td align="left">$3,657,650,043</td>
+<td align="left">$3,657,650,173</td>
 </tr>
 </tbody>
 </table>
@@ -2290,12 +2343,12 @@ events:
 <tr class="odd">
 <td align="right">15</td>
 <td align="left">lightning</td>
-<td align="left">$7,422,640</td>
+<td align="left">$7,422,670</td>
 </tr>
 <tr class="even">
 <td align="right">14</td>
 <td align="left">debris flow</td>
-<td align="left">$20,001,500</td>
+<td align="left">$20,006,500</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
@@ -2326,7 +2379,7 @@ Most aflicted locations
 We have determined what locations had the worst outcome from those
 events, both in terms of human health and economic losses.
 
-Unfortunatelly, these has been the worst counties for living in:
+Unfortunately, these has been the worst counties for living in:
 
     rm(crop.df, crop.all.df, crop95.df) # house cleanning
 
@@ -2371,7 +2424,7 @@ Worst fatality count
 <td align="left">louisiana</td>
 <td align="left">orleans</td>
 <td align="right">649</td>
-<td align="right">99</td>
+<td align="right">132</td>
 <td align="left">$21,614,049,550</td>
 <td align="left">$0</td>
 </tr>
@@ -2408,7 +2461,7 @@ Worst fatality count
 <td align="left">harris</td>
 <td align="right">216</td>
 <td align="right">2825</td>
-<td align="left">$10,890,439,870</td>
+<td align="left">$10,890,441,870</td>
 <td align="left">$7,442,000</td>
 </tr>
 <tr class="even">
@@ -2468,6 +2521,7 @@ Worst fatality count
 The county with the biggest fatality count is **orleans, in louisiana,
 with 649 people killed.**
 
+\newpage
 Worst injuries count
 --------------------
 
@@ -2509,7 +2563,7 @@ Worst injuries count
 <td align="left">harris</td>
 <td align="right">216</td>
 <td align="right">2825</td>
-<td align="left">$10,890,439,870</td>
+<td align="left">$10,890,441,870</td>
 <td align="left">$7,442,000</td>
 </tr>
 <tr class="odd">
@@ -2596,7 +2650,6 @@ Worst injuries count
 The county with the biggest injuries count is **st.louis, in missouri,
 with 3144 people injuried.**
 
-<!-- \newpage -->
 Worst property losses
 ---------------------
 
@@ -2629,7 +2682,7 @@ Worst property losses
 <td align="left">louisiana</td>
 <td align="left">orleans</td>
 <td align="right">649</td>
-<td align="right">99</td>
+<td align="right">132</td>
 <td align="left">$21,614,049,550</td>
 <td align="left">$0</td>
 </tr>
@@ -2639,7 +2692,7 @@ Worst property losses
 <td align="left">harris</td>
 <td align="right">216</td>
 <td align="right">2825</td>
-<td align="left">$10,890,439,870</td>
+<td align="left">$10,890,441,870</td>
 <td align="left">$7,442,000</td>
 </tr>
 <tr class="odd">
@@ -2684,7 +2737,7 @@ Worst property losses
 <td align="left">st.tammany</td>
 <td align="right">8</td>
 <td align="right">89</td>
-<td align="left">$5,677,622,950</td>
+<td align="left">$5,677,642,950</td>
 <td align="left">$0</td>
 </tr>
 <tr class="even">
@@ -2702,7 +2755,7 @@ Worst property losses
 <td align="left">galveston</td>
 <td align="right">43</td>
 <td align="right">259</td>
-<td align="left">$5,358,909,770</td>
+<td align="left">$5,358,929,770</td>
 <td align="left">$109,602,000</td>
 </tr>
 <tr class="even">
@@ -2778,7 +2831,7 @@ Worst crops losses
 <td align="left">northernsanjoaquin</td>
 <td align="right">14</td>
 <td align="right">25</td>
-<td align="left">$5,948,500</td>
+<td align="left">$6,058,500</td>
 <td align="left">$1,520,000,000</td>
 </tr>
 <tr class="even">
@@ -2880,14 +2933,14 @@ injuries](readme_files/figure-markdown_strict/health-plot-1.png)
 The single most fatal event was a **hurricane, that occurred in
 louisiana, orleans, on 2005-08-28, killing 638 people.**
 
-The most fatal event along the time is the **tornado. It has killed 5873
+The most fatal event along the time is the **tornado. It has killed 5878
 people until now.**
 
 The single most injuring event was a **hurricane, that occurred in
 texas, harris, on 2008-09-12, injuring 2400 people.**
 
 The most injuring event along the time is the **tornado. It has injuried
-94614 people until now.**
+94704 people until now.**
 
 Economic Damages
 ----------------

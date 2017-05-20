@@ -38,8 +38,8 @@ output:
 library(knitr)
 
 opts_chunk$set(echo = TRUE, message = FALSE, include = TRUE, 
-               warning = FALSE, autodep = TRUE, options(scipen=999))
-               # fig.pos = "H")
+               warning = FALSE, autodep = TRUE, options(scipen=999),
+               fig.pos = "H")
 
 # opts_knit$set(kable.force.latex = TRUE)
 ```

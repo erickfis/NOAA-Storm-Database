@@ -1,6 +1,28 @@
 # Data Processing 
 
+
+## Software and instructions for reproducibility
+
+This study was conducted under the following software:
+
+- `r R.version.string`
+- Platform `r R.version$platform`
+- OS: Linux Mint 18.1 Serena
+
+Using the same versions under the same OS should guaranty reproducibility.
+
+This script downloads the relevant raw data from NOAA repository, under ftp://ftp.ncdc.noaa.gov/pub/data/swdi/stormevents/csvfiles/, and process it.
+
+It is not necessary to keep the files downloaded after running this script because it writes the processed data to the file "data/harm.rds"
+
+Then everytime it is runned, it checks for new data on the ftp server. If there is new data, it will download the files missing and raw process everything again.
+
+
+## Raw data processing
+
 In order to answer our questions, the original database needed to be treated from its raw form to a more useful format.
+
+
 
 
 ```{r libraries}
@@ -22,56 +44,73 @@ library(grid)
 
 
 
-```{r processamento, cache=TRUE}
+```{r processamento, cache=FALSE}
 
-# looks at ftp repository listing files
+# looks at ftp repository and list files
 url <- "ftp://ftp.ncdc.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
 arquivos.ftp <- getURL(url, ftp.use.epsv = FALSE,dirlistonly = TRUE) 
-
 arquivos.ftp <- paste(strsplit(arquivos.ftp, "\n")[[1]], sep = "")
 arquivos.ftp <- arquivos.ftp[grep("details", arquivos.ftp)]
 
+tem.novidade <- 0 # start the trigger        
+
+# Verifies if the ftp data is the same that the data that has already been used before.
+# If not, set the download trigger and raw process trigger
+
+if (file.exists("../data/lista.ftp.txt")) {
+        data.previous <- readLines("../data/lista.ftp.txt")
+                if (identical(data.previous,arquivos.ftp)) {
+                        tem.novidade <- 0
+                } else {
+                        tem.novidade <- 1
+                        writeLines(arquivos.ftp, "../data/lista.ftp.txt")
+                }
+        
+} else {
+        tem.novidade <- 1
+        writeLines(arquivos.ftp, "../data/lista.ftp.txt")
+}
+
+
+
 
 # compares ftp repo to files already downloaded
-arquivos.local <- dir("data/")
+arquivos.local <- dir("../data/")
 arquivos.faltando <- arquivos.ftp[which(!(arquivos.ftp %in% arquivos.local))]
 
-baixa.arquivos <- arquivos.faltando # for in line R, so when I see this print on report I will let the triggers do their job.
-
-# arquivos.faltando <- NULL # I'm deleting those files now to save space and don't wanna do this check automaticaly so soon
-
-tem.novidade <- 0 # start the trigger
 
 # if the lists of files are different, download new ones 
-# and set the trigger for new raw processing
 
-if(length(arquivos.faltando)>0) {
-        tem.novidade <- 1 # set trigger
-        arquivo <- character()
+if(length(arquivos.faltando)>0 & tem.novidade ==1) {
+
+                arquivo <- character()
                 for (i in 1:length(arquivos.faltando)) {
                         arquivo <- paste0(url, arquivos.faltando[i])
                         download.file(arquivo, 
-                                paste0("data/", arquivos.faltando[i]),
+                                paste0("../data/", arquivos.faltando[i]),
                                 method = "curl")
                 }
 }        
 
 # check if processed data is present:
 
-tem.rds <- grep("rds", arquivos.local)
+tem.rds <- file.exists("../data/harm.rds")
+
 # if trigger is set, raw process again
-if(tem.novidade==1|length(tem.rds)==0) { # them process the data
-        arquivos.local <- dir("data/")
+
+if(tem.novidade==1|tem.rds==0) { # them process the data
+        arquivos.local <- dir("../data/")
+        arquivos.local <- arquivos.local[grep("details", arquivos.local)]
 
         dados <- fread(sprintf("gzip -dc %s | tr -d '\\000'",
-                                paste0("data/", arquivos.local[1])),
+                                paste0("../data/", arquivos.local[1])),
                         na.strings = "")
 
         for (i in 2:length(arquivos.local)) {
                 dados <- bind_rows(
                         dados, fread(sprintf(
                                 "gzip -dc %s | tr -d '\\000'",
-                                paste0("data/", arquivos.local[i]),
+                                paste0("../data/", arquivos.local[i]),
                                 na.strings = "")
                                 )
                         )
@@ -266,16 +305,14 @@ if(tem.novidade==1|length(tem.rds)==0) { # them process the data
         rm(dados) # house cleanning
         
         # end of processing - save the data
-        saveRDS(harm.df, "data/harm.rds")
+        saveRDS(harm.df, "../data/harm.rds")
 
 } else { # just loads processed data
-        harm.df <- readRDS("data/harm.rds")
+        harm.df <- readRDS("../data/harm.rds")
 }
 
 ```
 
-<!-- ### New files to download and process data again: -->
-<!--         `r baixa.arquivos` -->
 
 The necessary transformations were:
 

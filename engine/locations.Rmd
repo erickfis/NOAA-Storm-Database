@@ -5,7 +5,7 @@ We have determined what locations had the worst outcome from those events, both 
 
 
 
-Unfortunatelly, these has been the worst counties for living in:
+Unfortunately, these has been the worst counties for living in:
 
 
 ```{r cities.df, cache=TRUE}
@@ -46,6 +46,8 @@ worst.fatal.city.count <- cities.fatal.df$fatalities[1]
 
 The county with the biggest fatality count is **`r worst.fatal.city.county`, in  `r worst.fatal.city.st`, with `r worst.fatal.city.count` people killed.**
 
+\newpage
+
 ## Worst injuries count
     
 
@@ -70,7 +72,6 @@ worst.inj.city.count <- cities.inj.df$injuries[1]
 
 The county with the biggest injuries count is **`r worst.inj.city.county`, in  `r worst.inj.city.st`, with `r worst.inj.city.count` people injuried.**
 
-<!-- \newpage -->
 
 ## Worst property losses
 

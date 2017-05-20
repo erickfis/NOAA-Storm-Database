@@ -46,8 +46,6 @@ injuring.df <- injuring.df %>% filter(injuries > 0) %>%
                 median = median(injuries),
                 rank = seq_len(length(event)))
 
-# quantiles, same as 
-# poisson.test(mean, conf.level = 0.95)
 
 qt <- quantile(injuring.df$injuries, probs=seq(.999,1,0.005))
 #qt
@@ -84,7 +82,7 @@ In this study, we looked on the 1% most injuring occurrences.
 
 
 ```{r injuring-single-95, cache=TRUE}
-# subset for 99% CI
+# subset for 99% ocurrences
 injuring95.df <- filter(injuring.df, injuries>qt[1])
 
 # create color pallete for all events
@@ -115,10 +113,12 @@ kable(injuring95.df[, c(10,1,3,5:7)],
 plt.inj.single <- ggplot(injuring95.df, aes(day, injuries, colour=event))
 
 plt.inj.single <- plt.inj.single + geom_point() +
-        geom_text(aes(label=ifelse(rank <= 3,
+        geom_text(aes(label=ifelse(rank == 1,
+                 paste0(as.character(day), ": ", injuries, " injuried") ,""),
+                hjust=.5,vjust=1.5)) +
+        geom_text(aes(label=ifelse(rank %in% c(2,3),
                  paste0(as.character(day), ": ", injuries, " injuried") ,""),
                 hjust=-.03,vjust=0.5)) +
-
         # geom_hline(aes(yintercept = mean), linetype=2) +
         # geom_hline(aes(yintercept = median), linetype=3) +
         labs(title="Most Injuring",

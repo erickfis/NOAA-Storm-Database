@@ -91,7 +91,7 @@ In this study, we looked on the 1% most harmful occurrences.
 
 ```{r prop-single-95, cache=TRUE}
 
-# subset for 99% CI
+# subset for 99%
 prop95.df <- filter(prop.df, prop.ev>qt[1])
 
 # create color pallete for all events
@@ -125,14 +125,16 @@ plt.prop.single <- ggplot(prop95.df, aes(day, prop.ev, colour=event))
 
 plt.prop.single <- plt.prop.single + geom_point() +
         geom_text(aes(label=ifelse(rank <= 3,
-                as.character(day),""),
-                hjust=-.03,vjust=0.5)) +
+                                paste0(as.character(day), ": ", 
+                                       dollar(prop.ev))
+                        ,""),
+                hjust=1.05,vjust=.5)) +
         # geom_hline(aes(yintercept = media.raw), linetype=2) +
          # geom_hline(aes(yintercept = mediana.raw), linetype=3) +
         labs(title="Property Dammaging",
                     y="", x="") + 
                 
-        expand_limits(x=as.Date('2017-01-01'))+ #ok
+        # expand_limits(x=as.Date('2017-01-01'))+ #ok
         scale_y_continuous(labels = dollar)+
         
         scale_colour_manual(values = getPalette(colourCount.prop.single))+                
