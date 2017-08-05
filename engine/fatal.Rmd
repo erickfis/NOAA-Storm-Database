@@ -143,7 +143,7 @@ plt.fatal.single <- plt.fatal.single + geom_point() +
         labs(title="Most Fatal",
                     y="", x="") +
     
-        expand_limits(x=as.Date('2017-01-01'))+ #ok
+        # #expand_limits(x=as.Date('2017-01-01'))+ #ok
         scale_colour_manual(values = getPalette(colourCount.fatal.single))+                
         theme(legend.title=element_blank()) +
         theme(legend.position="bottom") +

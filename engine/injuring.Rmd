@@ -124,7 +124,7 @@ plt.inj.single <- plt.inj.single + geom_point() +
         labs(title="Most Injuring",
                     y="", x="") +
                 
-        expand_limits(x=as.Date('2017-01-01'))+ #ok
+        # expand_limits(x=as.Date('2017-01-01'))+ #ok
         scale_colour_manual(values = getPalette(colourCount.inj.single))+                
         theme(legend.title=element_blank()) +
         theme(legend.position="bottom") +

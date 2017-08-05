@@ -1,4 +1,3 @@
-\newpage
 
 ## Crop losses
 
@@ -131,7 +130,7 @@ plt.crop.single <- plt.crop.single + geom_point() +
         labs(title="Crop Dammaging",
                     y="", x="") + 
                 
-        # expand_limits(x=as.Date('2017-01-01'))+ #ok
+        # #expand_limits(x=as.Date('2017-01-01'))+ #ok
         scale_y_continuous(labels = dollar)+
         
         scale_colour_manual(values = getPalette(colourCount.crop.single))+                

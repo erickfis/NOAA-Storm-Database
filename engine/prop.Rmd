@@ -134,7 +134,7 @@ plt.prop.single <- plt.prop.single + geom_point() +
         labs(title="Property Dammaging",
                     y="", x="") + 
                 
-        # expand_limits(x=as.Date('2017-01-01'))+ #ok
+        # #expand_limits(x=as.Date('2017-01-01'))+ #ok
         scale_y_continuous(labels = dollar)+
         
         scale_colour_manual(values = getPalette(colourCount.prop.single))+                
@@ -259,4 +259,5 @@ kable(prop.all.df[1:10, c(8,1,5)], caption="Least property damaging events")
 
 
 ```
+\newpage
 

@@ -1,0 +1,60 @@
+---
+title: "NOAA Storm Database - worst cases"
+author: "erickfis"
+date: "`r format(Sys.time(), '%Y %B, %d')`"
+
+
+
+
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    toc: true
+    self_contained: no
+
+---
+
+
+
+```{r knit-rules, echo=FALSE}
+library(knitr)
+
+opts_chunk$set(echo = TRUE, message = FALSE, include = TRUE, 
+               warning = FALSE, autodep = TRUE, options(scipen=999),
+               fig.pos = "H")
+
+# opts_knit$set(kable.force.latex = TRUE)
+```
+
+
+
+```{r child = 'engine/intros.Rmd'}
+```
+
+<!-- ```{r child = 'engine/processamento.Rmd'} -->
+<!-- ``` -->
+
+<!-- ```{r child = 'engine/fatal.Rmd'} -->
+<!-- ``` -->
+
+<!-- ```{r child = 'engine/injuring.Rmd'} -->
+<!-- ``` -->
+
+<!-- ```{r child = 'engine/prop.Rmd'} -->
+<!-- ``` -->
+
+<!-- ```{r child = 'engine/crop.Rmd'} -->
+<!-- ``` -->
+
+<!-- ```{r child = 'engine/locations.Rmd'} -->
+<!-- ``` -->
+
+<!-- ```{r child = 'engine/resultados.Rmd'} -->
+<!-- ``` -->
+
+
+
+
+
+

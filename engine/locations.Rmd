@@ -48,6 +48,8 @@ The county with the biggest fatality count is **`r worst.fatal.city.county`, in 
 
 \newpage
 
+
+
 ## Worst injuries count
     
 

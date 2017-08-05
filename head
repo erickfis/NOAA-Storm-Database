@@ -1,0 +1,28 @@
+
+# NOAA Storm Database - Worst Cases
+*erickfis, 2017 maio, 20*
+
+
+In this study we have analysed the NOAA Storm Database in order to
+determine what are the worst natural catastrophic events, both in terms
+of public health and in economic impact.
+
+The U.S. National Oceanic and Atmospheric Administration's (NOAA) storm
+database tracks characteristics of major storms and weather events in
+the United States, including when and where they occur, as well as
+estimates of any fatalities, injuries, and property damage.
+
+The database currently contains data from January 1950 to January 2017,
+as entered by NOAA's National Weather Service (NWS).
+
+The database can be found on:
+
+<https://www.ncdc.noaa.gov/stormevents/ftp.jsp>
+
+RPubs version: 
+
+<http://rpubs.com/erickfis/noaa>
+
+GitHub version, with code included and pdf version:
+
+<https://github.com/erickfis/NOAA-Storm-Database>
