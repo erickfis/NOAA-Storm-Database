@@ -4,7 +4,6 @@
 .Ruserdata
 *.bz2
 *cache
-*html
 *.gz
 *.rds
 *.dcf
