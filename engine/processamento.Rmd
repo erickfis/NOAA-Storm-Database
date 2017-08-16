@@ -13,7 +13,7 @@ Using the same versions under the same OS should guaranty reproducibility.
 
 This script downloads the relevant raw data from NOAA repository, under ftp://ftp.ncdc.noaa.gov/pub/data/swdi/stormevents/csvfiles/, and process it.
 
-It is not necessary to keep the files downloaded after running this script because it writes the processed data to the file "data/harm.rds"
+It is not necessary to keep the files downloaded after running this script because it writes the processed data to the file "data/harm.rda"
 
 Then everytime it is runned, it checks for new data on the ftp server. If there is new data, it will download the files missing and raw process everything again.
 
@@ -39,6 +39,7 @@ library(rmarkdown)
 library(RColorBrewer)
 library(gridExtra)
 library(grid)
+library(plotly)
 
 ```
 
@@ -94,11 +95,11 @@ if(length(arquivos.faltando)>0 & tem.novidade ==1) {
 
 # check if processed data is present:
 
-tem.rds <- file.exists("../data/harm.rds")
+tem.rda <- file.exists("../data/harm.rda")
 
 # if trigger is set, raw process again
 
-if(tem.novidade==1|tem.rds==0) { # them process the data
+if(tem.novidade==1|tem.rda==0) { # them process the data
         arquivos.local <- dir("../data/")
         arquivos.local <- arquivos.local[grep("details", arquivos.local)]
 
@@ -305,10 +306,11 @@ if(tem.novidade==1|tem.rds==0) { # them process the data
         rm(dados) # house cleanning
         
         # end of processing - save the data
-        saveRDS(harm.df, "../data/harm.rds")
+        save(harm.df, file = "../data/harm.rda")
 
 } else { # just loads processed data
-        harm.df <- readRDS("../data/harm.rds")
+        # harm.df <- readRDS("../data/harm.rds")
+        load("../data/harm.rda")
 }
 
 ```

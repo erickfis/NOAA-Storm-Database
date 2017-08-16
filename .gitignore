@@ -6,5 +6,6 @@
 *cache
 *.gz
 *.rds
+*.rda
 *.dcf
 *.log

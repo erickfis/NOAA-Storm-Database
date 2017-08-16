@@ -128,31 +128,53 @@ kable(fatal95.df[, c(10,1,3,5:7)],
 
 ```{r fatal-plot-single, cache=TRUE, fig.cap="Worst fatal occurrences"}
 # the plot
-plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=event))
+# plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=event))
+# 
+# plt.fatal.single <- plt.fatal.single + geom_point() +
+#         geom_text(aes(label=ifelse(rank %in% c(1,3),
+#                  paste0(as.character(day), ": ", fatalities, " killed") ,""),
+#                 hjust=1.1,vjust=.5)) +
+#         geom_text(aes(label=ifelse(rank == 2,
+#                  paste0(as.character(day), ": ", fatalities, " killed") ,""),
+#                 hjust=0.8,vjust=-1.0)) +
+# 
+#         # geom_hline(aes(yintercept = mean), linetype=2) +
+#         # geom_hline(aes(yintercept = median), linetype=3) +
+#         labs(title="Most Fatal",
+#                     y="", x="") +
+#     
+#         # #expand_limits(x=as.Date('2017-01-01'))+ #ok
+#         scale_colour_manual(values = getPalette(colourCount.fatal.single))+                
+#         theme(legend.title=element_blank()) +
+#         theme(legend.position="bottom") +
+#         guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
+#         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+#         theme(plot.title = element_text(hjust = 0.5))                 
+
+
+plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=event,
+                        text = paste(event, "<br>", fatalities, "fatalities",
+                                     "<br>", as.Date(day))))
+
+
+
+# plt.fatal.single <- ggplot(fatal95.df, aes(day, fatalities, colour=event,
+#                         label = as.Date(day)))
 
 plt.fatal.single <- plt.fatal.single + geom_point() +
-        geom_text(aes(label=ifelse(rank %in% c(1,3),
-                 paste0(as.character(day), ": ", fatalities, " killed") ,""),
-                hjust=1.1,vjust=.5)) +
-        geom_text(aes(label=ifelse(rank == 2,
-                 paste0(as.character(day), ": ", fatalities, " killed") ,""),
-                hjust=0.8,vjust=-1.0)) +
-
-        # geom_hline(aes(yintercept = mean), linetype=2) +
-        # geom_hline(aes(yintercept = median), linetype=3) +
         labs(title="Most Fatal",
                     y="", x="") +
-    
-        # #expand_limits(x=as.Date('2017-01-01'))+ #ok
-        scale_colour_manual(values = getPalette(colourCount.fatal.single))+                
-        theme(legend.title=element_blank()) +
+        scale_colour_manual(values = getPalette(colourCount.fatal.single))+            theme(legend.title=element_blank()) +
         theme(legend.position="bottom") +
         guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.fatal.single + labs(title="Worst fatal occurrences",
-                    y="Fatalities", x="")
+
+ggplotly(plt.fatal.single + labs(title="Worst fatal occurrences",
+                    y="Fatalities", x=""), tooltip = "text")
+
+
 
 ```
 
@@ -213,26 +235,42 @@ kable(fatal.all.df[,c(5,1:2)],
 ```{r fatal-plot-alltime, cache=TRUE, fig.cap="Total fatalities by event"}
 
 # the plot
-plt.fatal.all <- ggplot(data=fatal.all.df, aes(event, total, fill=event))
+plt.fatal.all <- ggplot(data=fatal.all.df, aes(event, total, fill=event,
+                        text = paste(event, "<br>", total, "fatalities")))
+
+# plt.fatal.all <- plt.fatal.all + geom_bar(stat="identity") +
+#         geom_text(aes(label=ifelse(total==max(total),
+#                 paste0(event, ": ", max(total), " killed"),'')),
+#                 hjust=0,vjust=2) +
+#         geom_hline(aes(yintercept = mean), linetype=1) +
+#         # geom_hline(aes(yintercept = median), linetype=2) +
+#         labs(title="All time", y="",
+#              x="") + 
+#                 
+#         theme(legend.position="none") +        
+#         scale_colour_manual(values = getPalette(colourCount.fatal.all))+                
+#         theme(legend.title=element_blank()) +
+#         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+#         theme(plot.title = element_text(hjust = 0.5))                 
+# 
+# ggplotly(plt.fatal.all + labs(title="Total Fatalities - All time",
+#              subtitle="Most fatal events of all time",
+#                      y="Fatalities", x=""))
+
 
 plt.fatal.all <- plt.fatal.all + geom_bar(stat="identity") +
-        geom_text(aes(label=ifelse(total==max(total),
-                paste0(event, ": ", max(total), " killed"),'')),
-                hjust=0,vjust=2) +
-        geom_hline(aes(yintercept = mean), linetype=1) +
-        # geom_hline(aes(yintercept = median), linetype=2) +
-        labs(title="All time", y="",
-             x="") + 
-                
+        geom_hline(aes(yintercept = mean, 
+                       text=paste("mean", round(mean,2))), linetype=1) +
+        labs(title="All time", y="", x="") + 
         theme(legend.position="none") +        
-        scale_colour_manual(values = getPalette(colourCount.fatal.all))+                
-        theme(legend.title=element_blank()) +
+        scale_colour_manual(values = getPalette(colourCount.fatal.all))+               theme(legend.title=element_blank()) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.fatal.all + labs(title="Total Fatalities - All time",
+ggplotly(plt.fatal.all + labs(title="Total Fatalities - All time",
              subtitle="Most fatal events of all time",
-                     y="Fatalities", x="")
+                     y="Fatalities", x=""), tooltip = "text")
+
 
 ```
 

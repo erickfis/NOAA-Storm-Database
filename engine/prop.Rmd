@@ -121,31 +121,48 @@ kable(prop95.df[1:20,c(13,1,3,5,6,8)],
 
 ```{r prop-single-plot, cache=TRUE, fig.cap="Worst property damaging occurrences"}
 
-plt.prop.single <- ggplot(prop95.df, aes(day, prop.ev, colour=event))
+plt.prop.single <- ggplot(prop95.df, aes(day, prop.ev, colour=event,
+                        text = paste(event, "<br>", dollar(prop.ev), 
+                                     "in damages",
+                                     "<br>", as.Date(day))))
+
+# plt.prop.single <- plt.prop.single + geom_point() +
+#         geom_text(aes(label=ifelse(rank <= 3,
+#                                 paste0(as.character(day), ": ", 
+#                                        dollar(prop.ev))
+#                         ,""),
+#                 hjust=1.05,vjust=.5)) +
+#         # geom_hline(aes(yintercept = media.raw), linetype=2) +
+#          # geom_hline(aes(yintercept = mediana.raw), linetype=3) +
+#         labs(title="Property Dammaging",
+#                     y="", x="") + 
+#                 
+#         # #expand_limits(x=as.Date('2017-01-01'))+ #ok
+#         scale_y_continuous(labels = dollar)+
+#         
+#         scale_colour_manual(values = getPalette(colourCount.prop.single))+                
+#         theme(legend.title=element_blank()) +
+#         theme(legend.position="bottom") +
+#         guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
+#         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+#         theme(plot.title = element_text(hjust = 0.5)) 
+# 
+# plt.prop.single + labs(title="Worst property damaging occurrences",
+#                     y="Losses", x="")
+
 
 plt.prop.single <- plt.prop.single + geom_point() +
-        geom_text(aes(label=ifelse(rank <= 3,
-                                paste0(as.character(day), ": ", 
-                                       dollar(prop.ev))
-                        ,""),
-                hjust=1.05,vjust=.5)) +
-        # geom_hline(aes(yintercept = media.raw), linetype=2) +
-         # geom_hline(aes(yintercept = mediana.raw), linetype=3) +
-        labs(title="Property Dammaging",
-                    y="", x="") + 
-                
-        # #expand_limits(x=as.Date('2017-01-01'))+ #ok
+        labs(title="Property Dammaging", y="", x="") + 
         scale_y_continuous(labels = dollar)+
-        
-        scale_colour_manual(values = getPalette(colourCount.prop.single))+                
-        theme(legend.title=element_blank()) +
+        scale_colour_manual(values = getPalette(colourCount.prop.single))+             theme(legend.title=element_blank()) +
         theme(legend.position="bottom") +
         guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5)) 
 
-plt.prop.single + labs(title="Worst property damaging occurrences",
-                    y="Losses", x="")
+ggplotly(plt.prop.single + labs(title="Worst property damaging occurrences",
+                    y="Losses", x=""), tooltip = "text")
+
   
 ```
 
@@ -207,28 +224,48 @@ kable(prop.all.df[, c(8,1,5)],
 
 ```{r prop-all-plot, cache=TRUE, fig.cap="Total Property Damages by event"}
 
-plt.prop.all <- ggplot(data=prop.all.df, aes(event, total.raw, fill=event))
+plt.prop.all <- ggplot(data=prop.all.df, aes(event, total.raw, fill=event,
+                        text = paste(event, "<br>", 
+                                     dollar(total.raw), "in damages")))
+
+
+# plt.prop.all <- plt.prop.all + geom_bar(stat="identity") +
+#                 
+#         geom_text(aes(label=ifelse(total.raw==max(total.raw),
+#                 paste(event, dollar(max(total.raw)), sep=": "),'')),
+#                 hjust=0,vjust=2) +
+#         geom_hline(aes(yintercept = media.raw), linetype=1) +
+#         # geom_hline(aes(yintercept = mediana.raw), linetype=2) +
+#         labs(title="All time", y="", x="") + 
+#                 
+#         scale_y_continuous(labels = dollar)+
+#      
+#         theme(legend.position="none") +        
+#         scale_colour_manual(values = getPalette(colourCount.prop.all))+                
+#         theme(legend.title=element_blank()) +
+#         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+#         theme(plot.title = element_text(hjust = 0.5))                 
+# 
+# plt.prop.all + labs(title="Total Damages - All time",
+#              subtitle="Most property damaging events of all time",
+#                      y="Losses", x="")
+
 
 plt.prop.all <- plt.prop.all + geom_bar(stat="identity") +
-                
-        geom_text(aes(label=ifelse(total.raw==max(total.raw),
-                paste(event, dollar(max(total.raw)), sep=": "),'')),
-                hjust=0,vjust=2) +
-        geom_hline(aes(yintercept = media.raw), linetype=1) +
-        # geom_hline(aes(yintercept = mediana.raw), linetype=2) +
+        geom_hline(aes(yintercept = media.raw, 
+                       text=paste("mean", round(media.raw,2))), linetype=1) +
         labs(title="All time", y="", x="") + 
-                
         scale_y_continuous(labels = dollar)+
-     
         theme(legend.position="none") +        
-        scale_colour_manual(values = getPalette(colourCount.prop.all))+                
-        theme(legend.title=element_blank()) +
+        scale_colour_manual(values = getPalette(colourCount.prop.all))+                theme(legend.title=element_blank()) +
         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
         theme(plot.title = element_text(hjust = 0.5))                 
 
-plt.prop.all + labs(title="Total Damages - All time",
+ggplotly(plt.prop.all + labs(title="Total Damages - All time",
              subtitle="Most property damaging events of all time",
-                     y="Losses", x="")
+                     y="Losses", x=""), tooltip = "text")
+
+
 
 ```
 
