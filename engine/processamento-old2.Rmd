@@ -28,14 +28,17 @@ In order to answer our questions, the original database needed to be treated fro
 ```{r libraries}
 
 library(RCurl)
+# library(scales)
 library(stringr)
 library(data.table)
+# library(chron)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(rmarkdown)
 library(knitr)
 library(RColorBrewer)
+# library(gridExtra)
 library(grid)
 library(plotly)
 
@@ -48,55 +51,57 @@ expressao <- "cou.txt"
 tipo <- "census"
 
 baixa.arquivos(url, expressao, tipo)
-
-tem.rda <- file.exists("../data/cidades.rda")
-
-
-if(tem.novidade==1|tem.rda==0) { # them process the data
-        arquivos.local <- dir("../data/")
-        arquivos.local <- arquivos.local[grep(expressao, arquivos.local)]
-        
-        arquivo <- paste0("../data/", arquivos.local[1])
-        
-        cidades <- read.csv(arquivo, header = FALSE, colClasses = "character")
-                              
-        
-        for (i in 2:length(arquivos.local)) {
-                arquivo <- paste0("../data/", arquivos.local[i])
-
-                cidades <- bind_rows(
-                        cidades, 
-                        read.csv(arquivo, header = FALSE, 
-                                 colClasses = "character")
-                        )
-        }
-        cidades <-  subset(cidades, select = c(V1,V4))
-        names(cidades) <- c("state", "county")
-        
-        cidades$county <- tolower(cidades$county)
-        cidades$county <- gsub(" county| census area", "", cidades$county)
-        save(cidades, file = "../data/cidades.rda")
-
-} else { # just loads processed data
-        load("../data/cidades.rda")
-}
-          
-
-
-
-
 ```
 
 
 
 ```{r processamento-noaa, cache=FALSE}
 
+# looks at ftp repository and list files
 url <- "ftp://ftp.ncdc.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
-expressao <- "details"
-tipo <- "noaa"
+arquivos.ftp <- getURL(url, ftp.use.epsv = FALSE,dirlistonly = TRUE) 
+arquivos.ftp <- paste(strsplit(arquivos.ftp, "\n")[[1]], sep = "")
+arquivos.ftp <- arquivos.ftp[grep("details", arquivos.ftp)]
 
-baixa.arquivos(url, expressao, tipo)
+tem.novidade <- 0 # start the trigger        
 
+# Verifies if the ftp data is the same that the data that has already been used before.
+# If not, set the download trigger and raw process trigger
+
+if (file.exists("../data/lista.ftp.txt")) {
+        data.previous <- readLines("../data/lista.ftp.txt")
+                if (identical(data.previous,arquivos.ftp)) {
+                        tem.novidade <- 0
+                } else {
+                        tem.novidade <- 1
+                        writeLines(arquivos.ftp, "../data/lista.ftp.txt")
+                }
+        
+} else {
+        tem.novidade <- 1
+        writeLines(arquivos.ftp, "../data/lista.ftp.txt")
+}
+
+
+
+
+# compares ftp repo to files already downloaded
+arquivos.local <- dir("../data/")
+arquivos.faltando <- arquivos.ftp[which(!(arquivos.ftp %in% arquivos.local))]
+
+
+# if the lists of files are different, download new ones 
+
+if(length(arquivos.faltando)>0 & tem.novidade ==1) {
+
+                arquivo <- character()
+                for (i in 1:length(arquivos.faltando)) {
+                        arquivo <- paste0(url, arquivos.faltando[i])
+                        download.file(arquivo, 
+                                paste0("../data/", arquivos.faltando[i]),
+                                method = "curl")
+                }
+}        
 
 # check if processed data is present:
 
@@ -106,20 +111,18 @@ tem.rda <- file.exists("../data/harm.rda")
 
 if(tem.novidade==1|tem.rda==0) { # them process the data
         arquivos.local <- dir("../data/")
-        arquivos.local <- arquivos.local[grep(expressao, arquivos.local)]
+        arquivos.local <- arquivos.local[grep("details", arquivos.local)]
 
-        arquivo <- paste0("../data/", arquivos.local[1])
-
-        dados <- fread(sprintf("gzip -dc %s | tr -d '\\000'", arquivo),
+        dados <- fread(sprintf("gzip -dc %s | tr -d '\\000'",
+                                paste0("../data/", arquivos.local[1])),
                         na.strings = "", colClasses = "character")
 
       
         for (i in 2:length(arquivos.local)) {
-                arquivo <- paste0("../data/", arquivos.local[i])
-
                 dados <- bind_rows(
                         dados, fread(sprintf(
-                                "gzip -dc %s | tr -d '\\000'", arquivo),
+                                "gzip -dc %s | tr -d '\\000'",
+                                paste0("../data/", arquivos.local[i])),
                                 na.strings = "", colClasses = "character")
                                 )
         }

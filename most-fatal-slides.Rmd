@@ -1,0 +1,72 @@
+---
+title: "NOAA Storm Database - worst cases"
+author: "erickfis@gmail.com"
+date: "22 de setembro de 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Worst events of all time - fatalities
+
+
+```{r fatal, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(rmarkdown)
+library(knitr)
+library(RColorBrewer)
+library(plotly)
+
+
+load("data/harm.rda")
+fatal.all.df <- harm.df %>% 
+                filter(!is.na(fatalities)) %>%
+                select(1:7) %>%
+                filter(fatalities > 0) %>%
+                arrange(desc(fatalities)) %>%
+                mutate(mean = mean(fatalities), 
+                median = median(fatalities),
+                rank = seq_len(length(event))) %>% 
+        group_by(event) %>%
+        summarise(total = sum(fatalities)) %>% arrange(desc(total)) %>% 
+        mutate(mean = mean(total), median = median(total),
+               rank = seq_len(length(event))) %>%
+        filter(total > mean(total))
+
+# ordering events by rank, to plot later
+fatal.all.df$event <- factor(fatal.all.df$event,
+                levels = fatal.all.df$event[order(fatal.all.df$rank)])
+
+
+# create color pallete for all events
+colourCount.fatal.all = length(unique(fatal.all.df$event))
+getPalette = colorRampPalette(brewer.pal(colourCount.fatal.all, "Set1"))
+
+
+# the plot
+plt.fatal.all <- ggplot(data=fatal.all.df, aes(event, total, fill=event,
+                        text = paste(event, "<br>", total, "fatalities")))
+
+
+
+plt.fatal.all <- plt.fatal.all + geom_bar(stat="identity") +
+        geom_hline(aes(yintercept = mean, 
+                       text=paste("mean", round(mean,2))), linetype=1) +
+        labs(title="All time", y="", x="") + 
+        theme(legend.position="none") +        
+        scale_colour_manual(values = getPalette(colourCount.fatal.all))+                theme(legend.title=element_blank()) +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+        theme(plot.title = element_text(hjust = 0.5))                 
+
+ggplotly(plt.fatal.all + labs(title="Total Fatalities - All time",
+             subtitle="Most fatal events of all time",
+                     y="Fatalities", x=""), tooltip = "text")
+
+
+```
+
+
+        *Data from 1950 up to now*

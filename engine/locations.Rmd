@@ -14,13 +14,37 @@ rm(crop.df, crop.all.df, crop95.df) # house cleanning
 # subset original data
 cities.df <- harm.df %>% 
                 filter(!(is.na(county) | is.na(state))) %>%
-                select(6,5,7:10) %>%
-                group_by(state, county) %>%
+                select(6,5,7:12) %>%
+                # group_by(state, county) %>%
+                group_by(state) %>%
+
                 summarise(fatalities = sum(fatalities, na.rm=TRUE),
                         injuries = sum(injuries, na.rm=TRUE),
                         prop.dmg = sum(prop.ev, na.rm=TRUE),
                         crop.dmg = sum(crop.ev, na.rm=TRUE)
+                        # lat = mean(lat),
+                        # lng = mean(lng)
                 )
+
+save(cities.df, file = "cidades.rda")
+sum(is.na(cities.df$lng))
+
+sum(is.na(harm.df$lng))/nrow(harm.df)
+
+library(googleVis)
+library(maps)
+
+
+mari <- subset(harm.df, state =="maryland")
+
+
+leaflet(mapStates) %>% addTiles()
+
+mapa <- gvisGeoChart(cities.df, "state", "fatalities")
+
+mapa
+
+View(cities.df)
 ```
 
 

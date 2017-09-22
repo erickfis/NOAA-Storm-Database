@@ -18,14 +18,11 @@ output:
 
 
 
-```{r knit-rules, echo=FALSE}
-library(knitr)
 
-opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
                warning = FALSE, autodep = TRUE, options(scipen=999),
                fig.pos = "H")
-
-# opts_knit$set(kable.force.latex = TRUE)
 ```
 
 
