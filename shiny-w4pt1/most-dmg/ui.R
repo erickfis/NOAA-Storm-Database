@@ -8,7 +8,8 @@
 #
 
 library(shiny)
-library(ggvis)
+library(plotly)
+
 
 
 
@@ -32,12 +33,19 @@ fluidPage(
                                    
                        ),
                         hr(),
-                        helpText("Data from NOAA Storm Database")
+                        helpText(
+"Data from NOAA Storm Database",
+"contains data from January 1950 to January 2017, 
+as entered by NOAA’s National Weather Service (NWS).",
+a("Complete study", href="https://erickfis.github.io/NOAA-Storm-Database/")
+                        )
+                       
                 ),
                 
                 # Create a spot for the barplot
                 mainPanel(
-                        plotlyOutput("worst")  
+                        
+                        plotlyOutput("worst")
                 )
                 
         )

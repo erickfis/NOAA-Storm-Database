@@ -9,6 +9,7 @@
 
 library(shiny)
 library(dplyr)
+library(lubridate)
 library(ggplot2)
 library(rmarkdown)
 library(knitr)
@@ -19,7 +20,7 @@ library(plotly)
 
 # prepare data
 
-load("../../data/harm.rda")
+load("data/harm.rda")
 
 # load("data/harm.rda")
 # c("Fatalities", "Injuries", "Property", "Crops")
