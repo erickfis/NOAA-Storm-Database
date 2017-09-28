@@ -1,0 +1,196 @@
+---
+title       : NOAA - Worst natural disasters
+subtitle    : Most damaging types of natural disasters
+author      : erickfis@gmail.com
+job         : 
+framework   : shower        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : github  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [bootstrap] 
+ext_widgets : {rCharts: [libraries/nvd3]}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+
+## NOAA Storm Database
+
+### Worst Weather Events
+
+The U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage.
+
+The database currently contains data from January 1950 to January 2017, as entered by NOAA's National Weather Service (NWS).
+
+Full study: https://erickfis.github.io/NOAA-Storm-Database/
+
+erickfis@gmail.com
+
+2017-09-28
+
+
+
+---
+
+```{r libs, message=FALSE}
+# library(shiny)
+# library(plotly)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(rmarkdown)
+library(knitr)
+library(scales)
+library(rCharts)
+library(RColorBrewer)
+```
+
+
+```{r economic-db, message=FALSE, cache=TRUE}
+load("../data/harm.rda")
+
+Property <- harm.df %>% filter(!is.na(prop.ev)) %>% select(1:6,9) %>% 
+                filter(prop.ev > 0) %>%
+                group_by(event) %>%
+                summarise(total.raw = sum(prop.ev)) %>%
+                arrange(desc(total.raw)) %>%
+                mutate(
+                        media.raw = mean(total.raw),
+                        rank = seq_len(length(event))
+                       ) %>%
+                filter(total.raw > mean(total.raw))
+
+Property$event <- factor(Property$event,
+                           levels = Property$event[order(Property$rank)])
+
+
+
+Crops <- harm.df %>% filter(!is.na(crop.ev)) %>% select(1:6,10) %>%
+                filter(crop.ev > 0) %>%
+                group_by(event) %>%
+                # summarise(total.raw = sum(crop.ev)) %>%
+                summarise(total.raw = sum(crop.ev)) %>%
+                arrange(desc(total.raw)) %>%
+                mutate(
+                        media.raw = mean(total.raw),
+                        rank = seq_len(length(event))
+                        ) %>%
+                filter(total.raw > mean(total.raw))
+
+Crops$event <- factor(Crops$event,
+                           levels = Crops$event[order(Crops$rank)])
+
+```
+
+
+## Property losses, in billions $
+
+```{r props, results='asis'}
+
+
+colourCount = length(unique(Property$event))
+colors <- brewer.pal(colourCount, "Set1")
+Property$colors <- colors
+Property$total.raw <- Property$total.raw/1000000000
+
+
+p2 <-  nPlot(total.raw ~ event, data = Property, type = 'discreteBarChart')
+p2$chart(color = Property$colors)
+
+p2$print(include_assets=T)
+
+```
+
+
+---
+
+## Crops losses, in billions $
+
+```{r crops, results='asis'}
+
+colourCount = length(unique(Crops$event))
+colors <- brewer.pal(colourCount, "Set1")
+Crops$colors <- colors
+Crops$total.raw <- Crops$total.raw/1000000000
+
+
+p2 <-  nPlot(total.raw ~ event, data = Crops, type = 'discreteBarChart')
+p2$chart(color = Crops$colors)
+
+p2$print(include_assets=T)
+```
+
+
+---
+
+## Worst Weather Events - Fatalities
+
+
+```{r health-db, message=FALSE, cache=TRUE}
+
+Fatalities <- harm.df %>%
+        filter(!is.na(fatalities)) %>% select(1:7) %>%
+        filter(fatalities > 0) %>%
+        group_by(event) %>%
+        summarise(total = sum(fatalities)) %>% arrange(desc(total)) %>%
+        mutate(mean = mean(total), median = median(total),
+               rank = seq_len(length(event))
+               ) %>%
+        filter(total > mean(total))
+
+
+# ordering events by rank, to plot later
+Fatalities$event <- factor(Fatalities$event,
+                              levels = Fatalities$event[order(Fatalities$rank)])
+
+
+Injuries <- harm.df %>% filter(!is.na(injuries)) %>% select(1:6,8) %>%
+                filter(injuries > 0) %>%
+                group_by(event) %>%
+                summarise(total = sum(injuries)) %>%
+                arrange(desc(total)) %>%
+                mutate(mean = mean(total), median = median(total),
+                        rank = seq_len(length(event))
+                       )  %>%
+                filter(total >= mean(total))
+
+Injuries$event <- factor(Injuries$event,
+                           levels = Injuries$event[order(Injuries$rank)])
+
+```
+
+```{r fatalities-plot, results='asis'}
+
+colourCount = length(unique(Fatalities$event))
+colors <- brewer.pal(colourCount, "Set1")
+Fatalities$colors <- colors
+
+p2 <-  nPlot(total ~ event, data = Fatalities, type = 'discreteBarChart')
+p2$chart(color = Fatalities$colors)
+
+p2$print(include_assets=T)
+       
+```
+
+---
+
+## Worst Weather Events - Injuries
+
+```{r injuries-plot, results='asis'}
+
+colourCount = length(unique(Injuries$event))
+colors <- brewer.pal(colourCount, "Set1")
+Injuries$colors <- colors
+
+p2 <-  nPlot(total ~ event, data = Injuries, type = 'discreteBarChart')
+p2$chart(color = Injuries$colors)
+
+p2$print(include_assets=T)
+        
+```
+
+
