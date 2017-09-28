@@ -3,6 +3,8 @@ title       : NOAA - Worst natural disasters
 subtitle    : Most damaging types of natural disasters
 date: "28 de setembro de 2017"
 output: ioslides_presentation
+mode        : standalone # {standalone, draft}
+
 ---
 
 
@@ -91,7 +93,8 @@ Property$total.raw <- Property$total.raw/1000000000
 
 p2 <-  nPlot(total.raw ~ event, data = Property, type = 'discreteBarChart')
 p2$chart(color = Property$colors)
-p2$print(include_assets=T)
+# p2$print(include_assets=T)
+p2$show('inline', include_assets = TRUE, cdn = TRUE)
 
 ```
 
@@ -109,7 +112,7 @@ Crops$total.raw <- Crops$total.raw/1000000000
 p2 <-  nPlot(total.raw ~ event, data = Crops, type = 'discreteBarChart')
 p2$chart(color = Crops$colors)
 
-p2$print(include_assets=T)
+p2$show('inline', include_assets = TRUE, cdn = TRUE)
 ```
 
 
@@ -158,7 +161,8 @@ Fatalities$colors <- colors
 p2 <-  nPlot(total ~ event, data = Fatalities, type = 'discreteBarChart')
 p2$chart(color = Fatalities$colors)
 
-p2$print(include_assets=T)
+# p2$print(include_assets=T)
+p2$show('inline', include_assets = TRUE, cdn = TRUE)
        
 ```
 
@@ -173,7 +177,8 @@ Injuries$colors <- colors
 p2 <-  nPlot(total ~ event, data = Injuries, type = 'discreteBarChart')
 p2$chart(color = Injuries$colors)
 
-p2$print(include_assets=T)
+# p2$print(include_assets=T)
+p2$show('inline', include_assets = TRUE, cdn = TRUE)
         
 ```
 
