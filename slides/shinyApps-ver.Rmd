@@ -1,22 +1,16 @@
 ---
-title       : NOAA - Worst natural disasters
-subtitle    : Most damaging types of natural disasters
-date: "28 de setembro de 2017"
+title: "NOAA Storm database - Worst Weather Events"
+author: "erickfis@gmail.com"
+date: "27 de setembro de 2017"
 output: ioslides_presentation
-widgets     : [bootstrap]        
-mode        : standalone # {standalone, draft}
-
+runtime: shiny
 ---
 
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-
 ## NOAA Storm Database
-
-### Worst Weather Events
 
 The U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage.
 
@@ -24,28 +18,23 @@ The database currently contains data from January 1950 to January 2017, as enter
 
 Full study: https://erickfis.github.io/NOAA-Storm-Database/
 
-erickfis@gmail.com
 
-2017-09-28
-
-
+## Economic losses
 
 ```{r libs, message=FALSE}
-# library(shiny)
-# library(plotly)
+library(shiny)
+library(plotly)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(rmarkdown)
 library(knitr)
 library(scales)
-library(rCharts)
-library(RColorBrewer)
 ```
 
 
 ```{r economic-db, message=FALSE, cache=TRUE}
-load("../data/harm.rda")
+load("data/harm.rda")
 
 Property <- harm.df %>% filter(!is.na(prop.ev)) %>% select(1:6,9) %>% 
                 filter(prop.ev > 0) %>%
@@ -81,43 +70,47 @@ Crops$event <- factor(Crops$event,
 ```
 
 
-## Property losses, in billions $
+```{r eco-plot}
+inputPanel(
+        selectInput("type", "Type of economic losses",
+                    c("Property", "Crops")
+                    )
+)
 
-```{r props, results='asis'}
+tipo <- reactive({
+                x <- get(input$type)
+        })
 
+renderPlot({
 
-colourCount = length(unique(Property$event))
-colors <- brewer.pal(colourCount, "Set1")
-Property$colors <- colors
-Property$total.raw <- Property$total.raw/1000000000
+         df <- tipo()
 
+         plt <- ggplot(data=df, aes(event, total.raw, fill=event,
+                                    text = paste(event, "<br>", 
+                                                 dollar(total.raw), " in losses")))
+                        
+         plt <- plt + geom_bar(stat="identity") +
+                        geom_hline(aes(yintercept = media.raw, 
+                                               text=paste("mean",
+                                                          round(media.raw,2))), linetype=1) +
+                        
+                        scale_y_continuous(labels = dollar)+
+                        theme(legend.position="none") +        
+                        theme(legend.title=element_blank()) +
+                        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+                        theme(plot.title = element_text(hjust = 0.5))                 
+                        
+        plt
+        # ggplotly(plt + labs(title=paste("Total losses - All time"),
+        #                                              y="Losses", x=""), tooltip = "text")
 
-p2 <-  nPlot(total.raw ~ event, data = Property, type = 'discreteBarChart')
-p2$chart(color = Property$colors)
-# p2$print(include_assets=T)
-p2$show('inline', include_assets = TRUE, cdn = TRUE)
-
+        
+        
+})
 ```
 
 
-## Crops losses, in billions $
-
-```{r crops, results='asis'}
-
-colourCount = length(unique(Crops$event))
-colors <- brewer.pal(colourCount, "Set1")
-Crops$colors <- colors
-Crops$total.raw <- Crops$total.raw/1000000000
-
-
-p2 <-  nPlot(total.raw ~ event, data = Crops, type = 'discreteBarChart')
-p2$chart(color = Crops$colors)
-
-p2$show('inline', include_assets = TRUE, cdn = TRUE)
-```
-
-
-## Worst Weather Events - Fatalities
+## Human Health Damages
 
 
 ```{r health-db, message=FALSE, cache=TRUE}
@@ -153,34 +146,44 @@ Injuries$event <- factor(Injuries$event,
 
 ```
 
-```{r fatalities-plot, results='asis'}
+```{r human-plot}
+inputPanel(
+        selectInput("typeH", "Type of health losses",
+                    c("Fatalities", "Injuries")
+                    )
+)
 
-colourCount = length(unique(Fatalities$event))
-colors <- brewer.pal(colourCount, "Set1")
-Fatalities$colors <- colors
+tipoH <- reactive({
+                x <- get(input$typeH)
+        })
 
-p2 <-  nPlot(total ~ event, data = Fatalities, type = 'discreteBarChart')
-p2$chart(color = Fatalities$colors)
+renderPlot({
 
-# p2$print(include_assets=T)
-p2$show('inline', include_assets = TRUE, cdn = TRUE)
-       
-```
+        dfH <- tipoH()
 
-## Worst Weather Events - Injuries
+  
+        plt <- ggplot(data=dfH, aes(event, total, fill=event,
+                                                               text = paste(event, "<br>", total, "losses")))
+        plt <- plt + geom_bar(stat="identity") +
+                        geom_hline(aes(yintercept = mean, 
+                                        text=paste("mean", round(mean,2))), linetype=1) +
+                        theme(legend.position="none") +        
+                        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+                        theme(plot.title = element_text(hjust = 0.5))                 
 
-```{r injuries-plot, results='asis'}
-
-colourCount = length(unique(Injuries$event))
-colors <- brewer.pal(colourCount, "Set1")
-Injuries$colors <- colors
-
-p2 <-  nPlot(total ~ event, data = Injuries, type = 'discreteBarChart')
-p2$chart(color = Injuries$colors)
-
-# p2$print(include_assets=T)
-p2$show('inline', include_assets = TRUE, cdn = TRUE)
+        plt                
+                # ggplotly(plt + labs(title=paste("Total ", nome,  "- All time"),
+                #                                y=tipo, x=""), tooltip = "text")
+                # 
         
+})
 ```
+
+## About this presentation
+
+Technologies used:
+
+- RStudio Rmd Shiny Presentation
+- ggplot2
 
 
