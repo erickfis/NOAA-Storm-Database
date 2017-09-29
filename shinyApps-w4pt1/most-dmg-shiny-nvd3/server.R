@@ -16,6 +16,7 @@ library(knitr)
 library(scales)
 library(plotly)
 library(rCharts)
+library(RColorBrewer)
 
 # library(ggvis)
 
@@ -61,40 +62,31 @@ Crops$event <- factor(Crops$event,
 shinyServer(function(input, output) {
         
         
-        #         # c("Fatalities", "Injuries", "Property", "Crops")
- 
+   
         tipo <- reactive({
                 x <- get(input$type)
         })
 
       
         
-        # Fill in the spot we created for a plot
-        output$worst <- renderPlotly({
+        output$worst <- renderChart({
 
                 df <- tipo()
-
-                
                 df <- filter(df, rank <= input$max)
                 
+  
+                colourCount <- length(unique(df$event))
+                paleta <- colorRampPalette(brewer.pal(colourCount, "Set1"))
+                colors <- paleta(colourCount)
+                df$colors <- colors
                 
-                plt <- ggplot(data=df, aes(event, total.raw, fill=event,
-                                                                     text = paste(event, "<br>",
-                                                                                  dollar(total.raw), " in losses")))
-
-                        plt <- plt + geom_bar(stat="identity") +
-                                geom_hline(aes(yintercept = media.raw,
-                                               text=paste("mean", round(media.raw,2))), linetype=1) +
-                                labs(title="All time", y="", x="") +
-                                scale_y_continuous(labels = dollar)+
-                                theme(legend.position="none") +
-                                theme(legend.title=element_blank()) +
-                                theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-                                theme(plot.title = element_text(hjust = 0.5))
-
-                        ggplotly(plt + labs(title=paste("Total losses - All time"),
-                                                     y="Losses", x=""), tooltip = "text")
-
+                
+                df$total.raw <- df$total.raw/1000000000
+                
+                p2 <-  nPlot(total.raw ~ event, data = df, type = 'discreteBarChart')
+                p2$chart(color = Property$colors)
+                p2$set(dom = "worst")
+                return(p2)
         })
         
    

@@ -9,6 +9,7 @@
 
 library(shiny)
 library(plotly)
+library(rCharts)
 
 
 
@@ -20,11 +21,11 @@ fluidPage(
         titlePanel("Most harmfull events - NOAA Database"),
         
                # Generate a row with a sidebar
-        sidebarLayout(      
-                
+        sidebarLayout(
+
                 # Define the sidebar with one input
                 sidebarPanel(
-                      
+
                        selectInput("type", "Type of economic losses",
                                    c("Property", "Crops")
                                    ),
@@ -32,16 +33,31 @@ fluidPage(
                                    "Max #  of weather events:",
                                    min = 1,  max = 10,  value = 10)
                 ),
-                
+
                 # Create a spot for the barplot
                 mainPanel(
-                        
-                        plotlyOutput("worst")
-                       
+                        div(class='wrapper',
+                            tags$style(".Nvd3{ height: 300px; width: 300px;}"),
+                            showOutput("worst","nvd3")
                         )
+                )
 
         ),
         
+        
+        # fluidRow(
+        #         column(width=3,
+        #                selectInput("type", "Type of economic losses",
+        #                         c("Property", "Crops")
+        #                         ),
+        #                sliderInput("max","Max #  of weather events:",
+        #                            min = 1,  max = 10,  value = 10)
+        #         ),
+        #         column(width=9,
+        #                showOutput("worst","nvd3")
+        #         )
+        # ),                       
+                
         fluidRow(
                 column(width=12,
 
