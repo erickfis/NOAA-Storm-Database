@@ -84,8 +84,12 @@ shinyServer(function(input, output) {
                 df$total.raw <- df$total.raw/1000000000
                 
                 p2 <-  nPlot(total.raw ~ event, data = df, type = 'discreteBarChart')
-                p2$chart(color = Property$colors)
+                p2$chart(color = df$colors)
+                # p2$set(title = "Losses in billion $")
+                # p2$yAxis( axisLabel = "Losses in billion $" )
+                p2$yAxis(axisLabel = "Losses in billions $", width=60)
                 p2$set(dom = "worst")
+               
                 return(p2)
         })
         

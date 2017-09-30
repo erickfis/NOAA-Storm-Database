@@ -37,7 +37,7 @@ fluidPage(
                 # Create a spot for the barplot
                 mainPanel(
                         div(class='wrapper',
-                            tags$style(".Nvd3{ height: 300px; width: 300px;}"),
+                            tags$style(".Nvd3{ height: 600px;"),
                             showOutput("worst","nvd3")
                         )
                 )
